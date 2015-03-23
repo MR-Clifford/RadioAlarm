@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="11"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Label"
+            android:id="@+id/textView2"
+            android:layout_weight="8"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="00:00"
+            android:id="@+id/textView"
+            android:layout_weight="2"
+            android:layout_marginTop="4dp"
+            android:gravity="center_horizontal" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBox"
+            android:layout_weight="1"
+            android:checked="false" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="7"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Mon"
+            android:id="@+id/textView3"
+            android:layout_weight="1"
+            android:autoText="false"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:padding="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Tue"
+            android:id="@+id/textView4"
+            android:layout_weight="1"
+            android:autoText="false"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:padding="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Wed"
+            android:id="@+id/textView5"
+            android:layout_weight="1"
+            android:autoText="false"
+            android:singleLine="false"
+            android:gravity="center_horizontal"
+            android:padding="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Thu"
+            android:id="@+id/textView6"
+            android:layout_weight="1"
+            android:autoText="false"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:padding="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Fri"
+            android:id="@+id/textView7"
+            android:layout_weight="1"
+            android:autoText="false"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:padding="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Sat"
+            android:id="@+id/textView8"
+            android:layout_weight="1"
+            android:autoText="false"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:padding="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Sun"
+            android:id="@+id/textView9"
+            android:layout_weight="1"
+            android:autoText="false"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:padding="2dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:id="@+id/imageView"
+            android:layout_weight="1"
+            android:src="@android:drawable/arrow_down_float" />
+
+    </LinearLayout>
+</LinearLayout>

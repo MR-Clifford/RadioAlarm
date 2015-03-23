@@ -7,14 +7,39 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
         <activity
-            android:name=".MainActivity"
+            android:name=".ManageActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <service
+            android:name=".alarmServicePlus"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".CreateAlarmActivity"
+            android:label="@string/title_activity_create_alarm" >
+        </activity>
+        <activity
+            android:name=".models.AlarmActivity"
+            android:label="@string/title_activity_alarm" >
         </activity>
     </application>
 
