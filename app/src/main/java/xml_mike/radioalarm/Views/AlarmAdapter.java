@@ -1,4 +1,4 @@
-package xml_mike.radioalarm.models;
+package xml_mike.radioalarm.Views;
 
 import android.content.Context;
 import android.view.View;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import xml_mike.radioalarm.models.Alarm;
 
 /**
  * Created by MClifford on 23/02/15.

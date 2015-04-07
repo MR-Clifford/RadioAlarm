@@ -1,6 +1,7 @@
 package xml_mike.radioalarm;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,11 +15,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
+import android.widget.TimePicker;
+
+import java.util.Observable;
+import java.util.Observer;
+
+import xml_mike.radioalarm.managers.AlarmsManager;
+import xml_mike.radioalarm.models.Alarm;
+import xml_mike.radioalarm.Views.ExpandableAlarmAdapter;
+import xml_mike.radioalarm.models.StandardAlarm;
 
 
 public class ManageActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, View.OnClickListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, View.OnClickListener, TimePickerDialog.OnTimeSetListener, ExpandableListView.OnGroupCollapseListener, Observer{
+
+    private int currentAlarm = -1;
 
     private ProgressBar playSeekBar;
 
@@ -27,6 +40,8 @@ public class ManageActivity extends ActionBarActivity
     private Button buttonStop;
 
     private MediaPlayer player;
+
+    ExpandableListView mExpandableList;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -41,7 +56,9 @@ public class ManageActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_manage);
+
+        //this.deleteDatabase("RadioAlarm.db");
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -52,7 +69,42 @@ public class ManageActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        mExpandableList = (ExpandableListView) findViewById(R.id.managedAlarms);
+        ExpandableAlarmAdapter expandableAlarmAdapter = new ExpandableAlarmAdapter(this, LayoutInflater.from(this), AlarmsManager.getInstance().getAlarms() );
+        mExpandableList.setAdapter(expandableAlarmAdapter);
+
+        AlarmsManager.getInstance().addObserver(this);
+        AlarmsManager.getInstance().notifyObservers();
+
+        //Global.getInstance().register(this);
+        //Global.getInstance().notifyObservers();
+
+
         initialiseMediaPlayer();
+    }
+
+    /*
+    @Override
+    public void update() {
+        ExpandableAlarmAdapter temp = (ExpandableAlarmAdapter) mExpandableList.getExpandableListAdapter();
+        //temp.setItems(Global.getInstance().getAlarms());
+        temp.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setAObservable(AObservable aObservable) {
+
+    }
+*/
+
+    @Override
+    public void update(Observable observable, Object data) {
+        ((ExpandableAlarmAdapter) mExpandableList.getExpandableListAdapter()).notifyDataSetChanged();
+    }
+
+    @Override
+    public void onGroupCollapse(int groupPosition) {
+        
     }
 
     @Override
@@ -139,6 +191,34 @@ public class ManageActivity extends ActionBarActivity
 
     }
 
+    public void createNewAlarm(View v){
+
+        //Log.e("Testing Button click","uber test");
+        //Toast.makeText(this, "Test Button Click", Toast.LENGTH_SHORT).show();
+
+        currentAlarm = -1;
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, this, 0,0,true) ;
+        timePickerDialog.show();
+
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+
+        Alarm nAlarm = new StandardAlarm() ;
+
+        nAlarm.setTimeHour(hourOfDay);
+        nAlarm.setTimeMinute(minute);
+
+        if(currentAlarm < 0)
+            AlarmsManager.getInstance().add(nAlarm);
+
+
+        currentAlarm = -1;
+
+    }
 
     /**
      * A placeholder fragment containing a simple view.

@@ -1,11 +1,13 @@
 package xml_mike.radioalarm.models;
 
+import android.util.Log;
+
 /**
  * Created by MClifford on 18/03/15.
  */
 public class AlarmFactory {
 
-    public static Alarm createAlarm(long id,String alarmType, String name, String data, String repeatingDays,  int timeHour, int timeMinute, int isEnabled){
+    public static Alarm createAlarm(long id,String alarmType, String name, String data, String repeatingDays,  int timeHour, int timeMinute, int isEnabled, int repeating, int vibrating){
 
         Alarm alarm = generateType(alarmType);
 
@@ -14,7 +16,7 @@ public class AlarmFactory {
             char[] ch = repeatingDays.toCharArray();
 
             for (int i = 0; i < repeatingDays.length(); i++) {
-                if (ch[i] == 1)
+                if (ch[i] == '1')
                     RD[i] = true;
                 else
                     RD[i] = false;
@@ -33,6 +35,8 @@ public class AlarmFactory {
         alarm.setTimeHour(timeHour);
         alarm.setTimeMinute(timeMinute);
         alarm.setEnabled(isEnabled != 0);
+        alarm.setRepeating(repeating != 0);
+        alarm.setVibrate(vibrating !=0);
 
         return alarm;
     }
@@ -41,14 +45,40 @@ public class AlarmFactory {
 
         Alarm alarm = new StandardAlarm();
 
-        if(alarmType == StandardAlarm.class.toString())
+        if(alarmType.equalsIgnoreCase(StandardAlarm.class.toString()))
             alarm = new StandardAlarm();
-        if(alarmType == MusicAlarm.class.toString())
+        if(alarmType.equalsIgnoreCase(MusicAlarm.class.toString()))
             alarm = new MusicAlarm();
-        if(alarmType == RadioAlarm.class.toString())
+        if(alarmType.equalsIgnoreCase(RadioAlarm.class.toString()))
             alarm = new RadioAlarm();
 
+
         return alarm;
+    }
+
+    /**
+     *
+     * @param classname class which implements alarm interface
+     * @param alarm alarm to be converted
+     * @return converted alarm object
+     */
+    public static Alarm convertAlarm(String classname, Alarm alarm){
+
+        Alarm returnAlarm = generateType(classname);
+
+        returnAlarm.setId(alarm.getId());
+        returnAlarm.setRepeatingDays(alarm.getRepeatingDays());
+        returnAlarm.setVibrate(alarm.isVibrate());
+        returnAlarm.setEnabled(alarm.isEnabled());
+        returnAlarm.setData(alarm.getData());
+        returnAlarm.setName(alarm.getName());
+        returnAlarm.setTimeHour(alarm.getTimeHour());
+        returnAlarm.setTimeMinute(alarm.getTimeMinute());
+        returnAlarm.setRepeating(alarm.isRepeating());
+
+        Log.d("AlarmFactory.generateType", "alarm:"+alarm.getClass().toString()+" className"+classname);
+
+        return returnAlarm;
     }
 
 }

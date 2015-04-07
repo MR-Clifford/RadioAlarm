@@ -1,23 +1,25 @@
-package xml_mike.radioalarm;
+package xml_mike.radioalarm.Views;
 
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class CreateAlarmActivity extends ActionBarActivity {
+import xml_mike.radioalarm.R;
+
+public class AlarmActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_alarm);
+        setContentView(R.layout.activity_alarm2);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_create_alarm, menu);
+        getMenuInflater().inflate(R.menu.menu_alarm, menu);
         return true;
     }
 

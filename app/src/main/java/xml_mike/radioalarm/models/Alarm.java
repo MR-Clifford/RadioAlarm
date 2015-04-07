@@ -1,9 +1,11 @@
 package xml_mike.radioalarm.models;
 
+import android.os.Parcelable;
+
 /**
  * Created by MClifford on 22/02/15.
  */
-public interface Alarm {
+public interface Alarm extends Parcelable{
 
     public void setId(long id);
     public long getId();
@@ -17,8 +19,8 @@ public interface Alarm {
     public void setEnabled(boolean enable);
     public boolean isEnabled();
 
-    public boolean isRepeatWeekly();
-    public void setRepeatWeekly(boolean repeatWeekly);
+    public boolean isRepeating();
+    public void setRepeating(boolean repeatWeekly);
 
     public int getTimeHour();
     public void setTimeHour(int timeHour);
@@ -33,5 +35,7 @@ public interface Alarm {
     public boolean[] getRepeatingDays();
 
     public void setVibrate(boolean vibrate);
-    public boolean getVibrate();
+    public boolean isVibrate();
+
+    public String getDBRepeatingDays();
 }

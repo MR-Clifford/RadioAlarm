@@ -12,12 +12,13 @@
     <item name="darkorange" type="color">#FFFF8800</item>
     <item name="darkred" type="color">#FFCC0000</item>
 
-    <item name="text-color" type="color">#FF000000</item>
-    <item name="text-selected" type="color">#FF000000</item>
-    <item name="text-unselected" type="color">#FF000000</item>
-    <item name="text-background-color" type="color">#FF000000</item>
-    <item name="background-color" type="color">#FF000000</item>
-    <item name="border-color" type="color">#FF000000</item>
+    <item name="text_color" type="color">#FF000000</item>
+    <item name="text_selected" type="color">#CCCCCC</item>
+    <item name="text_unselected" type="color">#333333</item>
+    <item name="text_background_selected" type="color">#222222</item>
+    <item name="text_background_unselected" type="color">#DDDDDD</item>
+    <item name="background_color" type="color">#FF000000</item>
+    <item name="border_color" type="color">#FF000000</item>
 
     <integer-array name="androidcolors">
         <item>@color/blue</item>

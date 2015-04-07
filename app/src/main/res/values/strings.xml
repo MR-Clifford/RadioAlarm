@@ -13,4 +13,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_alarm">AlarmActivity</string>
 
+    <string-array name="alarm_types_array">
+        <item>Standard</item>
+        <item>Music</item>
+        <item>Radio</item>
+    </string-array>
 </resources>
