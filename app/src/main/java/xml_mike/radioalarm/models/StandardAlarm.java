@@ -24,5 +24,4 @@ public class StandardAlarm extends AlarmAbstract{
             return new StandardAlarm[size];
         }
     };
-
 }

@@ -2,6 +2,7 @@ package xml_mike.radioalarm.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
 
 /**
  * Created by MClifford on 22/02/15.
@@ -24,4 +25,14 @@ public class MusicAlarm extends AlarmAbstract {
             return new MusicAlarm[size];
         }
     };
+
+    public static View.OnClickListener getOnClickListener(){
+
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        };
+    }
 }

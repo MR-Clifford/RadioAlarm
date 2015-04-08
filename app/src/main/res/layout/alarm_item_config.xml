@@ -67,7 +67,8 @@
             android:id="@+id/data"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="12dp" />
 
     </LinearLayout>
 

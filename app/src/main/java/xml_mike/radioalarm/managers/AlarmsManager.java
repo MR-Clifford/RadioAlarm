@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -121,7 +120,7 @@ public class AlarmsManager extends Observable {
 
         //alarmManager.cancel(this.generatePendingIntent(alarm)); //ensure that
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, this.generatePendingIntent(alarm));
-        Toast.makeText(Global.getInstance().getBaseContext(),"Will go off on:"+calendar.getTime().toString(), Toast.LENGTH_SHORT ).show();
+        //Toast.makeText(Global.getInstance().getBaseContext(),"Will go off on:"+calendar.getTime().toString(), Toast.LENGTH_SHORT ).show();
         Log.e("AlarmsManager.scheduleAlarm", "" + alarm.getId());
     }
 
@@ -129,7 +128,7 @@ public class AlarmsManager extends Observable {
 
         Intent intent = new Intent(Global.getInstance(), AlarmReceiver.class);
         intent.putExtra("alarmId", alarm.getId());
-        Log.e("alarmId",""+alarm.getId());
+        intent.setAction("Start.Alarm");
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         return PendingIntent.getBroadcast(Global.getInstance().getBaseContext(), safeLongToInt(alarm.getId()), intent, PendingIntent.FLAG_UPDATE_CURRENT);

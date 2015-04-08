@@ -18,4 +18,14 @@
         <item>Music</item>
         <item>Radio</item>
     </string-array>
+    <string-array name="radio_station_values">
+        <item>http://www.listenlive.eu/bbcradio1.m3u</item>
+        <item>http://www.listenlive.eu/bbcradio2.m3u</item>
+        <item>http://www.listenlive.eu/bbcradio3.m3u</item>
+    </string-array>
+    <string-array name="radio_station_names">
+        <item>BBC1</item>
+        <item>BBC2</item>
+        <item>BBC3</item>
+    </string-array>
 </resources>

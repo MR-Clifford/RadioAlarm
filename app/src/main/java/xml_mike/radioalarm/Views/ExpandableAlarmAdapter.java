@@ -5,6 +5,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.media.RingtoneManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -96,6 +99,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         CheckBox isEnabled = (CheckBox) convertView.findViewById(R.id.is_enabled);
         LinearLayout view = (LinearLayout) convertView.findViewById(R.id.alarm_item);
 
+
         view.setVisibility((isExpanded) ? View.INVISIBLE : View.VISIBLE);
 
         isEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -133,12 +137,14 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
         TextView alarm_name = (TextView) convertView.findViewById(R.id.alarm_name);
         TextView alarm_time = (TextView) convertView.findViewById(R.id.alarm_time);
+        TextView alarm_data = (TextView) convertView.findViewById(R.id.data);
         CheckBox alarm_isEnabled = (CheckBox) convertView.findViewById(R.id.is_enabled);
         CheckBox alarm_isRepeating = (CheckBox) convertView.findViewById(R.id.repeating);
         CheckBox alarm_isVibrating = (CheckBox) convertView.findViewById(R.id.vibrating);
         LinearLayout daysLayout = (LinearLayout) convertView.findViewById(R.id.days);
         Spinner alarm_type = (Spinner) convertView.findViewById(R.id.alarm_type);
         Button deleteButton = (Button) convertView.findViewById(R.id.alarm_delete);
+
 
         final ExpandableAlarmAdapter callBack = this;
 
@@ -198,6 +204,15 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             }
         });
 
+
+
+        if(alarms.get(groupPosition) instanceof StandardAlarm)
+            alarm_data.setOnClickListener(getDataOnClickListener((StandardAlarm) alarms.get(groupPosition), groupPosition));
+        if(alarms.get(groupPosition) instanceof MusicAlarm)
+            alarm_data.setOnClickListener(getDataOnClickListener((MusicAlarm) alarms.get(groupPosition), groupPosition));
+        if(alarms.get(groupPosition) instanceof RadioAlarm)
+            alarm_data.setOnClickListener(getDataOnClickListener((RadioAlarm) alarms.get(groupPosition), groupPosition));
+
         alarm_isEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -210,7 +225,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
         alarm_isRepeating.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton  buttonView, boolean isChecked) {
                 alarms.get(groupPosition).setRepeating(isChecked);
                 AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition));
                 //Global.getInstance().updateAlarm(alarms.get(groupPosition));
@@ -274,6 +289,13 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         alarm_isRepeating.setChecked(alarms.get(groupPosition).isRepeating());
         alarm_isVibrating.setChecked(alarms.get(groupPosition).isVibrate());
 
+        if(!alarms.get(groupPosition).getData().equals("")){
+            if(alarms.get(groupPosition) instanceof StandardAlarm)
+                alarm_data.setText(alarms.get(groupPosition).getData());
+            else
+                alarm_data.setText(alarms.get(groupPosition).getData());
+        }
+
         int alarm_type_position = 0;
 
         if (alarms.get(groupPosition).getClass().toString().equalsIgnoreCase(MusicAlarm.class.toString()))
@@ -317,5 +339,70 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    private View.OnClickListener getDataOnClickListener(final StandardAlarm alarm, final int groupPosition){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(context,"StandardAlarm", Toast.LENGTH_SHORT).show();
+
+                final RingtoneManager ringtoneManager = new RingtoneManager(context);
+                ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
+                Cursor cursor = ringtoneManager.getCursor();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder
+                        .setTitle("Select Alarm")
+                        .setSingleChoiceItems(cursor, -1, "title", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Toast.makeText(context, ringtoneManager.getRingtoneUri(which).toString(), Toast.LENGTH_SHORT).show();
+                                alarm.setData(ringtoneManager.getRingtoneUri(which).toString());
+                                AlarmsManager.getInstance().update(groupPosition, alarm);
+                                AlarmsManager.getInstance().notifyObservers();
+                            }
+                        })
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                AlarmsManager.getInstance().notifyObservers();
+                            }
+                        })
+                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                AlarmsManager.getInstance().notifyObservers();
+                            }
+                        });
+
+                builder.create().show();
+            }
+        };
+    }
+
+    private View.OnClickListener getDataOnClickListener(MusicAlarm alarm, final int groupPosition){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"MusicAlarm", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    private View.OnClickListener getDataOnClickListener(RadioAlarm alarm, final int groupPosition){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"RadioAlarm", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    private View.OnClickListener getDataOnClickListener(Alarm alarm, final int groupPosition){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"Alarm:cast did not work", Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 }
