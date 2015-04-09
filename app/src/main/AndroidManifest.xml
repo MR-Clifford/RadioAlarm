@@ -31,11 +31,7 @@
         </receiver>
 
         <activity
-            android:name=".models.AlarmActivity"
-            android:label="@string/title_activity_alarm" >
-        </activity>
-        <activity
-            android:name=".Views.AlarmActivity"
+            android:name=".AlarmActivity"
             android:label="@string/title_activity_alarm" >
         </activity>
     </application>

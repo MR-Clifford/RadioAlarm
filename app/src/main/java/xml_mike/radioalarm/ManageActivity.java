@@ -2,7 +2,6 @@ package xml_mike.radioalarm;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,32 +13,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ProgressBar;
 import android.widget.TimePicker;
 
 import java.util.Observable;
 import java.util.Observer;
 
+import xml_mike.radioalarm.Views.ExpandableAlarmAdapter;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
-import xml_mike.radioalarm.Views.ExpandableAlarmAdapter;
 import xml_mike.radioalarm.models.StandardAlarm;
 
 
 public class ManageActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, View.OnClickListener, TimePickerDialog.OnTimeSetListener, ExpandableListView.OnGroupCollapseListener, Observer{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TimePickerDialog.OnTimeSetListener, ExpandableListView.OnGroupCollapseListener, Observer{
 
     private int currentAlarm = -1;
-
-    private ProgressBar playSeekBar;
-
-    private Button buttonPlay;
-
-    private Button buttonStop;
-
-    private MediaPlayer player;
 
     ExpandableListView mExpandableList;
 
@@ -80,7 +69,7 @@ public class ManageActivity extends ActionBarActivity
         //Global.getInstance().notifyObservers();
 
 
-        initialiseMediaPlayer();
+        //initialiseMediaPlayer();
     }
 
     /*
@@ -166,18 +155,6 @@ public class ManageActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v == buttonPlay) {
-            startPlaying();
-        } else if (v == buttonStop) {
-            stopPlaying();
-        }
-    }
-
-    public void initialiseMediaPlayer(){
-
-    }
 
     public void initialiseUI(){
 

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -290,8 +291,18 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         alarm_isVibrating.setChecked(alarms.get(groupPosition).isVibrate());
 
         if(!alarms.get(groupPosition).getData().equals("")){
-            if(alarms.get(groupPosition) instanceof StandardAlarm)
-                alarm_data.setText(alarms.get(groupPosition).getData());
+            if(alarms.get(groupPosition) instanceof StandardAlarm) {
+
+                RingtoneManager ringtoneManager = new RingtoneManager(context);
+                //ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
+                //Cursor cursor = ringtoneManager.getCursor();
+                String alarmdata = alarms.get(groupPosition).getData();//alarm_data.setText(alarms.get(groupPosition).getData());
+
+                Uri alarmToneName = Uri.parse(alarmdata);
+
+                alarm_data.setText(RingtoneManager.getRingtone(context, alarmToneName).getTitle(context));
+
+            }
             else
                 alarm_data.setText(alarms.get(groupPosition).getData());
         }
