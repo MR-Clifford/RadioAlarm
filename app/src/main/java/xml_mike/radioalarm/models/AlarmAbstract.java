@@ -27,6 +27,15 @@ public abstract class AlarmAbstract implements Alarm {
     public long getId(){return this.id;}
 
     @Override
+    public int getIntId(){
+        if (id < Integer.MIN_VALUE || id > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException
+                    (id + " cannot be cast to int without changing its value.");
+        }
+        return (int) id;
+    }
+
+    @Override
     public void setId(long id){this.id = id;}
 
     @Override

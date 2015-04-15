@@ -2,6 +2,7 @@ package xml_mike.radioalarm;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import xml_mike.radioalarm.Views.ExpandableAlarmAdapter;
+import xml_mike.radioalarm.managers.AlarmMediaManager;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
 import xml_mike.radioalarm.models.StandardAlarm;
@@ -65,26 +67,9 @@ public class ManageActivity extends ActionBarActivity
         AlarmsManager.getInstance().addObserver(this);
         AlarmsManager.getInstance().notifyObservers();
 
-        //Global.getInstance().register(this);
-        //Global.getInstance().notifyObservers();
-
-
-        //initialiseMediaPlayer();
-    }
-
-    /*
-    @Override
-    public void update() {
-        ExpandableAlarmAdapter temp = (ExpandableAlarmAdapter) mExpandableList.getExpandableListAdapter();
-        //temp.setItems(Global.getInstance().getAlarms());
-        temp.notifyDataSetChanged();
-    }
-
-    @Override
-    public void setAObservable(AObservable aObservable) {
+        //this.serviceTest();
 
     }
-*/
 
     @Override
     public void update(Observable observable, Object data) {
@@ -235,6 +220,18 @@ public class ManageActivity extends ActionBarActivity
             ((ManageActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+    }
+
+    public void serviceTest(){
+        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        Long alarmId = this.getIntent().getLongExtra("alarmId", 1L);
+
+        if(alarmId >= 0)
+            intent.putExtra("alarmId",alarmId);
+
+        intent.setAction("com.example.action.PLAY");
+
+        startService(intent);
     }
 
 }

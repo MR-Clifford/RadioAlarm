@@ -106,10 +106,10 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         isEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                alarms.get(groupPosition).setEnabled(isChecked);
+                //alarms.get(groupPosition).setEnabled(isChecked);
                 // Global.getInstance().setAlarms(alarms);
-                AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition));
-                callBack.notifyDataSetChanged();
+                //AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition));
+                //callBack.notifyDataSetChanged();
             }
         });
 
@@ -189,16 +189,13 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                        if (currentAlarm >= 0) {
-                            alarms.get(currentAlarm).setTimeMinute(minute);
-                            alarms.get(currentAlarm).setTimeHour(hourOfDay);
+                        alarms.get(currentAlarm).setTimeMinute(minute);
+                        alarms.get(currentAlarm).setTimeHour(hourOfDay);
 
-                            //Global.getInstance().setAlarms(alarms);
-                            AlarmsManager.getInstance().update(currentAlarm, alarms.get(currentAlarm));
-                            callBack.notifyDataSetChanged();
-                        }
+                        //Global.getInstance().setAlarms(alarms);
+                        AlarmsManager.getInstance().update(currentAlarm, alarms.get(currentAlarm));
+                        callBack.notifyDataSetChanged();
 
-                        currentAlarm = -1;
                     }
                 }, 0, 0, true);
                 timePickerDialog.show();
@@ -292,10 +289,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
         if(!alarms.get(groupPosition).getData().equals("")){
             if(alarms.get(groupPosition) instanceof StandardAlarm) {
-
-                RingtoneManager ringtoneManager = new RingtoneManager(context);
-                //ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
-                //Cursor cursor = ringtoneManager.getCursor();
                 String alarmdata = alarms.get(groupPosition).getData();//alarm_data.setText(alarms.get(groupPosition).getData());
 
                 Uri alarmToneName = Uri.parse(alarmdata);
@@ -306,6 +299,9 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             else
                 alarm_data.setText(alarms.get(groupPosition).getData());
         }
+        else
+            alarm_data.setText("Select Audio");
+
 
         int alarm_type_position = 0;
 

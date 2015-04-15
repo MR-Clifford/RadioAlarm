@@ -9,6 +9,7 @@ public interface Alarm extends Parcelable{
 
     public void setId(long id);
     public long getId();
+    public int  getIntId();
 
     public void setName(String name);
     public String getName();

@@ -105,33 +105,39 @@ public class AlarmsManager extends Observable {
         //Log.e("AlarmsManager.updateAlarm",""+alarms.get(i).getId());
     }
 
-    private void unscheduleAlarm(Alarm alarm){
-        alarmManager.cancel(this.generatePendingIntent(alarm));
-        Log.e("AlarmsManager.unscheduleAlarm", "" + alarm.getId());
+    public void unscheduleAlarm(Alarm alarm){
+        //Intent intent = new Intent(Global.getInstance().getApplicationContext(), AlarmReceiver.class);
+        //intent.setAction("xml_mike.radioalarm.intent.START_ALARM");
+        //PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getApplicationContext(), alarm.getIntId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = generatePendingIntent(alarm);
+        pendingIntent.cancel();
+        alarmManager.cancel(pendingIntent);
 
+        Log.e("AlarmsManager", "u" + alarm.getId());
     }
 
     private void scheduleAlarm(Alarm alarm){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, alarm.getTimeHour());
-        calendar.set(Calendar.MINUTE,alarm.getTimeMinute() );
-        calendar.set(Calendar.SECOND,0 );
+        calendar.set(Calendar.MINUTE, alarm.getTimeMinute());
+        calendar.set(Calendar.SECOND, 0);
 
-        //alarmManager.cancel(this.generatePendingIntent(alarm)); //ensure that
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, this.generatePendingIntent(alarm));
+        PendingIntent pendingIntent = this.generatePendingIntent(alarm);
+        alarmManager.cancel(pendingIntent); //ensure that
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent );
         //Toast.makeText(Global.getInstance().getBaseContext(),"Will go off on:"+calendar.getTime().toString(), Toast.LENGTH_SHORT ).show();
-        Log.e("AlarmsManager.scheduleAlarm", "" + alarm.getId());
+        Log.e("AlarmsManager", "s" + alarm.getId());
     }
 
     private PendingIntent generatePendingIntent(Alarm alarm){
 
-        Intent intent = new Intent(Global.getInstance(), AlarmReceiver.class);
+        Intent intent = new Intent(Global.getInstance().getApplicationContext(), AlarmReceiver.class);
         intent.putExtra("alarmId", alarm.getId());
-        intent.setAction("Start.Alarm");
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        return PendingIntent.getBroadcast(Global.getInstance().getBaseContext(), safeLongToInt(alarm.getId()), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.setAction("xml_mike.radioalarm.intent.START_ALARM");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getApplicationContext(), alarm.getIntId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Log.e("generatePendingIntent",":"+pendingIntent.toString());
+        return pendingIntent;
     }
 
     public Alarm getAlarm(Long id){
@@ -141,7 +147,8 @@ public class AlarmsManager extends Observable {
         return new StandardAlarm();
     }
 
-    private static int safeLongToInt(long l) {
+
+    public static int safeLongToInt(long l) {
         if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
             throw new IllegalArgumentException
                     (l + " cannot be cast to int without changing its value.");
