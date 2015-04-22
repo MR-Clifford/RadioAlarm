@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +21,7 @@ import android.widget.TimePicker;
 import java.util.Observable;
 import java.util.Observer;
 
-import xml_mike.radioalarm.Views.ExpandableAlarmAdapter;
+import xml_mike.radioalarm.views.ExpandableAlarmAdapter;
 import xml_mike.radioalarm.managers.AlarmMediaManager;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
@@ -66,6 +67,8 @@ public class ManageActivity extends ActionBarActivity
 
         AlarmsManager.getInstance().addObserver(this);
         AlarmsManager.getInstance().notifyObservers();
+
+        //this.startActivity(new Intent(this, MusicSelectActivity.class));
 
         //this.serviceTest();
 
@@ -234,4 +237,23 @@ public class ManageActivity extends ActionBarActivity
         startService(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode >= 0) {
+            if(resultCode == Activity.RESULT_OK) {
+                Log.e("OMg", "" + requestCode);
+                Alarm alarm = AlarmsManager.getInstance().getAlarms().get(requestCode);
+                String result = data.getStringExtra("result");
+                if(result != null) {
+                    alarm.setData(result);
+                    AlarmsManager.getInstance().update(requestCode, alarm, false);
+                    this.update(null,null);
+                }
+                else
+                    Log.e("onActivityResult", "F:" + requestCode + ":" + alarm.getData());
+            }
+        }
+    }
 }

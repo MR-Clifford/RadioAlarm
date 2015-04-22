@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import xml_mike.radioalarm.managers.AlarmsManager;
+
 /**
  when a pending intent is loaded, the Alarm Receiver will upon activation create the appropriate alarm activity with correct alarm object.
  */
@@ -20,11 +22,12 @@ public class AlarmBootReceiver extends BroadcastReceiver {
 
 
         if(intent.getAction() != null) {
-            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-                //Toast.makeText(Global.getInstance().getApplicationContext(), "This! was run on", Toast.LENGTH_LONG).show();
-            }
+            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
+                AlarmsManager.getInstance().scheduleAllAlarms();
+
             Log.e("String", intent.getAction());
         }
 
     }
+
 }

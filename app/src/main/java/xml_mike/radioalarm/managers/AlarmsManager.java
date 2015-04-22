@@ -22,9 +22,10 @@ public class AlarmsManager extends Observable {
 
     static private AlarmsManager instance;
 
-
     private ArrayList<Alarm> alarms;
     private AlarmManager alarmManager;
+    private PendingIntent lastPendingIntent;
+    private Intent lastIntent;
 
     private AlarmsManager(){
         super();
@@ -44,23 +45,20 @@ public class AlarmsManager extends Observable {
     }
 
     public ArrayList<Alarm> getAlarms(){
-        //this.setChanged();
         return alarms;
     }
 
-    public void update(int i, Alarm alarm){
+    public void update(int i, Alarm alarm, boolean changedTime){
         alarms.set(i, alarm);
         DatabaseManager.getInstance().updateDataBaseItem(alarm);
-        if(alarm.getId() >= 0)
-            this.updateAlarm(i);
+        if(alarm.getIntId() >=0 && changedTime)
+            updateAlarm(i);
         this.setChanged();
         this.notifyObservers();
     }
 
 
     public void update(Alarm alarm){
-        //alarms.remove(alarm);
-        //alarms.add(alarm);
         alarms.set(alarms.indexOf(alarm), alarm);
         DatabaseManager.getInstance().updateDataBaseItem(alarm);
         if(alarm.getId() >= 0)
@@ -71,9 +69,8 @@ public class AlarmsManager extends Observable {
 
     public void remove(int i){
         Alarm alarm = alarms.remove(i);
+        this.unscheduleAlarm(alarm);
         DatabaseManager.getInstance().removeDatabaseItem(alarm);
-        if(alarm.getId() >=0)
-            this.unscheduleAlarm(alarm);
         this.setChanged();
         this.notifyObservers();
     }
@@ -106,37 +103,63 @@ public class AlarmsManager extends Observable {
     }
 
     public void unscheduleAlarm(Alarm alarm){
-        //Intent intent = new Intent(Global.getInstance().getApplicationContext(), AlarmReceiver.class);
-        //intent.setAction("xml_mike.radioalarm.intent.START_ALARM");
-        //PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getApplicationContext(), alarm.getIntId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        PendingIntent pendingIntent = generatePendingIntent(alarm);
-        pendingIntent.cancel();
+        //PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getBaseContext(), alarm.getIntId(), this.generateIntent(alarm),PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = this.generateIntent(alarm);
+
         alarmManager.cancel(pendingIntent);
 
-        Log.e("AlarmsManager", "u" + alarm.getId());
+        Log.e("AlarmsManager", "u" + alarm.getId()+""+pendingIntent);
     }
 
     private void scheduleAlarm(Alarm alarm){
         Calendar calendar = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        now.setTimeInMillis(System.currentTimeMillis());
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, alarm.getTimeHour());
         calendar.set(Calendar.MINUTE, alarm.getTimeMinute());
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        if(calendar.before(now))//if its in the past increment of day // stop the alarm going off immediately
+            calendar.add(Calendar.DATE,1);
 
-        PendingIntent pendingIntent = this.generatePendingIntent(alarm);
-        alarmManager.cancel(pendingIntent); //ensure that
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent );
-        //Toast.makeText(Global.getInstance().getBaseContext(),"Will go off on:"+calendar.getTime().toString(), Toast.LENGTH_SHORT ).show();
-        Log.e("AlarmsManager", "s" + alarm.getId());
+        PendingIntent pendingIntent = this.generateIntent(alarm);
+
+        alarmManager.cancel(pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        Log.e("AlarmsManager", "s" + alarm.getId() + ":"+pendingIntent.toString());
     }
 
-    private PendingIntent generatePendingIntent(Alarm alarm){
-
-        Intent intent = new Intent(Global.getInstance().getApplicationContext(), AlarmReceiver.class);
+    private PendingIntent generateIntent(Alarm alarm){
+        Intent intent = new Intent(Global.getInstance().getBaseContext(), AlarmReceiver.class);
+        Log.e(this.getClass().getSimpleName(),"context:"+Global.getInstance().getApplicationContext());
         intent.putExtra("alarmId", alarm.getId());
         intent.setAction("xml_mike.radioalarm.intent.START_ALARM");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getApplicationContext(), alarm.getIntId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Log.e("generatePendingIntent",":"+pendingIntent.toString());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getBaseContext(), alarm.getIntId(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if(lastPendingIntent == null)
+            lastPendingIntent = pendingIntent;
+        else if(lastPendingIntent.equals(pendingIntent)) {
+            lastPendingIntent = pendingIntent;
+            Log.e("pendingIntentTest", "pass");
+        }
+        else {
+            lastPendingIntent = pendingIntent;
+            Log.e("pendingIntentTest", "fail");
+        }
+
+        if(lastIntent == null)
+            lastIntent = intent;
+        else if(lastIntent.filterEquals(intent)) {
+            lastIntent = intent;
+            Log.e("IntentTest", "pass");
+        }
+        else {
+            lastIntent = intent;
+            Log.e("IntentTest", "fail");
+        }
+
         return pendingIntent;
     }
 
@@ -147,12 +170,10 @@ public class AlarmsManager extends Observable {
         return new StandardAlarm();
     }
 
-
-    public static int safeLongToInt(long l) {
-        if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException
-                    (l + " cannot be cast to int without changing its value.");
+    public void scheduleAllAlarms(){
+        for(Alarm alarm:alarms){
+            if(alarm.isEnabled())
+                this.scheduleAlarm(alarm);
         }
-        return (int) l;
     }
 }

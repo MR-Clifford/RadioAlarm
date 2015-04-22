@@ -21,7 +21,7 @@ public abstract class AlarmAbstract implements Alarm {
         repeatingDays = new boolean[7];
         repeating = false;
         vibrate = false;
-        isEnabled = true;
+        isEnabled = false;
     }
     @Override
     public long getId(){return this.id;}

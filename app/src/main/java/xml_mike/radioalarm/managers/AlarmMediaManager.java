@@ -7,26 +7,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import xml_mike.radioalarm.AlarmActivity;
+import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.R;
+import xml_mike.radioalarm.managers.parsers.FileParser;
 import xml_mike.radioalarm.models.Alarm;
+import xml_mike.radioalarm.models.AlarmMedia;
+import xml_mike.radioalarm.models.MusicAlarm;
 import xml_mike.radioalarm.models.RadioAlarm;
+import xml_mike.radioalarm.models.StandardAlarm;
 
 /**
  * Created by MClifford on 09/04/15.
+ * this will handle all the audio produced by the alarm
  */
 public class AlarmMediaManager extends Service implements MediaPlayer.OnPreparedListener, AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnErrorListener {
     private static final String ACTION_PLAY = "com.example.action.PLAY";
@@ -49,11 +52,9 @@ public class AlarmMediaManager extends Service implements MediaPlayer.OnPrepared
 
             if (alarm.getId() >= 0L) {
                 if(alarm instanceof RadioAlarm){
-                    //getAudioStreamUrl("http://bbc.co.uk/radio/listen/live/r1x.asx", alarm);
                     this.setupMediaplayer("", alarm);
                 }
                 else {
-                    //getAudioStreamUrl("http://bbc.co.uk/radio/listen/live/r1x.asx", alarm);
                     this.setupMediaplayer("", alarm);
                 }
             }
@@ -127,102 +128,56 @@ public class AlarmMediaManager extends Service implements MediaPlayer.OnPrepared
         }
     }
 
-    private void getAudioStreamUrl(final String urlString, final Alarm alarm) {
-
-        final AlarmMediaManager context = this;
-/*
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                String returnString = "";
-                try {
-                    URL url = new URL(urlString);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-                    int i = 0;
-                    while ((returnString += in.readLine()) != null) {
-                        i++;
-                    }
-                    //return returnString;
-                } catch (IOException e) {
-                    Log.e("getAudioStreamUrl", e.toString());
-                }
-
-                SAXParserFactory factory = SAXParserFactory.newInstance();
-                AlarmMediaManager.HandlerContent handler = new HandlerContent();
-                try {
-                    SAXParser saxParser = factory.newSAXParser();
-                    saxParser.parse(new InputSource(new StringReader(returnString)), handler);
-
-                } catch (Throwable e) {
-                    Log.e("getAudioStreamUrl", e.toString());
-                }
-
-                context.setupMediaplayer(urlString, alarm);
-            }
-        };
-
-        queue.execute(runnable);
-*/
-    }
-
-
-    public static class HandlerContent extends DefaultHandler {
-
-        protected boolean inEntry = true;
-        protected boolean inTitle = true;
-        protected String title;
-
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if (localName.equals("ENTRY")) {
-                inEntry = true;
-            }
-            if (inEntry && localName.equals("TITLE")) {
-                inTitle = true;
-            }
-            Log.e("",""+attributes.toString());
-
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (localName.equals("ENTRY")) {
-                inEntry = false;
-            }
-            if (inEntry && localName.equals("TITLE")) {
-                inTitle = false;
-            }
-        }
-
-        @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            if (inEntry && inTitle) {
-                title = new String(ch);
-            }
-        }
-
-        public String getTitle() {
-            return title;
-        }
-    }
-
     public void setupMediaplayer(String string, Alarm alarm){
         wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
 
         wifiLock.acquire();
         mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
 
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
         try {
-            //mMediaPlayer.setDataSource("http://static.bbci.co.uk/radiolisten/audio/windows_media_over.mp3");
-            mMediaPlayer.setDataSource("http://sc8.1.fm:8030/");
+            if(!alarm.getData().equals("")) {
+                if (alarm instanceof StandardAlarm) {
+                    String alarmdata = alarm.getData();//alarm_data.setText(alarms.get(groupPosition).getData());
+                    Uri alarmToneName = Uri.parse(alarmdata);
+
+                    mMediaPlayer.setDataSource(Global.getInstance().getApplicationContext(), alarmToneName);
+                    mMediaPlayer.setLooping(true);
+                    mMediaPlayer.prepare();
+                }
+                if (alarm instanceof MusicAlarm) {
+                    AlarmMedia alarmMedia = FileManager.getInstance().getAlarmMedia(alarm.getData());
+                    mMediaPlayer.setDataSource(alarmMedia.data);
+                    mMediaPlayer.setLooping(true);
+                    mMediaPlayer.setOnPreparedListener(this);
+                    mMediaPlayer.prepareAsync();
+                }
+                if (alarm instanceof RadioAlarm) {
+                    final ExecutorService queue = Executors.newSingleThreadExecutor();
+                    final String url = alarm.getData();
+                    final AlarmMediaManager context = this;
+                    final Runnable runner = new Runnable() {
+                        @Override
+                        public void run() {
+                            context.onRadioDownLoad(FileParser.getURL(url));
+                        }
+                    };
+                    queue.execute(runner);
+                }
+            }
+            else {
+                Uri alarmToneName = Uri.parse("content://media/internal/audio/media/1");
+                mMediaPlayer.setDataSource(Global.getInstance().getApplicationContext(), alarmToneName);
+                mMediaPlayer.setLooping(true);
+                mMediaPlayer.prepare();
+            }
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
-            Log.e("Media:setDataSource", e.toString());
+            Log.e(this.getClass().toString(),e.toString());
         }
+
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-        mMediaPlayer.setOnPreparedListener(this);
-        mMediaPlayer.prepareAsync(); // prepare async to not block main thread
+         // prepare async to not block main thread
 
         // assign the song name to songName
         PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0,
@@ -236,4 +191,16 @@ public class AlarmMediaManager extends Service implements MediaPlayer.OnPrepared
                 "Playing: " + alarm.getData(), pi);
         startForeground(alarm.getIntId(), notification);
     }
+
+    private void onRadioDownLoad(String realUrl){
+        try {
+            mMediaPlayer.setDataSource(realUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.prepareAsync();
+    }
+
 }
