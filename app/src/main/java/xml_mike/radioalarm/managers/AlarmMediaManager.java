@@ -48,14 +48,13 @@ public class AlarmMediaManager extends Service implements MediaPlayer.OnPrepared
             queue = Executors.newFixedThreadPool(1);
             long alarmId = intent.getLongExtra("alarmId", -1L);
             Alarm alarm = AlarmsManager.getInstance().getAlarm(alarmId);
-            //Log.e("AlarmMediaManager","alarm:"+alarm.getId() alarm);
 
             if (alarm.getId() >= 0L) {
                 if(alarm instanceof RadioAlarm){
-                    this.setupMediaplayer("", alarm);
+                    this.setupMediaplayer(alarm);
                 }
                 else {
-                    this.setupMediaplayer("", alarm);
+                    this.setupMediaplayer(alarm);
                 }
             }
         }else if (intent.getAction().equals(ACTION_STOP)){
@@ -85,7 +84,7 @@ public class AlarmMediaManager extends Service implements MediaPlayer.OnPrepared
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        Log.e("alarmMediaManager", "Is there really a problem");
+        Log.e("alarmMediaManager", "Failed"); //if media fails, request dump
         return false;
     }
 
@@ -128,7 +127,7 @@ public class AlarmMediaManager extends Service implements MediaPlayer.OnPrepared
         }
     }
 
-    public void setupMediaplayer(String string, Alarm alarm){
+    public void setupMediaplayer(Alarm alarm){
         wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
 
@@ -147,7 +146,7 @@ public class AlarmMediaManager extends Service implements MediaPlayer.OnPrepared
                     mMediaPlayer.prepare();
                 }
                 if (alarm instanceof MusicAlarm) {
-                    AlarmMedia alarmMedia = FileManager.getInstance().getAlarmMedia(alarm.getData());
+                    AlarmMedia alarmMedia = DatabaseManager.getInstance().getAlarmMedia(alarm.getData());
                     mMediaPlayer.setDataSource(alarmMedia.data);
                     mMediaPlayer.setLooping(true);
                     mMediaPlayer.setOnPreparedListener(this);

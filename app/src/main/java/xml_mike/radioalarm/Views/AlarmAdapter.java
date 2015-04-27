@@ -1,4 +1,4 @@
-package xml_mike.radioalarm.Views;
+package xml_mike.radioalarm.views;
 
 import android.content.Context;
 import android.view.View;

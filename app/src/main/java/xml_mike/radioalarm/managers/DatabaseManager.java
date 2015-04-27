@@ -1,23 +1,30 @@
 package xml_mike.radioalarm.managers;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.provider.BaseColumns;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.models.Alarm;
 import xml_mike.radioalarm.models.AlarmFactory;
+import xml_mike.radioalarm.models.AlarmMedia;
 
 /**
  * Created by MClifford on 23/03/15.
  */
 public class DatabaseManager {
     private static DatabaseManager ourInstance = new DatabaseManager();
+    private ArrayList<AlarmMedia> songsList;
 
     public static DatabaseManager getInstance() {
 
@@ -28,11 +35,11 @@ public class DatabaseManager {
     }
 
     private DatabaseManager() {
+        songsList = getLocalMedia();
     }
 
     public void addDatabaseItem(Alarm alarm){
         SQLiteDatabase db = new AlarmHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
-
         ContentValues values = new ContentValues();
 
         values.put(AlarmSchema.ALARM_TIME_HOUR,alarm.getTimeHour());
@@ -44,6 +51,8 @@ public class DatabaseManager {
         values.put(AlarmSchema.ALARM_IS_ENABLED,alarm.getName());
         values.put(AlarmSchema.ALARM_TYPE,alarm.getName());
         values.put(AlarmSchema.ALARM_DATA,alarm.getName());
+        values.put(AlarmSchema.ALARM_DURATION,alarm.getDuration());
+        values.put(AlarmSchema.ALARM_EASING,alarm.getEasing());
 
         long id = db.insert(AlarmSchema.TABLE_NAME, "NULL", values);
 
@@ -68,6 +77,8 @@ public class DatabaseManager {
         values.put(AlarmSchema.ALARM_IS_ENABLED,alarm.isEnabled() ? 1:0);
         values.put(AlarmSchema.ALARM_TYPE,alarm.getClass().toString());
         values.put(AlarmSchema.ALARM_DATA,alarm.getData());
+        values.put(AlarmSchema.ALARM_DURATION,alarm.getDuration());
+        values.put(AlarmSchema.ALARM_EASING,alarm.getEasing());
 
         String selection = AlarmSchema.ALARM_ID + " LIKE ?";
 
@@ -104,7 +115,9 @@ public class DatabaseManager {
                 AlarmSchema.ALARM_NAME,
                 AlarmSchema.ALARM_IS_ENABLED,
                 AlarmSchema.ALARM_TYPE,
-                AlarmSchema.ALARM_DATA //changes depending on alarm type
+                AlarmSchema.ALARM_DATA, //changes depending on alarm type
+                AlarmSchema.ALARM_DURATION,
+                AlarmSchema.ALARM_EASING
         };
 
         //initialise variables
@@ -129,8 +142,10 @@ public class DatabaseManager {
                 int ALARM_IS_VIBRATING = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_IS_VIBRATING));
                 String ALARM_TYPE = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_TYPE));
                 String ALARM_DATA = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_DATA));
+                int ALARM_DURATION = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_DURATION));
+                int ALARM_EASING = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_EASING));
 
-                Alarm alarm = AlarmFactory.createAlarm(Long.parseLong(ALARM_ID, 10),ALARM_TYPE,ALARM_NAME,ALARM_DATA,ALARM_REPEATING_DAYS,ALARM_TIME_HOUR,ALARM_TIME_MINTUE,ALARM_IS_ENABLED,ALARM_REPEAT, ALARM_IS_VIBRATING);
+                Alarm alarm = AlarmFactory.createAlarm(Long.parseLong(ALARM_ID, 10),ALARM_TYPE,ALARM_NAME,ALARM_DATA,ALARM_REPEATING_DAYS,ALARM_TIME_HOUR,ALARM_TIME_MINTUE,ALARM_IS_ENABLED,ALARM_REPEAT, ALARM_IS_VIBRATING, ALARM_DURATION, ALARM_EASING);
 
                 returnList.add(alarm);
 
@@ -183,6 +198,8 @@ public class DatabaseManager {
         private static final String ALARM_IS_VIBRATING ="is_vibrating";
         private static final String ALARM_TYPE = "type";
         private static final String ALARM_DATA = "data";
+        private static final String ALARM_DURATION = "duration";
+        private static final String ALARM_EASING = "easing";
 
         private static final String TABLE_CREATE = "CREATE TABLE " +
                 AlarmSchema.TABLE_NAME           + " ( " +
@@ -196,9 +213,82 @@ public class DatabaseManager {
                 AlarmSchema.ALARM_IS_VIBRATING   + " INTEGER, " +
                 AlarmSchema.ALARM_TYPE           + " TEXT, " +
                 AlarmSchema.ALARM_DATA           + " TEXT " +
+                AlarmSchema.ALARM_DURATION       + " INTEGER " +
+                AlarmSchema.ALARM_EASING         + " INTEGER " +
                 " );" ;
 
         private static final String SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS" + AlarmSchema.TABLE_NAME;
     }
+
+    public List<AlarmMedia> getMediaList(){
+        return songsList;
+    }
+
+    private ArrayList<AlarmMedia> getLocalMedia(){
+
+        String[] projection = {
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION
+        };
+
+        ContentResolver cr = Global.getInstance().getContentResolver();
+
+        Uri uri2 = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
+        Cursor cursor = cr.query(uri2, projection, selection, null, sortOrder);
+
+        Log.i("DataBaseManager", "Total Media on phone:" + cursor.getCount());
+
+        ArrayList<AlarmMedia> songs = new ArrayList<>();
+        while(cursor.moveToNext())
+            songs.add(new AlarmMedia(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5) ));
+
+        cursor.close();
+
+        return songs;
+    }
+
+    public AlarmMedia getAlarmMedia(String id){
+
+        AlarmMedia alarmMedia = new AlarmMedia();
+        try {
+            String[] projection = {
+                    MediaStore.Audio.Media._ID,
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.DATA,
+                    MediaStore.Audio.Media.DISPLAY_NAME,
+                    MediaStore.Audio.Media.DURATION
+            };
+
+            ContentResolver cr = Global.getInstance().getContentResolver();
+
+            Uri uri2 = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            String selection = MediaStore.Audio.Media._ID + " = " + id;
+            String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
+            Cursor cursor = cr.query(uri2, projection, selection, null, sortOrder);
+
+            while (cursor.moveToNext())
+                alarmMedia = new AlarmMedia(
+                        cursor.getString(0), // MediaStore.Audio.Media._ID,
+                        cursor.getString(1), // MediaStore.Audio.Media.ARTIST,
+                        cursor.getString(2), // MediaStore.Audio.Media.TITLE,
+                        cursor.getString(3), // MediaStore.Audio.Media.DATA,
+                        cursor.getString(4), // MediaStore.Audio.Media.DISPLAY_NAME,
+                        cursor.getString(5)  // MediaStore.Audio.Media.DURATION
+                );
+            cursor.close();
+        }catch (Exception e){
+            Log.e("DatabaseManager",e.toString());
+        }
+
+        return alarmMedia;
+    }
+
 }

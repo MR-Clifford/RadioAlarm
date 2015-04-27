@@ -19,34 +19,50 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if(intent.getAction() == null)
-            Log.e("A","");
+            Log.e(this.getClass().getSimpleName(),"the intent action was null");
         else if (intent.getAction().equals("xml_mike.radioalarm.intent.START_ALARM")) {
             Long alarmId = 0L;
             alarmId = intent.getLongExtra("alarmId", alarmId);
 
             Alarm alarm = AlarmsManager.getInstance().getAlarm(alarmId);
 
-            if(alarm.getId() >= 0l) {
+            if(alarm.getId() >= 0L) {
                 Calendar calendar = Calendar.getInstance();
                 int day = calendar.get(Calendar.DAY_OF_WEEK);
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
 
-                if (alarm.getRepeatingDay(day)) {
+                if (alarm.getRepeatingDay(day-1) && alarm.isRepeating()) {
                     if(alarm.getTimeMinute() == minute && alarm.getTimeHour() == hour) {
                         Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
                         newIntent.putExtra("alarmId", alarmId);
-                        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                         Global.getInstance().startActivity(newIntent);
                     }
                     else
                         Log.e("AlarmReceiver","Right day, wrong Time");
                 }
+                else if(!alarm.isRepeating()){
+                    alarm.setEnabled(false);
+                    AlarmsManager.getInstance().update(alarm);
+                }
 
-                Log.e("AlarmReceiver.onReceive","ID:1: " + alarmId + " CLOCK:"+alarm.getTimeHour()+":"+alarm.getTimeMinute() );
+                Log.i("AlarmReceiver.onReceive", "ID:1: " + alarmId + " CLOCK:" + alarm.getTimeHour() + ":" + alarm.getTimeMinute() );
             }
 
+        } else if(intent.getAction().equals("xml_mike.radioalarm.intent.SNOOZE")){
+
+            Long alarmId = 0L;
+            alarmId = intent.getLongExtra("alarmId", alarmId);
+            Alarm alarm = AlarmsManager.getInstance().getAlarm(alarmId);
+
+            if(alarm.getId() >= 0L) {
+                Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
+                newIntent.putExtra("alarmId", alarmId);
+                newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Global.getInstance().startActivity(newIntent);
+            }
         }
     }
 }

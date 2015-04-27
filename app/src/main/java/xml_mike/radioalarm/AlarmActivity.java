@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import xml_mike.radioalarm.managers.AlarmMediaManager;
+import xml_mike.radioalarm.managers.AlarmsManager;
+import xml_mike.radioalarm.models.Alarm;
 
 
 public class AlarmActivity extends ActionBarActivity {
@@ -48,11 +50,17 @@ public class AlarmActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        intent.setAction("com.example.action.STOP");
+        startService(intent);
 }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        intent.setAction("com.example.action.STOP");
+        startService(intent);
     }
 
 
@@ -73,10 +81,21 @@ public class AlarmActivity extends ActionBarActivity {
 
         Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
         intent.setAction("com.example.action.STOP");
-
-
         startService(intent);
 
+        finish();
+    }
+
+    public void pauseAlarmService(View view){
+        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        intent.setAction("com.example.action.STOP");
+        startService(intent);
+
+        Long alarmId = this.getIntent().getLongExtra("alarmId", -1L);
+        if(alarmId >= 0L) {
+            Alarm alarm = AlarmsManager.getInstance().getAlarm(alarmId);
+            AlarmsManager.getInstance().setSnoozeAlarm(alarm);
+        }
         finish();
     }
 }

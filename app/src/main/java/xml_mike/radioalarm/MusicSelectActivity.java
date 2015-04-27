@@ -12,7 +12,7 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import xml_mike.radioalarm.managers.FileManager;
+import xml_mike.radioalarm.managers.DatabaseManager;
 import xml_mike.radioalarm.models.AlarmMedia;
 import xml_mike.radioalarm.views.MusicFilterableAdapter;
 
@@ -30,7 +30,7 @@ public class MusicSelectActivity extends Activity {
 
         ListView listview = (ListView) findViewById(R.id.music_filter_list);
 
-        List<AlarmMedia> files = FileManager.getInstance().getMediaList();
+        List<AlarmMedia> files = DatabaseManager.getInstance().getMediaList();
         final MusicFilterableAdapter adapter = new MusicFilterableAdapter(this, files);
 
         listview.setAdapter(adapter);

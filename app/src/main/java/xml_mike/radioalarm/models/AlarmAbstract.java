@@ -10,6 +10,8 @@ public abstract class AlarmAbstract implements Alarm {
     private long id = -1;
     private int timeHour = 0;
     private int timeMinute = 0;
+    private int duration = 0;
+    private int increasingDuration = 0;
     private boolean repeatingDays[];
     private boolean repeating = true;
     private boolean vibrate = false;
@@ -166,6 +168,24 @@ public abstract class AlarmAbstract implements Alarm {
 
         this.repeatingDays = new boolean[7];
         in.readBooleanArray(repeatingDays);
+    }
+
+    public void setDuration(int time){
+        duration = time;
+    }
+    @Override
+    public int getDuration(){
+        return duration;
+    }
+
+    @Override
+    public void setEasing(int time) {
+        increasingDuration = time;
+    }
+
+    @Override
+    public int getEasing() {
+        return increasingDuration;
     }
 }
 

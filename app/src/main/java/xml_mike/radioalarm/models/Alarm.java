@@ -7,36 +7,42 @@ import android.os.Parcelable;
  */
 public interface Alarm extends Parcelable{
 
-    public void setId(long id);
-    public long getId();
-    public int  getIntId();
+    void setId(long id);
+    long getId();
+    int  getIntId();
 
-    public void setName(String name);
-    public String getName();
+    void setName(String name);
+    String getName();
 
-    public void setData(String data);
-    public String getData();
+    void setData(String data);
+    String getData();
 
-    public void setEnabled(boolean enable);
-    public boolean isEnabled();
+    void setEnabled(boolean enable);
+    boolean isEnabled();
 
-    public boolean isRepeating();
-    public void setRepeating(boolean repeatWeekly);
+    boolean isRepeating();
+    void setRepeating(boolean repeatWeekly);
 
-    public int getTimeHour();
-    public void setTimeHour(int timeHour);
+    int getTimeHour();
+    void setTimeHour(int timeHour);
 
-    public int getTimeMinute();
-    public void setTimeMinute(int timeMinute);
+    int getTimeMinute();
+    void setTimeMinute(int timeMinute);
 
-    public void setRepeatingDay(int dayOfWeek, boolean value);
-    public boolean getRepeatingDay(int dayOfWeek);
+    void setRepeatingDay(int dayOfWeek, boolean value);
+    boolean getRepeatingDay(int dayOfWeek);
 
-    public void setRepeatingDays(boolean[] daysOfWeek);
-    public boolean[] getRepeatingDays();
+    void setRepeatingDays(boolean[] daysOfWeek);
+    boolean[] getRepeatingDays();
 
-    public void setVibrate(boolean vibrate);
-    public boolean isVibrate();
+    void setVibrate(boolean vibrate);
+    boolean isVibrate();
 
-    public String getDBRepeatingDays();
+    void setDuration(int time);
+    int getDuration();
+
+    void setEasing(int time);
+    int getEasing();
+
+    String getDBRepeatingDays();
 }

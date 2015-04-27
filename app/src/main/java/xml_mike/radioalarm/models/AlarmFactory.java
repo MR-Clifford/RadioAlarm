@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class AlarmFactory {
 
-    public static Alarm createAlarm(long id,String alarmType, String name, String data, String repeatingDays,  int timeHour, int timeMinute, int isEnabled, int repeating, int vibrating){
+    public static Alarm createAlarm(long id, String alarmType, String name, String data, String repeatingDays, int timeHour, int timeMinute, int isEnabled, int repeating, int vibrating, int duration, int easing){
 
         Alarm alarm = generateType(alarmType);
 
@@ -16,10 +16,7 @@ public class AlarmFactory {
             char[] ch = repeatingDays.toCharArray();
 
             for (int i = 0; i < repeatingDays.length(); i++) {
-                if (ch[i] == '1')
-                    RD[i] = true;
-                else
-                    RD[i] = false;
+                RD[i] = ch[i] == '1';
             }
 
             alarm.setRepeatingDays(RD);
@@ -76,7 +73,7 @@ public class AlarmFactory {
         returnAlarm.setTimeMinute(alarm.getTimeMinute());
         returnAlarm.setRepeating(alarm.isRepeating());
 
-        Log.d("AlarmFactory.generateType", "alarm:"+alarm.getClass().toString()+" className"+classname);
+        Log.d("AlarmFactory", "alarm:"+alarm.getClass().toString()+" className"+classname);
 
         return returnAlarm;
     }

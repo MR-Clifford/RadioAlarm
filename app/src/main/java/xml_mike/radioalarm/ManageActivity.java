@@ -241,9 +241,10 @@ public class ManageActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //in this instance the requestCode is associated with the alarm ID
         if(requestCode >= 0) {
-            if(resultCode == Activity.RESULT_OK) {
-                Log.e("OMg", "" + requestCode);
+            if(resultCode == Activity.RESULT_OK) { //only if the user selects a media will this be Activity.RESULT_OK
+                Log.i("OnActivityResult", "" + requestCode);
                 Alarm alarm = AlarmsManager.getInstance().getAlarms().get(requestCode);
                 String result = data.getStringExtra("result");
                 if(result != null) {
@@ -252,8 +253,10 @@ public class ManageActivity extends ActionBarActivity
                     this.update(null,null);
                 }
                 else
-                    Log.e("onActivityResult", "F:" + requestCode + ":" + alarm.getData());
+                    Log.e("onActivityResult", "F:" + requestCode + ":" + alarm.getData()); //somehow the wrong result was made, if case please analyse
             }
+            else
+                Log.e("onActivityResult", "F:" + requestCode); //somehow the wrong result was made, if case please analyse
         }
     }
 }

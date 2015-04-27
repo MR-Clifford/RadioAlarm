@@ -17,7 +17,7 @@
             android:layout_weight="2"
             android:lines="1"
             android:maxLines="1"
-            android:text="Alarm2" />
+            android:text="Alarm" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -198,6 +198,34 @@
             android:padding="2dp"
             android:layout_margin="3dp" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Duration:10"
+            android:id="@+id/duration"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:padding="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Easing:0"
+            android:id="@+id/easing"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:nestedScrollingEnabled="false"
+            android:padding="5dp" />
     </LinearLayout>
 
     <LinearLayout

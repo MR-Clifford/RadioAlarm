@@ -20,14 +20,11 @@ public class AlarmBootReceiver extends BroadcastReceiver {
         // an Intent broadcast.
         //throw new UnsupportedOperationException("Not yet implemented");
 
-
         if(intent.getAction() != null) {
             if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
                 AlarmsManager.getInstance().scheduleAllAlarms();
 
-            Log.e("String", intent.getAction());
+            Log.e("AlarmBookReceiver", intent.getAction());
         }
-
     }
-
 }

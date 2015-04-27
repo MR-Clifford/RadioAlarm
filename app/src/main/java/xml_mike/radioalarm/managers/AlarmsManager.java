@@ -57,7 +57,6 @@ public class AlarmsManager extends Observable {
         this.notifyObservers();
     }
 
-
     public void update(Alarm alarm){
         alarms.set(alarms.indexOf(alarm), alarm);
         DatabaseManager.getInstance().updateDataBaseItem(alarm);
@@ -99,7 +98,6 @@ public class AlarmsManager extends Observable {
             scheduleAlarm(alarms.get(i));
         else
             unscheduleAlarm(alarms.get(i));
-        //Log.e("AlarmsManager.updateAlarm",""+alarms.get(i).getId());
     }
 
     public void unscheduleAlarm(Alarm alarm){
@@ -108,7 +106,7 @@ public class AlarmsManager extends Observable {
 
         alarmManager.cancel(pendingIntent);
 
-        Log.e("AlarmsManager", "u" + alarm.getId()+""+pendingIntent);
+        Log.i("AlarmsManager", "u" + alarm.getId()+""+pendingIntent);
     }
 
     private void scheduleAlarm(Alarm alarm){
@@ -126,39 +124,20 @@ public class AlarmsManager extends Observable {
         PendingIntent pendingIntent = this.generateIntent(alarm);
 
         alarmManager.cancel(pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        Log.e("AlarmsManager", "s" + alarm.getId() + ":"+pendingIntent.toString());
+        if(alarm.isRepeating())
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        else
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Log.i("AlarmsManager", "s" + alarm.getId() + ":"+pendingIntent.toString());
     }
 
+    //always generate the same intent using this function, enables easy cancel
     private PendingIntent generateIntent(Alarm alarm){
         Intent intent = new Intent(Global.getInstance().getBaseContext(), AlarmReceiver.class);
-        Log.e(this.getClass().getSimpleName(),"context:"+Global.getInstance().getApplicationContext());
         intent.putExtra("alarmId", alarm.getId());
         intent.setAction("xml_mike.radioalarm.intent.START_ALARM");
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getBaseContext(), alarm.getIntId(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
-
-        if(lastPendingIntent == null)
-            lastPendingIntent = pendingIntent;
-        else if(lastPendingIntent.equals(pendingIntent)) {
-            lastPendingIntent = pendingIntent;
-            Log.e("pendingIntentTest", "pass");
-        }
-        else {
-            lastPendingIntent = pendingIntent;
-            Log.e("pendingIntentTest", "fail");
-        }
-
-        if(lastIntent == null)
-            lastIntent = intent;
-        else if(lastIntent.filterEquals(intent)) {
-            lastIntent = intent;
-            Log.e("IntentTest", "pass");
-        }
-        else {
-            lastIntent = intent;
-            Log.e("IntentTest", "fail");
-        }
 
         return pendingIntent;
     }
@@ -170,10 +149,33 @@ public class AlarmsManager extends Observable {
         return new StandardAlarm();
     }
 
+
+    /**
+     * used primarily to restart all alarms after the phone has been restarted
+     */
     public void scheduleAllAlarms(){
-        for(Alarm alarm:alarms){
-            if(alarm.isEnabled())
-                this.scheduleAlarm(alarm);
+        for(int i = 0; i < alarms.size();i++){
+            if(alarms.get(i).isEnabled())
+                this.scheduleAlarm(alarms.get(i));
         }
+    }
+
+    /**
+     * used calendar add to alarm 5 minutes from function call, normally right after user presses snooze
+     * @param alarm orginal alarm, to work like previous alarm but 5 minutes later
+     */
+    public void setSnoozeAlarm(Alarm alarm){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.MINUTE, 5);
+
+        Intent intent = new Intent(Global.getInstance().getBaseContext(), AlarmReceiver.class);
+        Log.e(this.getClass().getSimpleName(), "context:" + Global.getInstance().getApplicationContext());
+        intent.putExtra("alarmId", alarm.getId());
+        intent.setAction("xml_mike.radioalarm.intent.SNOOZE");
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getBaseContext(), 0,intent,PendingIntent.FLAG_ONE_SHOT);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 }

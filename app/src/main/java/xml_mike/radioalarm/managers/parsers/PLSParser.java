@@ -80,7 +80,7 @@ public class PLSParser {
 		return "";
 	}
 
-	private URLConnection getConnection(String url) throws MalformedURLException, IOException {
+	private URLConnection getConnection(String url) throws IOException {
 		URLConnection mUrl = new URL(url).openConnection();
 		return mUrl;
 	}
