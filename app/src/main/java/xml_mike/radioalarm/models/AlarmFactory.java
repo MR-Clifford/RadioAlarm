@@ -26,14 +26,19 @@ public class AlarmFactory {
             alarm.setName(name);
         if(data != null)
             alarm.setData(data);
+        else
+            Log.e("Something","wrong");
         if(id >-1)
             alarm.setId(id);
 
         alarm.setTimeHour(timeHour);
         alarm.setTimeMinute(timeMinute);
+        alarm.setDuration(duration);
+        alarm.setEasing(easing);
         alarm.setEnabled(isEnabled != 0);
         alarm.setRepeating(repeating != 0);
         alarm.setVibrate(vibrating !=0);
+
 
         return alarm;
     }
@@ -67,11 +72,13 @@ public class AlarmFactory {
         returnAlarm.setRepeatingDays(alarm.getRepeatingDays());
         returnAlarm.setVibrate(alarm.isVibrate());
         returnAlarm.setEnabled(alarm.isEnabled());
-        returnAlarm.setData(alarm.getData());
+        returnAlarm.setData("");
         returnAlarm.setName(alarm.getName());
         returnAlarm.setTimeHour(alarm.getTimeHour());
         returnAlarm.setTimeMinute(alarm.getTimeMinute());
         returnAlarm.setRepeating(alarm.isRepeating());
+        returnAlarm.setEasing(alarm.getEasing());
+        returnAlarm.setDuration(alarm.getDuration());
 
         Log.d("AlarmFactory", "alarm:"+alarm.getClass().toString()+" className"+classname);
 

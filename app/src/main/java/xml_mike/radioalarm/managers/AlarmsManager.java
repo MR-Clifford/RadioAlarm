@@ -167,7 +167,7 @@ public class AlarmsManager extends Observable {
     public void setSnoozeAlarm(Alarm alarm){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.MINUTE, 5);
+        calendar.add(Calendar.MINUTE, 1);
 
         Intent intent = new Intent(Global.getInstance().getBaseContext(), AlarmReceiver.class);
         Log.e(this.getClass().getSimpleName(), "context:" + Global.getInstance().getApplicationContext());

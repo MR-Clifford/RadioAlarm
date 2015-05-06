@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import xml_mike.radioalarm.managers.AlarmMediaManager;
+import xml_mike.radioalarm.managers.AlarmService;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
 
@@ -50,7 +50,7 @@ public class AlarmActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        Intent intent = new Intent(getBaseContext(), AlarmService.class);
         intent.setAction("com.example.action.STOP");
         startService(intent);
 }
@@ -58,7 +58,7 @@ public class AlarmActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        Intent intent = new Intent(getBaseContext(), AlarmService.class);
         intent.setAction("com.example.action.STOP");
         startService(intent);
     }
@@ -66,7 +66,7 @@ public class AlarmActivity extends ActionBarActivity {
 
     private Intent getAlarmService(){
 
-        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        Intent intent = new Intent(getBaseContext(), AlarmService.class);
         Long alarmId = this.getIntent().getLongExtra("alarmId", -1L);
 
         if(alarmId >= 0)
@@ -79,7 +79,7 @@ public class AlarmActivity extends ActionBarActivity {
 
     public void stopAlarmService(View view){
 
-        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        Intent intent = new Intent(getBaseContext(), AlarmService.class);
         intent.setAction("com.example.action.STOP");
         startService(intent);
 
@@ -87,7 +87,7 @@ public class AlarmActivity extends ActionBarActivity {
     }
 
     public void pauseAlarmService(View view){
-        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        Intent intent = new Intent(getBaseContext(), AlarmService.class);
         intent.setAction("com.example.action.STOP");
         startService(intent);
 

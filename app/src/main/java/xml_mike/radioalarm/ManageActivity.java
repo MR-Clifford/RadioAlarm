@@ -22,7 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import xml_mike.radioalarm.views.ExpandableAlarmAdapter;
-import xml_mike.radioalarm.managers.AlarmMediaManager;
+import xml_mike.radioalarm.managers.AlarmService;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
 import xml_mike.radioalarm.models.StandardAlarm;
@@ -226,7 +226,7 @@ public class ManageActivity extends ActionBarActivity
     }
 
     public void serviceTest(){
-        Intent intent = new Intent(getBaseContext(), AlarmMediaManager.class);
+        Intent intent = new Intent(getBaseContext(), AlarmService.class);
         Long alarmId = this.getIntent().getLongExtra("alarmId", 1L);
 
         if(alarmId >= 0)

@@ -212,8 +212,8 @@ public class DatabaseManager {
                 AlarmSchema.ALARM_IS_ENABLED     + " INTEGER, " +
                 AlarmSchema.ALARM_IS_VIBRATING   + " INTEGER, " +
                 AlarmSchema.ALARM_TYPE           + " TEXT, " +
-                AlarmSchema.ALARM_DATA           + " TEXT " +
-                AlarmSchema.ALARM_DURATION       + " INTEGER " +
+                AlarmSchema.ALARM_DATA           + " TEXT, " +
+                AlarmSchema.ALARM_DURATION       + " INTEGER, " +
                 AlarmSchema.ALARM_EASING         + " INTEGER " +
                 " );" ;
 

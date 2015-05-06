@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,8 +152,8 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         LinearLayout daysLayout = (LinearLayout) convertView.findViewById(R.id.days);
         Spinner alarm_type = (Spinner) convertView.findViewById(R.id.alarm_type);
         Button deleteButton = (Button) convertView.findViewById(R.id.alarm_delete);
-        TextView duration = (TextView) convertView.findViewById(R.id.duration);
-        TextView easing = (TextView) convertView.findViewById(R.id.easing);
+        TextView alarm_duration = (TextView) convertView.findViewById(R.id.duration);
+        TextView alarm_easing = (TextView) convertView.findViewById(R.id.easing);
 
         final ExpandableAlarmAdapter callBack = this;
 
@@ -268,17 +269,17 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                 switch (position) {
                     case 0:
                         className = StandardAlarm.class.toString();
+                        AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
                         break;
                     case 1:
                         className = MusicAlarm.class.toString();
+                        AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
                         break;
                     case 2:
                         className = RadioAlarm.class.toString();
+                        AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
                         break;
                 }
-
-                alarms.get(groupPosition).setData("");
-                AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
             }
 
             @Override
@@ -287,7 +288,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        duration.setOnClickListener(new View.OnClickListener() {
+        alarm_duration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder d = new AlertDialog.Builder(context);
@@ -321,14 +322,14 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        easing.setOnClickListener(new View.OnClickListener() {
+        alarm_easing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder d = new AlertDialog.Builder(context);
                 d.setTitle("Volume Easing");
                 final NumberPicker np = new NumberPicker(context);//(NumberPicker) d.findViewById(R.id.numberPicker);
                 np.setMaxValue(60);
-                np.setMinValue(1);
+                np.setMinValue(0);
                 np.setWrapSelectorWheel(false);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -417,6 +418,11 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
         }
 
+        Log.e("Expandable",""+alarms.get(groupPosition).getDuration()+":"+alarms.get(groupPosition).getEasing());
+
+        alarm_duration.setText("Duration:" + alarms.get(groupPosition).getDuration());
+        alarm_easing.setText("Easing:" + alarms.get(groupPosition).getEasing());
+
         return convertView;
     }
 
@@ -477,8 +483,9 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"RadioAlarm", Toast.LENGTH_SHORT).show();
-                alarms.get(groupPosition).setData("http://www.internet-radio.com/servers/tools/playlistgenerator/?u=http://205.164.36.17:80/listen.pls&t=.pls");
+                Toast.makeText(context, "RadioAlarm", Toast.LENGTH_SHORT).show();
+                //alarms.get(groupPosition).setData("http://www.internet-radio.com/servers/tools/playlistgenerator/?u=http://205.164.36.17:80/listen.pls&t=.pls");
+                alarms.get(groupPosition).setData("http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/http-icy-aac-lc-a/format/pls/vpid/bbc_radio_three.pls");
             }
         };
     }

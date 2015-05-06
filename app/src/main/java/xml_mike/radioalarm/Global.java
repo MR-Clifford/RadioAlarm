@@ -21,4 +21,5 @@ public class Global extends Application {
     public static Global getInstance(){
         return singleton;
     }
+
 }
