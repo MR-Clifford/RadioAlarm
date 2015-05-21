@@ -14,21 +14,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import xml_mike.radioalarm.models.AlarmMedia;
+import xml_mike.radioalarm.models.RadioStation;
 
 /**
- * Created by MClifford on 17/04/15.
+ * Created by MClifford on 20/05/15.
  */
-public class MusicFilterableAdapter extends BaseAdapter implements Filterable, FilterableType {
-
+public class RadioFilterableAdapter extends BaseAdapter implements Filterable, FilterableType {
     private String type = null;
-    private List<AlarmMedia>  originalData = null;
-    private List<AlarmMedia> filteredData = null;
+    private List<RadioStation> originalData = null;
+    private List<RadioStation> filteredData = null;
     private Context context = null;
     private LayoutInflater mInflator = null;
     private ItemFilter mFilter = new ItemFilter();
 
-    public MusicFilterableAdapter(Context context, List<AlarmMedia> data ){
+    public RadioFilterableAdapter(Context context, List<RadioStation> data){
+
         this.originalData = data;
         this.context = context;
         this.mInflator = LayoutInflater.from(context);
@@ -56,9 +56,8 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-
         if (convertView == null) {
-             convertView = mInflator.inflate(android.R.layout.simple_list_item_1, null);
+            convertView = mInflator.inflate(android.R.layout.simple_list_item_1, null);
 
             // Creates a ViewHolder and store references to the two children views
             // we want to bind data to.
@@ -75,12 +74,13 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
         }
 
         // If weren't re-ordering this you could rely on what you set last time
-        holder.text.setText(filteredData.get(position).title);
+        holder.text.setText(filteredData.get(position).getName());
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", filteredData.get(position).id);
+                returnIntent.putExtra("result", filteredData.get(position).getId());
                 returnIntent.putExtra("alarm_type", filteredData.get(position).getClass().toString());
                 ((Activity) context).setResult(Activity.RESULT_OK, returnIntent);
                 ((Activity) context).finish();
@@ -117,16 +117,16 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
 
             FilterResults results = new FilterResults();
 
-            final List<AlarmMedia> list = originalData;
+            final List<RadioStation> list = originalData;
 
             int count = list.size();
-            final ArrayList<AlarmMedia> nlist = new ArrayList<AlarmMedia>(count);
+            final ArrayList<RadioStation> nlist = new ArrayList<RadioStation>(count);
 
-            AlarmMedia filterableAlarm ;
+            RadioStation filterableAlarm ;
 
             for (int i = 0; i < count; i++) {
                 filterableAlarm = list.get(i);
-                if (filterableAlarm.title.toLowerCase().contains(filterString)) {
+                if (filterableAlarm.getName().toLowerCase().contains(filterString)) {
                     nlist.add(filterableAlarm);
                 }
             }
@@ -140,7 +140,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredData = (ArrayList<AlarmMedia>) results.values;
+            filteredData = (ArrayList<RadioStation>) results.values;
             notifyDataSetChanged();
         }
 

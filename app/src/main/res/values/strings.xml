@@ -29,4 +29,5 @@
         <item>BBC3</item>
     </string-array>
     <string name="title_activity_music_select">MusicSelectActivity</string>
+    <string name="title_activity_radio_select">RadioSelectActivity</string>
 </resources>

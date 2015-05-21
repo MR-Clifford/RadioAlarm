@@ -3,7 +3,9 @@ package xml_mike.radioalarm;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -21,20 +23,20 @@ import android.widget.TimePicker;
 import java.util.Observable;
 import java.util.Observer;
 
-import xml_mike.radioalarm.views.ExpandableAlarmAdapter;
 import xml_mike.radioalarm.managers.AlarmService;
 import xml_mike.radioalarm.managers.AlarmsManager;
+import xml_mike.radioalarm.managers.RadioStationsManager;
 import xml_mike.radioalarm.models.Alarm;
+import xml_mike.radioalarm.models.RadioAlarm;
 import xml_mike.radioalarm.models.StandardAlarm;
+import xml_mike.radioalarm.views.ExpandableAlarmAdapter;
 
 
 public class ManageActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, TimePickerDialog.OnTimeSetListener, ExpandableListView.OnGroupCollapseListener, Observer{
 
-    private int currentAlarm = -1;
-
     ExpandableListView mExpandableList;
-
+    private int currentAlarm = -1;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -68,9 +70,14 @@ public class ManageActivity extends ActionBarActivity
         AlarmsManager.getInstance().addObserver(this);
         AlarmsManager.getInstance().notifyObservers();
 
-        //this.startActivity(new Intent(this, MusicSelectActivity.class));
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //this.serviceTest();
+        boolean firstRun = p.getBoolean(Global.PREFERENCE_FIRST_RUN, true);
+
+        if(firstRun){
+            RadioStationsManager.getInstance().downloadStations();
+            p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
+        }
 
     }
 
@@ -81,7 +88,7 @@ public class ManageActivity extends ActionBarActivity
 
     @Override
     public void onGroupCollapse(int groupPosition) {
-        
+
     }
 
     @Override
@@ -180,49 +187,8 @@ public class ManageActivity extends ActionBarActivity
         if(currentAlarm < 0)
             AlarmsManager.getInstance().add(nAlarm);
 
-
         currentAlarm = -1;
 
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((ManageActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
     }
 
     public void serviceTest(){
@@ -244,19 +210,72 @@ public class ManageActivity extends ActionBarActivity
         //in this instance the requestCode is associated with the alarm ID
         if(requestCode >= 0) {
             if(resultCode == Activity.RESULT_OK) { //only if the user selects a media will this be Activity.RESULT_OK
+
                 Log.i("OnActivityResult", "" + requestCode);
                 Alarm alarm = AlarmsManager.getInstance().getAlarms().get(requestCode);
-                String result = data.getStringExtra("result");
-                if(result != null) {
-                    alarm.setData(result);
-                    AlarmsManager.getInstance().update(requestCode, alarm, false);
-                    this.update(null,null);
+                long result = data.getLongExtra("result",-1L);
+                String alarmType = data.getStringExtra("alarm_type");
+
+                if(alarmType != null){
+                    if(alarmType.equals(RadioAlarm.class.toString())) {
+                        if (result != -1l) {
+                            alarm.setData(""+result);
+                            AlarmsManager.getInstance().update(requestCode, alarm, false);
+                            this.update(null, null);
+                        }
+                    } else {
+                        if (result != -1l) {
+                            alarm.setData(""+result);
+                            AlarmsManager.getInstance().update(requestCode, alarm, false);
+                            this.update(null, null);
+                        }
+                    }
                 }
                 else
                     Log.e("onActivityResult", "F:" + requestCode + ":" + alarm.getData()); //somehow the wrong result was made, if case please analyse
             }
             else
                 Log.e("onActivityResult", "F:" + requestCode); //somehow the wrong result was made, if case please analyse
+        }
+    }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public PlaceholderFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((ManageActivity) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
 }

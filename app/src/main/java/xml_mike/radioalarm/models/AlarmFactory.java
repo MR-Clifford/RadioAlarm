@@ -54,7 +54,6 @@ public class AlarmFactory {
         if(alarmType.equalsIgnoreCase(RadioAlarm.class.toString()))
             alarm = new RadioAlarm();
 
-
         return alarm;
     }
 
@@ -80,7 +79,7 @@ public class AlarmFactory {
         returnAlarm.setEasing(alarm.getEasing());
         returnAlarm.setDuration(alarm.getDuration());
 
-        Log.d("AlarmFactory", "alarm:"+alarm.getClass().toString()+" className"+classname);
+        Log.e("AlarmFactory", "alarm:" + alarm.getClass().toString() + " className:" + classname);
 
         return returnAlarm;
     }

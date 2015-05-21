@@ -31,8 +31,10 @@ import java.util.ArrayList;
 import xml_mike.radioalarm.ManageActivity;
 import xml_mike.radioalarm.MusicSelectActivity;
 import xml_mike.radioalarm.R;
+import xml_mike.radioalarm.RadioSelectActivity;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.managers.DatabaseManager;
+import xml_mike.radioalarm.managers.RadioStationsManager;
 import xml_mike.radioalarm.models.Alarm;
 import xml_mike.radioalarm.models.AlarmFactory;
 import xml_mike.radioalarm.models.AlarmMedia;
@@ -110,14 +112,14 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         view.setVisibility((isExpanded) ? View.INVISIBLE : View.VISIBLE);
 
         isEnabled.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alarms.get(groupPosition).setEnabled(!alarms.get(groupPosition).isEnabled());
-                        // Global.getInstance().setAlarms(alarms);
-                        AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), true);
-                        callBack.notifyDataSetChanged();
-                    }
-                }
+                                         @Override
+                                         public void onClick(View v) {
+                                             alarms.get(groupPosition).setEnabled(!alarms.get(groupPosition).isEnabled());
+                                             // Global.getInstance().setAlarms(alarms);
+                                             AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), true);
+                                             callBack.notifyDataSetChanged();
+                                         }
+                                     }
         );
 
         String timeHour = (alarms.get(groupPosition).getTimeHour() < 10) ? "0" + alarms.get(groupPosition).getTimeHour() : "" + alarms.get(groupPosition).getTimeHour();
@@ -150,7 +152,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         CheckBox alarm_isRepeating = (CheckBox) convertView.findViewById(R.id.repeating);
         CheckBox alarm_isVibrating = (CheckBox) convertView.findViewById(R.id.vibrating);
         LinearLayout daysLayout = (LinearLayout) convertView.findViewById(R.id.days);
-        Spinner alarm_type = (Spinner) convertView.findViewById(R.id.alarm_type);
+        final Spinner alarm_type = (Spinner) convertView.findViewById(R.id.alarm_type);
         Button deleteButton = (Button) convertView.findViewById(R.id.alarm_delete);
         TextView alarm_duration = (TextView) convertView.findViewById(R.id.duration);
         TextView alarm_easing = (TextView) convertView.findViewById(R.id.easing);
@@ -259,14 +261,14 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
             }
         });
+        //this was put into a Runnable due to issue with spinners firing on initialisation
 
         alarm_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int selectedPosition, long id) {
 
                 String className = "";
-
-                switch (position) {
+                switch (selectedPosition) {
                     case 0:
                         className = StandardAlarm.class.toString();
                         AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
@@ -279,7 +281,12 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                         className = RadioAlarm.class.toString();
                         AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
                         break;
+                    default:
+                        break;
                 }
+
+                Log.e("selectedPosition", "selectedPosition" + selectedPosition);
+
             }
 
             @Override
@@ -287,6 +294,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
             }
         });
+
 
         alarm_duration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -375,7 +383,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                 alarm_data.setText(alarmMedia.title);
             }
             else
-                alarm_data.setText(alarms.get(groupPosition).getData());
+                alarm_data.setText(RadioStationsManager.getInstance().getRadioStation(Long.parseLong(alarms.get(groupPosition).getData())).getName());//alarms.get(groupPosition).getData());
         }
         else
             alarm_data.setText("Select Audio");
@@ -388,7 +396,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         if (alarms.get(groupPosition).getClass().toString().equalsIgnoreCase(RadioAlarm.class.toString()))
             alarm_type_position = 2;
 
-        alarm_type.setSelection(alarm_type_position);
+        alarm_type.setSelection(alarm_type_position, false);
 
         if (!alarms.get(groupPosition).isRepeating())
             daysLayout.setAlpha(0.5f);
@@ -483,9 +491,11 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "RadioAlarm", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "RadioAlarm", Toast.LENGTH_SHORT).show();
                 //alarms.get(groupPosition).setData("http://www.internet-radio.com/servers/tools/playlistgenerator/?u=http://205.164.36.17:80/listen.pls&t=.pls");
-                alarms.get(groupPosition).setData("http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/http-icy-aac-lc-a/format/pls/vpid/bbc_radio_three.pls");
+                //alarms.get(groupPosition).setData("http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/http-icy-aac-lc-a/format/pls/vpid/bbc_radio_three.pls");
+                Intent intent = new Intent(context, RadioSelectActivity.class);
+                ((ManageActivity) context).startActivityForResult(intent, groupPosition);
             }
         };
     }

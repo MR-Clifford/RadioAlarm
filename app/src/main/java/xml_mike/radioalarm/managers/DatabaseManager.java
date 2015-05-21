@@ -18,13 +18,22 @@ import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.models.Alarm;
 import xml_mike.radioalarm.models.AlarmFactory;
 import xml_mike.radioalarm.models.AlarmMedia;
+import xml_mike.radioalarm.models.RadioCategory;
+import xml_mike.radioalarm.models.RadioFactory;
+import xml_mike.radioalarm.models.RadioStation;
+import xml_mike.radioalarm.models.RadioStream;
 
 /**
  * Created by MClifford on 23/03/15.
+ * This class acts as a medium for collection and storing all the relational data, via the broker pattern
  */
 public class DatabaseManager {
     private static DatabaseManager ourInstance = new DatabaseManager();
     private ArrayList<AlarmMedia> songsList;
+
+    private DatabaseManager() {
+        songsList = getLocalMedia();
+    }
 
     public static DatabaseManager getInstance() {
 
@@ -34,25 +43,21 @@ public class DatabaseManager {
         return ourInstance;
     }
 
-    private DatabaseManager() {
-        songsList = getLocalMedia();
-    }
-
     public void addDatabaseItem(Alarm alarm){
-        SQLiteDatabase db = new AlarmHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put(AlarmSchema.ALARM_TIME_HOUR,alarm.getTimeHour());
-        values.put(AlarmSchema.ALARM_TIME_MINTUE,alarm.getTimeMinute());
-        values.put(AlarmSchema.ALARM_REPEATING_DAYS,alarm.getDBRepeatingDays());
-        values.put(AlarmSchema.ALARM_REPEAT,alarm.isRepeating() ? 1:0);
-        values.put(AlarmSchema.ALARM_IS_VIBRATING,alarm.isVibrate() ? 1:0);
-        values.put(AlarmSchema.ALARM_NAME,alarm.getName());
-        values.put(AlarmSchema.ALARM_IS_ENABLED,alarm.getName());
-        values.put(AlarmSchema.ALARM_TYPE,alarm.getName());
-        values.put(AlarmSchema.ALARM_DATA,alarm.getName());
-        values.put(AlarmSchema.ALARM_DURATION,alarm.getDuration());
-        values.put(AlarmSchema.ALARM_EASING,alarm.getEasing());
+        values.put(AlarmSchema.TIME_HOUR,alarm.getTimeHour());
+        values.put(AlarmSchema.TIME_MINUTE,alarm.getTimeMinute());
+        values.put(AlarmSchema.REPEATING_DAYS,alarm.getDBRepeatingDays());
+        values.put(AlarmSchema.REPEAT,alarm.isRepeating() ? 1:0);
+        values.put(AlarmSchema.IS_VIBRATING,alarm.isVibrate() ? 1:0);
+        values.put(AlarmSchema.NAME,alarm.getName());
+        values.put(AlarmSchema.IS_ENABLED,alarm.getName());
+        values.put(AlarmSchema.TYPE,alarm.getName());
+        values.put(AlarmSchema.DATA,alarm.getName());
+        values.put(AlarmSchema.DURATION,alarm.getDuration());
+        values.put(AlarmSchema.EASING,alarm.getEasing());
 
         long id = db.insert(AlarmSchema.TABLE_NAME, "NULL", values);
 
@@ -64,34 +69,34 @@ public class DatabaseManager {
     }
 
     public void updateDataBaseItem(Alarm alarm){
-        SQLiteDatabase db = new AlarmHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
-        values.put(AlarmSchema.ALARM_TIME_HOUR,alarm.getTimeHour());
-        values.put(AlarmSchema.ALARM_TIME_MINTUE,alarm.getTimeMinute());
-        values.put(AlarmSchema.ALARM_REPEATING_DAYS,alarm.getDBRepeatingDays());
-        values.put(AlarmSchema.ALARM_REPEAT,alarm.isRepeating() ? 1:0);
-        values.put(AlarmSchema.ALARM_IS_VIBRATING,alarm.isVibrate() ? 1:0);
-        values.put(AlarmSchema.ALARM_NAME,alarm.getName());
-        values.put(AlarmSchema.ALARM_IS_ENABLED,alarm.isEnabled() ? 1:0);
-        values.put(AlarmSchema.ALARM_TYPE,alarm.getClass().toString());
-        values.put(AlarmSchema.ALARM_DATA,alarm.getData());
-        values.put(AlarmSchema.ALARM_DURATION,alarm.getDuration());
-        values.put(AlarmSchema.ALARM_EASING,alarm.getEasing());
+        values.put(AlarmSchema.TIME_HOUR,alarm.getTimeHour());
+        values.put(AlarmSchema.TIME_MINUTE,alarm.getTimeMinute());
+        values.put(AlarmSchema.REPEATING_DAYS,alarm.getDBRepeatingDays());
+        values.put(AlarmSchema.REPEAT,alarm.isRepeating() ? 1:0);
+        values.put(AlarmSchema.IS_VIBRATING,alarm.isVibrate() ? 1:0);
+        values.put(AlarmSchema.NAME,alarm.getName());
+        values.put(AlarmSchema.IS_ENABLED,alarm.isEnabled() ? 1:0);
+        values.put(AlarmSchema.TYPE,alarm.getClass().toString());
+        values.put(AlarmSchema.DATA,alarm.getData());
+        values.put(AlarmSchema.DURATION,alarm.getDuration());
+        values.put(AlarmSchema.EASING,alarm.getEasing());
 
-        String selection = AlarmSchema.ALARM_ID + " LIKE ?";
+        String selection = AlarmSchema.ID + " = "+alarm.getId();
 
-        String[] selectionArgs = {String.valueOf(alarm.getId())};
+        String[] selectionArgs = null;//{"'"+String.valueOf(alarm.getId())+"'"};
 
         db.update(AlarmSchema.TABLE_NAME,values, selection, selectionArgs);
         db.close();
     }
 
     public void removeDatabaseItem(Alarm alarm){
-        SQLiteDatabase db = new AlarmHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
         // Define 'where' part of query.
-        String selection = AlarmSchema.ALARM_ID + " LIKE ?";
+        String selection = AlarmSchema.ID + " = ";
         // Specify arguments in placeholder order.
         String[] selectionArgs = {String.valueOf(alarm.getId())};
         // Issue SQL statement.
@@ -103,25 +108,25 @@ public class DatabaseManager {
 
         ArrayList<Alarm> returnList = new ArrayList<>();
 
-        SQLiteDatabase db = new AlarmHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
 
         String[] projection = {
-                AlarmSchema.ALARM_ID,
-                AlarmSchema.ALARM_TIME_HOUR,
-                AlarmSchema.ALARM_TIME_MINTUE,
-                AlarmSchema.ALARM_REPEATING_DAYS,
-                AlarmSchema.ALARM_REPEAT,
-                AlarmSchema.ALARM_IS_VIBRATING,
-                AlarmSchema.ALARM_NAME,
-                AlarmSchema.ALARM_IS_ENABLED,
-                AlarmSchema.ALARM_TYPE,
-                AlarmSchema.ALARM_DATA, //changes depending on alarm type
-                AlarmSchema.ALARM_DURATION,
-                AlarmSchema.ALARM_EASING
+                AlarmSchema.ID,
+                AlarmSchema.TIME_HOUR,
+                AlarmSchema.TIME_MINUTE,
+                AlarmSchema.REPEATING_DAYS,
+                AlarmSchema.REPEAT,
+                AlarmSchema.IS_VIBRATING,
+                AlarmSchema.NAME,
+                AlarmSchema.IS_ENABLED,
+                AlarmSchema.TYPE,
+                AlarmSchema.DATA, //changes depending on alarm type
+                AlarmSchema.DURATION,
+                AlarmSchema.EASING
         };
 
         //initialise variables
-        String sortOrder = AlarmSchema.ALARM_NAME + " Desc";
+        String sortOrder = AlarmSchema.NAME + " Desc";
         String[] selectionArgs = {};
         String selection = "";
 
@@ -132,20 +137,33 @@ public class DatabaseManager {
         if(cursor.getCount() > 0){
             do{
                 //Collect data needed to create objects
-                String ALARM_ID = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_ID));
-                int ALARM_TIME_HOUR = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_TIME_HOUR));
-                int ALARM_TIME_MINTUE = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_TIME_MINTUE));
-                String ALARM_REPEATING_DAYS = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_REPEATING_DAYS));
-                int ALARM_REPEAT = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_REPEAT));
-                String ALARM_NAME = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_NAME));
-                int ALARM_IS_ENABLED = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_IS_ENABLED));
-                int ALARM_IS_VIBRATING = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_IS_VIBRATING));
-                String ALARM_TYPE = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_TYPE));
-                String ALARM_DATA = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_DATA));
-                int ALARM_DURATION = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_DURATION));
-                int ALARM_EASING = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.ALARM_EASING));
+                String ALARM_ID = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.ID));
+                int ALARM_TIME_HOUR = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.TIME_HOUR));
+                int ALARM_TIME_MINTUE = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.TIME_MINUTE));
+                String ALARM_REPEATING_DAYS = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.REPEATING_DAYS));
+                int ALARM_REPEAT = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.REPEAT));
+                String ALARM_NAME = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.NAME));
+                int ALARM_IS_ENABLED = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.IS_ENABLED));
+                int ALARM_IS_VIBRATING = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.IS_VIBRATING));
+                String ALARM_TYPE = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.TYPE));
+                String ALARM_DATA = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.DATA));
+                int ALARM_DURATION = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.DURATION));
+                int ALARM_EASING = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.EASING));
 
-                Alarm alarm = AlarmFactory.createAlarm(Long.parseLong(ALARM_ID, 10),ALARM_TYPE,ALARM_NAME,ALARM_DATA,ALARM_REPEATING_DAYS,ALARM_TIME_HOUR,ALARM_TIME_MINTUE,ALARM_IS_ENABLED,ALARM_REPEAT, ALARM_IS_VIBRATING, ALARM_DURATION, ALARM_EASING);
+                Alarm alarm = AlarmFactory.createAlarm(
+                        Long.parseLong(ALARM_ID, 10),
+                        ALARM_TYPE,
+                        ALARM_NAME,
+                        ALARM_DATA,
+                        ALARM_REPEATING_DAYS,
+                        ALARM_TIME_HOUR,
+                        ALARM_TIME_MINTUE,
+                        ALARM_IS_ENABLED,
+                        ALARM_REPEAT,
+                        ALARM_IS_VIBRATING,
+                        ALARM_DURATION,
+                        ALARM_EASING
+                );
 
                 returnList.add(alarm);
 
@@ -156,69 +174,6 @@ public class DatabaseManager {
         db.close();
 
         return returnList;
-    }
-
-    private class DatabaseSchema implements BaseColumns {
-        private static final int DATABASE_VERSION = 1;
-        private static final String DATABASE_NAME = "RadioAlarm";
-    }
-
-    /**
-     * Inner class to Help store and retrieve Products items from the database
-     */
-    private class AlarmHelper extends SQLiteOpenHelper {
-
-        AlarmHelper(Context context) {
-            super(context, DatabaseSchema.DATABASE_NAME, null, DatabaseSchema.DATABASE_VERSION);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-
-            //db.execSQL(AlarmSchema.SQL_DELETE_ENTRIES);
-            db.execSQL(AlarmSchema.TABLE_CREATE);
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-            db.execSQL(AlarmSchema.SQL_DELETE_ENTRIES);
-            onCreate(db);
-        }
-    }
-
-    private class AlarmSchema implements BaseColumns{
-        private static final String TABLE_NAME ="alarm";
-        private static final String ALARM_ID ="id";
-        private static final String ALARM_TIME_HOUR ="time_hour";
-        private static final String ALARM_TIME_MINTUE ="time_minute";
-        private static final String ALARM_REPEATING_DAYS ="repeating_days";
-        private static final String ALARM_REPEAT ="repeat";
-        private static final String ALARM_NAME ="name";
-        private static final String ALARM_IS_ENABLED ="is_enabled";
-        private static final String ALARM_IS_VIBRATING ="is_vibrating";
-        private static final String ALARM_TYPE = "type";
-        private static final String ALARM_DATA = "data";
-        private static final String ALARM_DURATION = "duration";
-        private static final String ALARM_EASING = "easing";
-
-        private static final String TABLE_CREATE = "CREATE TABLE " +
-                AlarmSchema.TABLE_NAME           + " ( " +
-                AlarmSchema.ALARM_ID             + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                AlarmSchema.ALARM_TIME_HOUR      + " INTEGER, " +
-                AlarmSchema.ALARM_TIME_MINTUE    + " INTEGER, " +
-                AlarmSchema.ALARM_REPEATING_DAYS + " TEXT, " +
-                AlarmSchema.ALARM_REPEAT         + " INTEGER, " +
-                AlarmSchema.ALARM_NAME           + " TEXT, " +
-                AlarmSchema.ALARM_IS_ENABLED     + " INTEGER, " +
-                AlarmSchema.ALARM_IS_VIBRATING   + " INTEGER, " +
-                AlarmSchema.ALARM_TYPE           + " TEXT, " +
-                AlarmSchema.ALARM_DATA           + " TEXT, " +
-                AlarmSchema.ALARM_DURATION       + " INTEGER, " +
-                AlarmSchema.ALARM_EASING         + " INTEGER " +
-                " );" ;
-
-        private static final String SQL_DELETE_ENTRIES =
-                "DROP TABLE IF EXISTS" + AlarmSchema.TABLE_NAME;
     }
 
     public List<AlarmMedia> getMediaList(){
@@ -291,4 +246,388 @@ public class DatabaseManager {
         return alarmMedia;
     }
 
+    public void addRadioStation(RadioStation radioStation){
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
+        try{
+            ContentValues values = new ContentValues();
+
+            values.put(RadioStationSchema.ID, radioStation.getId());
+            values.put(RadioStationSchema.COUNTRY, radioStation.getCountry());
+            values.put(RadioStationSchema.DESCRIPTION, radioStation.getDescription());
+            values.put(RadioStationSchema.NAME, radioStation.getName());
+            values.put(RadioStationSchema.SLUG, radioStation.getSlug());
+            values.put(RadioStationSchema.WEBSITE, radioStation.getWebsite());
+            values.put(RadioStationSchema.UPDATED, radioStation.getUpdated());
+
+            Log.d("Test:RadioStation", "Id" + radioStation.getId() + " Name:" + radioStation.getName() + " Slug:" + radioStation.getSlug() + " Country:" + radioStation.getCountry());
+
+            if(!ifRecordExists(RadioStationSchema.TABLE_NAME, "" + radioStation.getId())){
+                db.insert(RadioStationSchema.TABLE_NAME, "NULL", values);
+
+                if(radioStation.getStreams().size() >0) {
+                    for (int i =0; i < radioStation.getStreams().size(); i++) {
+                        ContentValues streamValues = new ContentValues();
+
+                        streamValues.put(RadioStationStreamSchema.RADIO_ID, radioStation.getId());
+                        streamValues.put(RadioStationStreamSchema.URL, radioStation.getStreams().get(i).url);
+
+                        radioStation.getStreams().get(i).id = db.insert(RadioStationStreamSchema.TABLE_NAME, "NULL", streamValues);
+                    }
+                }
+
+                if(radioStation.getCategories().size() >0) {
+                    for (RadioCategory category : radioStation.getCategories()) {
+                        ContentValues categoryValues = new ContentValues();
+                        ContentValues categoryRelationValues = new ContentValues();
+
+                        categoryValues.put(RadioStationCategorySchema.ID, category.id);
+                        categoryValues.put(RadioStationCategorySchema.TITLE, category.title);
+                        categoryValues.put(RadioStationCategorySchema.SLUG, category.slug);
+                        categoryValues.put(RadioStationCategorySchema.DESCRIPTION, category.description);
+
+                        categoryRelationValues.put(RadioStationCategoryRelationSchema.RADIO_ID, radioStation.getId());
+                        categoryRelationValues.put(RadioStationCategoryRelationSchema.CATEGORY_ID, category.id);
+
+                        if (this.ifRecordExists(RadioStationCategorySchema.TABLE_NAME, "" + category.id))
+                            db.insert(RadioStationCategorySchema.TABLE_NAME, "NULL", categoryValues);
+
+                        db.insert(RadioStationCategoryRelationSchema.TABLE_NAME, "NULL", categoryRelationValues);
+                    }
+                }
+            }
+        }catch (Exception e){
+            Log.e("Database Issue", radioStation.getId()+" :Exception"+e.toString());
+        }
+        finally {
+            db.close();
+        }
+    }
+
+    public RadioStation getRadioStation(long id){
+
+        return null;
+    }
+
+    public ArrayList<RadioStation> getAllRadioStations(){
+        ArrayList<RadioStation> returnArrayList = new ArrayList<>();
+
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getReadableDatabase();
+
+        String[] projection = {
+                RadioStationSchema.ID,
+                RadioStationSchema.COUNTRY,
+                RadioStationSchema.DESCRIPTION,
+                RadioStationSchema.NAME,
+                RadioStationSchema.SLUG,
+                RadioStationSchema.UPDATED,
+                RadioStationSchema.WEBSITE
+        };
+
+        //initialise variables
+        String sortOrder = RadioStationSchema.NAME + " Desc";
+
+        Cursor cursor = db.query(RadioStationSchema.TABLE_NAME, projection, null, null, null, null, sortOrder);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount() > 0){
+            do{
+                //Collect data needed to create objects
+                String RADIO_ID = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.ID));
+                String RADIO_NAME = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.NAME));
+                String RADIO_COUNTRY = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.COUNTRY));
+                String RADIO_DESCRIPTION = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.DESCRIPTION));
+                String RADIO_SLUG = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.SLUG));
+                String RADIO_WEBSITE = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.WEBSITE));
+                String RADIO_UPDATED = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.UPDATED));
+
+                RadioStation radioStation = RadioFactory.generateRadionStation(
+                        Long.parseLong(RADIO_ID),
+                        RADIO_NAME,
+                        RADIO_DESCRIPTION,
+                        RADIO_SLUG,
+                        RADIO_COUNTRY,
+                        RADIO_WEBSITE,
+                        RADIO_UPDATED,
+                        this.getRadioStationStreams(Long.parseLong(RADIO_ID)),
+                        this.getRadioStationCategories(Long.parseLong(RADIO_ID))
+                );
+
+                returnArrayList.add(radioStation);
+
+            } while(cursor.moveToNext());
+        }
+
+        Log.e("TESTDATABASE", "Total:"+returnArrayList.size()+": cursor:"+cursor.getCount());
+        cursor.close();
+        db.close();
+
+        return returnArrayList;
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public ArrayList<RadioStream> getRadioStationStreams(long id){
+
+        ArrayList<RadioStream> streams = new ArrayList<>();
+        if(id >0) {
+            SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getReadableDatabase();
+
+            String[] projection = {
+                    RadioStationStreamSchema.ID,
+                    RadioStationStreamSchema.RADIO_ID,
+                    RadioStationStreamSchema.URL,
+            };
+
+            //initialise variables
+            String sortOrder = null;
+            //String[] selectionArgs = null;
+            String selection = RadioStationStreamSchema.RADIO_ID + " =  '" +id+"'";
+
+            Cursor cursor = db.query(RadioStationStreamSchema.TABLE_NAME, projection, selection, null, null, null, sortOrder);
+
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+                do {
+                    Log.d("Paramount SQL:", "" + cursor.getCount());
+                    String ID = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationStreamSchema.ID));
+                    String RADIO_ID = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationStreamSchema.RADIO_ID));
+                    String URL = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationStreamSchema.URL));
+
+                    streams.add(new RadioStream(
+                            Long.parseLong(ID),
+                            Long.parseLong(RADIO_ID),
+                            URL
+                    ));
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
+            db.close();
+        }
+        return streams;
+    }
+
+    /**
+     * get all the categories that a radio station has
+     * @param id id of radio station
+     * @return list of categories
+     */
+    public ArrayList<RadioCategory> getRadioStationCategories(long id){
+        ArrayList<RadioCategory> categories = new ArrayList<>();
+
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
+        String relationJoinQuery = " SELECT a.* FROM "+RadioStationCategorySchema.TABLE_NAME+" a INNER JOIN "+RadioStationCategoryRelationSchema.TABLE_NAME+" b ON a."+RadioStationCategorySchema.ID+" = b."+RadioStationCategoryRelationSchema.CATEGORY_ID+" WHERE b."+RadioStationCategoryRelationSchema.RADIO_ID+" = '"+id+"';";
+
+        Cursor cursor = db.rawQuery(relationJoinQuery, null);
+        try{
+            //inner join to find all games
+            cursor.moveToFirst();
+
+            if(cursor.getCount() > 0){
+                do {
+                    Log.d("Paramount SQL:",""+cursor.getCount());
+
+                    String ID = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationCategorySchema.ID));
+                    String TITLE = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationCategorySchema.TITLE));
+                    String SLUG = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationCategorySchema.SLUG));
+                    String DESCRIPTION = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationCategorySchema.DESCRIPTION));
+
+                    categories.add(new RadioCategory(
+                            Long.parseLong(ID),
+                            TITLE,
+                            DESCRIPTION,
+                            SLUG
+                    ));
+                } while(cursor.moveToNext());
+            }
+        } catch(Exception e){
+            Log.e("error",e.toString());
+        } finally {
+            if(cursor != null) cursor.close();
+            db.close();
+        }
+
+        return categories;
+    }
+
+    /**
+     * Based on table structure where table id is "_id"
+     * @param tableName name of the table
+     * @param id to see if already in table
+     * @return if ID is in table return true;
+     */
+    public boolean ifRecordExists(String tableName, String id){
+
+        Cursor cursor = null;
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance()).getReadableDatabase();
+
+        boolean returnFlag = false;
+        try{
+            cursor=  db.rawQuery(" select * from "+tableName+" a where a._id = " +id, new String[] {} );
+
+            if(cursor.getCount() >0)
+                returnFlag = true;
+        }
+        catch(Exception e){
+            //empty
+        }
+        finally {
+            if(cursor != null)
+                cursor.close();
+            db.close();
+        }
+        return returnFlag;
+    }
+
+    private class DatabaseSchema implements BaseColumns {
+        private static final int DATABASE_VERSION = 2;
+        private static final String DATABASE_NAME = "RadioAlarm";
+    }
+
+    /**
+     * Inner class to Help store and retrieve Products items from the database
+     */
+    private class DataBaseManagerHelper extends SQLiteOpenHelper {
+
+        DataBaseManagerHelper(Context context) {
+            super(context, DatabaseSchema.DATABASE_NAME, null, DatabaseSchema.DATABASE_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            //db.execSQL(AlarmSchema.SQL_DELETE_ENTRIES);
+            db.execSQL(AlarmSchema.TABLE_CREATE);
+            db.execSQL(RadioStationSchema.TABLE_CREATE);
+            db.execSQL(RadioStationStreamSchema.TABLE_CREATE);
+            db.execSQL(RadioStationCategorySchema.TABLE_CREATE);
+            db.execSQL(RadioStationCategoryRelationSchema.TABLE_CREATE);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
+            db.execSQL(AlarmSchema.SQL_DELETE_ENTRIES);
+            db.execSQL(RadioStationSchema.SQL_DELETE_ENTRIES);
+            db.execSQL(RadioStationStreamSchema.SQL_DELETE_ENTRIES);
+            db.execSQL(RadioStationCategorySchema.SQL_DELETE_ENTRIES);
+            db.execSQL(RadioStationCategoryRelationSchema.SQL_DELETE_ENTRIES);
+            onCreate(db);
+        }
+    }
+
+    private class AlarmSchema implements BaseColumns{
+        private static final String TABLE_NAME ="alarm";
+        private static final String ID ="_id";
+        private static final String TIME_HOUR ="time_hour";
+        private static final String TIME_MINUTE ="time_minute";
+        private static final String REPEATING_DAYS ="repeating_days";
+        private static final String REPEAT ="repeat";
+        private static final String NAME ="name";
+        private static final String IS_ENABLED ="is_enabled";
+        private static final String IS_VIBRATING ="is_vibrating";
+        private static final String TYPE = "type";
+        private static final String DATA = "data";
+        private static final String DURATION = "duration";
+        private static final String EASING = "easing";
+
+        private static final String TABLE_CREATE = "CREATE TABLE " +
+                AlarmSchema.TABLE_NAME           + " ( " +
+                AlarmSchema.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                AlarmSchema.TIME_HOUR + " INTEGER, " +
+                AlarmSchema.TIME_MINUTE + " INTEGER, " +
+                AlarmSchema.REPEATING_DAYS + " TEXT, " +
+                AlarmSchema.REPEAT + " INTEGER, " +
+                AlarmSchema.NAME + " TEXT, " +
+                AlarmSchema.IS_ENABLED + " INTEGER, " +
+                AlarmSchema.IS_VIBRATING + " INTEGER, " +
+                AlarmSchema.TYPE + " TEXT, " +
+                AlarmSchema.DATA + " TEXT, " +
+                AlarmSchema.DURATION + " INTEGER, " +
+                AlarmSchema.EASING + " INTEGER " +
+                " );" ;
+
+        private static final String SQL_DELETE_ENTRIES =
+                "DROP TABLE IF EXISTS " + AlarmSchema.TABLE_NAME;
+    }
+
+    /**
+     * based off the drible API,
+     */
+    private class RadioStationSchema implements BaseColumns{
+        private static final String TABLE_NAME = "radio_station";
+        private static final String ID = "_id";
+        private static final String NAME = "name";
+        private static final String DESCRIPTION = "description";
+        private static final String SLUG = "slug";
+        private static final String COUNTRY = "country";
+        private static final String WEBSITE = "website";
+        private static final String UPDATED = "updated";
+
+        private static final String TABLE_CREATE = "CREATE TABLE " +
+                RadioStationSchema.TABLE_NAME           + " ( " +
+                RadioStationSchema.ID + " INTEGER PRIMARY KEY, " +
+                RadioStationSchema.NAME + " TEXT, " +
+                RadioStationSchema.DESCRIPTION + " TEXT, " +
+                RadioStationSchema.SLUG + " TEXT, " +
+                RadioStationSchema.COUNTRY + " TEXT, " +
+                RadioStationSchema.WEBSITE + " TEXT, " +
+                RadioStationSchema.UPDATED + " TEXT " +
+                " );";
+        private static final String SQL_DELETE_ENTRIES =
+                "DROP TABLE IF EXISTS " + RadioStationSchema.TABLE_NAME;
+    }
+
+    private class RadioStationStreamSchema implements BaseColumns{
+        private static final String TABLE_NAME = "radio_station_stream";
+        private static final String ID = "_id";
+        private static final String RADIO_ID = "radio_id";
+        private static final String URL = "url";
+
+        private static final String TABLE_CREATE = "CREATE TABLE " +
+                RadioStationStreamSchema.TABLE_NAME + " ( " +
+                RadioStationStreamSchema.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                RadioStationStreamSchema.RADIO_ID + " INTEGER, " +
+                RadioStationStreamSchema.URL + " TEXT " +
+                " );";
+
+        private static final String SQL_DELETE_ENTRIES =
+                "DROP TABLE IF EXISTS " + RadioStationStreamSchema.TABLE_NAME;
+    }
+
+    private class RadioStationCategorySchema implements BaseColumns{
+        private static final String TABLE_NAME = "radio_station_category";
+        private static final String ID = "_id";
+        private static final String TITLE = "title";
+        private static final String DESCRIPTION = "desciption";
+        private static final String SLUG = "slug";
+
+        private static final String TABLE_CREATE = "CREATE TABLE " +
+                RadioStationCategorySchema.TABLE_NAME           + " ( " +
+                RadioStationCategorySchema.ID + " INTEGER PRIMARY KEY, " +
+                RadioStationCategorySchema.TITLE + " TEXT, " +
+                RadioStationCategorySchema.DESCRIPTION + " TEXT, " +
+                RadioStationCategorySchema.SLUG + " SLUG " +
+                " );";
+
+        private static final String SQL_DELETE_ENTRIES =
+                "DROP TABLE IF EXISTS " + RadioStationCategorySchema.TABLE_NAME;
+    }
+
+    private class RadioStationCategoryRelationSchema implements BaseColumns{
+        private static final String TABLE_NAME = "radio_station_category_relation";
+        private static final String RADIO_ID = "radio_id";
+        private static final String CATEGORY_ID = "category_id";
+
+        private static final String TABLE_CREATE = "CREATE TABLE " +
+                RadioStationCategoryRelationSchema.TABLE_NAME           + " ( " +
+                RadioStationCategoryRelationSchema.RADIO_ID + " INTEGER, " +
+                RadioStationCategoryRelationSchema.CATEGORY_ID + " INTEGER " +
+                " );";
+        private static final String SQL_DELETE_ENTRIES =
+                "DROP TABLE IF EXISTS " + RadioStationCategoryRelationSchema.TABLE_NAME;
+    }
 }

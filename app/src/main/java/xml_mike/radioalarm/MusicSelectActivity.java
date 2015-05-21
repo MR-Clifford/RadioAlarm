@@ -1,7 +1,6 @@
 package xml_mike.radioalarm;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,13 +21,11 @@ public class MusicSelectActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_music_select);
+        setContentView(R.layout.activity_select);
 
-        final Context context = this.getBaseContext();
+        EditText editText = (EditText) findViewById(R.id.selection_filter);
 
-        EditText editText = (EditText) findViewById(R.id.music_filter);
-
-        ListView listview = (ListView) findViewById(R.id.music_filter_list);
+        ListView listview = (ListView) findViewById(R.id.selection_filter_list);
 
         List<AlarmMedia> files = DatabaseManager.getInstance().getMediaList();
         final MusicFilterableAdapter adapter = new MusicFilterableAdapter(this, files);
@@ -45,8 +42,7 @@ public class MusicSelectActivity extends Activity {
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
