@@ -18,6 +18,8 @@ import xml_mike.radioalarm.models.RadioStation;
 
 /**
  * Created by MClifford on 20/05/15.
+ *
+ * deprecated for common functionality
  */
 public class RadioFilterableAdapter extends BaseAdapter implements Filterable, FilterableType {
     private String type = null;
@@ -74,13 +76,17 @@ public class RadioFilterableAdapter extends BaseAdapter implements Filterable, F
         }
 
         // If weren't re-ordering this you could rely on what you set last time
-        holder.text.setText(filteredData.get(position).getName());
+        String name = filteredData.get(position).getName();
+        String url =" \n NO URL FOUND";
+        if(filteredData.get(position).getStreams().size() >0)
+            url = " \n "+filteredData.get(position).getStreams().get(0).url;
+        holder.text.setText(name+":"+url);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", filteredData.get(position).getId());
+                returnIntent.putExtra("result", "" + filteredData.get(position).getId());
                 returnIntent.putExtra("alarm_type", filteredData.get(position).getClass().toString());
                 ((Activity) context).setResult(Activity.RESULT_OK, returnIntent);
                 ((Activity) context).finish();
@@ -120,7 +126,7 @@ public class RadioFilterableAdapter extends BaseAdapter implements Filterable, F
             final List<RadioStation> list = originalData;
 
             int count = list.size();
-            final ArrayList<RadioStation> nlist = new ArrayList<RadioStation>(count);
+            final ArrayList<RadioStation> nlist = new ArrayList<>(count);
 
             RadioStation filterableAlarm ;
 

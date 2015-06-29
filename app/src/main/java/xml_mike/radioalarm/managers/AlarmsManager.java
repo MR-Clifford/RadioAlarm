@@ -17,6 +17,15 @@ import xml_mike.radioalarm.models.StandardAlarm;
 
 /**
  * Created by MClifford on 01/04/15.
+ *
+ * this class will store and manage all the alarms on the system.
+ * this is to keep track of alarms as android does not allow a means to retrieve alarms that have been set.
+ * the main concept is to have this class mimic alarms that are stored on the android device.
+ *
+ * its main job is to store alarm objects,
+ * schedule and unschedule alarms,
+ * update the database everytime an alarm is changed
+ * notify all entities watching it.
  */
 public class AlarmsManager extends Observable {
 
@@ -36,7 +45,7 @@ public class AlarmsManager extends Observable {
 
     /**
      * singleton pattern with lazy initialisation
-     * @return
+     * @return get instance of AlarmsManager object
      */
     static public AlarmsManager getInstance(){
         if(instance == null)

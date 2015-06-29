@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <TextView
+            android:id="@+id/alarm_name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/alarm_name"
             android:layout_weight="2"
             android:lines="1"
             android:maxLines="1"
             android:text="Alarm" />
 
         <TextView
+            android:id="@+id/alarm_time"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="00:00"
-            android:id="@+id/alarm_time"
-            android:layout_weight="3"
             android:layout_marginTop="4dp"
+            android:layout_weight="3"
             android:gravity="center_horizontal"
-            android:padding="2dp" />
+            android:padding="2dp"
+            android:text="00:00"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <CheckBox
+            android:id="@+id/is_enabled"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/is_enabled"
             android:layout_weight="3"
             android:checked="false"
             android:focusable="false"
@@ -42,201 +42,195 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
         <Spinner
+            android:id="@+id/alarm_type"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/alarm_type"
-            android:spinnerMode="dialog"
-            android:entries="@array/alarm_types_array"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1"
+            android:entries="@array/alarm_types_array"
             android:gravity="center"
-            android:layout_weight="1" />
+            android:spinnerMode="dialog" />
 
         <TextView
+            android:id="@+id/data"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Select Audio"
-            android:id="@+id/data"
             android:layout_gravity="center_horizontal"
-            android:gravity="center"
             android:layout_weight="1"
-            android:textSize="12dp" />
+            android:gravity="center"
+            android:text="Select Audio"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
         <CheckBox
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Repeating"
             android:id="@+id/repeating"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:checked="false"
             android:focusable="false"
-            android:layout_weight="1" />
+            android:text="Repeating" />
 
         <CheckBox
+            android:id="@+id/vibrating"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Vibrate"
-            android:id="@+id/vibrating"
+            android:layout_weight="1"
             android:checked="false"
             android:focusable="false"
-            android:layout_weight="1" />
+            android:text="Vibrate" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="7"
-        android:layout_gravity="center_horizontal"
         android:id="@+id/days"
-        android:layout_marginBottom="10dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:weightSum="7">
 
         <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Sun"
             android:id="@+id/day1"
-            android:layout_weight="1"
-            android:autoText="false"
-            android:textAlignment="center"
-            android:gravity="center_horizontal"
-            android:padding="2dp"
-            android:layout_margin="3dp" />
-
-        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Mon"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:autoText="false"
+            android:gravity="center_horizontal"
+            android:padding="2dp"
+            android:text="Sun"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
             android:id="@+id/day2"
-            android:layout_weight="1"
-            android:autoText="false"
-            android:textAlignment="center"
-            android:gravity="center_horizontal"
-            android:padding="2dp"
-            android:layout_margin="3dp" />
-
-        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Tue"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:padding="2dp"
+            android:text="Mon"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
             android:id="@+id/day3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
             android:layout_weight="1"
-            android:autoText="false"
+            android:gravity="center_horizontal"
+            android:padding="2dp"
             android:singleLine="false"
-            android:gravity="center_horizontal"
-            android:padding="2dp"
-            android:layout_margin="3dp" />
+            android:text="Tue"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Wed"
             android:id="@+id/day4"
-            android:layout_weight="1"
-            android:autoText="false"
-            android:textAlignment="center"
-            android:gravity="center_horizontal"
-            android:padding="2dp"
-            android:layout_margin="3dp" />
-
-        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Thu"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:padding="2dp"
+            android:text="Wed"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
             android:id="@+id/day5"
-            android:layout_weight="1"
-            android:autoText="false"
-            android:textAlignment="center"
-            android:gravity="center_horizontal"
-            android:padding="2dp"
-            android:layout_margin="3dp" />
-
-        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Fri"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:padding="2dp"
+            android:text="Thu"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
             android:id="@+id/day6"
-            android:layout_weight="1"
-            android:autoText="false"
-            android:textAlignment="center"
-            android:gravity="center_horizontal"
-            android:padding="2dp"
-            android:layout_margin="3dp" />
-
-        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Sat"
-            android:id="@+id/day7"
+            android:layout_margin="3dp"
             android:layout_weight="1"
-            android:autoText="false"
-            android:textAlignment="center"
             android:gravity="center_horizontal"
             android:padding="2dp"
-            android:layout_margin="3dp" />
+            android:text="Fri"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/day7"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:padding="2dp"
+            android:text="Sat"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Duration:10"
-            android:id="@+id/duration"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:text="Duration:10"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
+            android:id="@+id/easing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Easing:0"
-            android:id="@+id/easing"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:nestedScrollingEnabled="false"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:text="Easing:0"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <Button
+            android:id="@+id/alarm_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="DELETE"
-            android:id="@+id/alarm_delete" />
+            android:text="DELETE" />
     </LinearLayout>
 </LinearLayout>

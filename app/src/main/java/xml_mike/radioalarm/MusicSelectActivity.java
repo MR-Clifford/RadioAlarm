@@ -9,10 +9,12 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import xml_mike.radioalarm.managers.DatabaseManager;
 import xml_mike.radioalarm.models.AlarmMedia;
+import xml_mike.radioalarm.models.MediaPlayerView;
 import xml_mike.radioalarm.views.MusicFilterableAdapter;
 
 
@@ -28,7 +30,12 @@ public class MusicSelectActivity extends Activity {
         ListView listview = (ListView) findViewById(R.id.selection_filter_list);
 
         List<AlarmMedia> files = DatabaseManager.getInstance().getMediaList();
-        final MusicFilterableAdapter adapter = new MusicFilterableAdapter(this, files);
+        List<MediaPlayerView> convertedList = new ArrayList<>();
+
+        for(AlarmMedia currentMedia:files)
+            convertedList.add(currentMedia);
+
+        final MusicFilterableAdapter adapter = new MusicFilterableAdapter(this, convertedList);
 
         listview.setAdapter(adapter);
 

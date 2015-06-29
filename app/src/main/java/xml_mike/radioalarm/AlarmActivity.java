@@ -11,7 +11,12 @@ import xml_mike.radioalarm.managers.AlarmService;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
 
-
+/**
+ * @author MClifford
+ *
+ * this class will be the main one intiated once the alarm goes off,
+ * it will be bound to the alarm Service so that a user can easily cancel it,
+ */
 public class AlarmActivity extends ActionBarActivity {
 
     @Override

@@ -38,6 +38,10 @@ public class RadioStationsManager {
         return ourInstance;
     }
 
+    public static RadioStation retrieveRadioStation(long ID){
+        return DatabaseManager.getInstance().getRadioStation(ID);
+    }
+
     public ArrayList<RadioStation> getRadioStations() {
         return radioStations;
     }
@@ -59,7 +63,7 @@ public class RadioStationsManager {
         return radioStations.get(position);
     }
 
-    public RadioStation getRadioStation(Long ID){
+    public RadioStation searchRadioStation(Long ID){
 
         for(RadioStation radioStation: radioStations) {
             if(radioStation.getId() == ID){
@@ -117,7 +121,8 @@ public class RadioStationsManager {
                     if(returnArray.length() > 0) {
                         for (int i = 0; i < returnArray.length(); i++) {
                             RadioStation rad = RadioFactory.generateRadionStation(returnArray.getJSONObject(i));
-                            addRadioStation(rad) ;
+                            if(rad.getStreams().size() >0)
+                                addRadioStation(rad) ;
                         }
                     }
 

@@ -7,11 +7,13 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import xml_mike.radioalarm.managers.RadioStationsManager;
+import xml_mike.radioalarm.models.MediaPlayerView;
 import xml_mike.radioalarm.models.RadioStation;
-import xml_mike.radioalarm.views.RadioFilterableAdapter;
+import xml_mike.radioalarm.views.MusicFilterableAdapter;
 
 /**
  * Created by MClifford on 20/05/15.
@@ -27,8 +29,13 @@ public class RadioSelectActivity extends ActionBarActivity {
 
         ListView listview = (ListView) findViewById(R.id.selection_filter_list);
 
-        List<RadioStation> files = RadioStationsManager.getInstance().getRadioStations();
-        final RadioFilterableAdapter adapter = new RadioFilterableAdapter(this, files);
+        List<RadioStation> files =  RadioStationsManager.getInstance().getRadioStations();
+        List<MediaPlayerView> convertedList = new ArrayList<>();
+
+        for(RadioStation currentMedia: files)
+            convertedList.add(currentMedia);
+
+        final MusicFilterableAdapter adapter = new MusicFilterableAdapter(this, convertedList);
 
         listview.setAdapter(adapter);
 

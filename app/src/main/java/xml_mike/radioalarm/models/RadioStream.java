@@ -23,16 +23,16 @@ public class RadioStream{
 
     /**
      * Constructer used by factory
-     * @param id
-     * @param radioid
-     * @param url
+     * @param id id of new radio stream, if provided
+     * @param radioid radio station that the stream belongs to
+     * @param url url of said stream.
      */
     public RadioStream(long id, long radioid,  String url) {
         this.id = id;
         this.radioId = radioid;
-        this.title = title;
-        this.description = description;
-        this.slug = slug;
+        //this.title = title;
+        //this.description = description;
+        //this.slug = slug;
         this.url = url;
     }
 }

@@ -4,9 +4,7 @@ import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
@@ -24,14 +22,10 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import xml_mike.radioalarm.ManageActivity;
-import xml_mike.radioalarm.MusicSelectActivity;
 import xml_mike.radioalarm.R;
-import xml_mike.radioalarm.RadioSelectActivity;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.managers.DatabaseManager;
 import xml_mike.radioalarm.managers.RadioStationsManager;
@@ -213,13 +207,16 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         });
 
 
-
+        /*
         if(alarms.get(groupPosition) instanceof StandardAlarm)
             alarm_data.setOnClickListener(getDataOnClickListener((StandardAlarm) alarms.get(groupPosition), groupPosition));
         if(alarms.get(groupPosition) instanceof MusicAlarm)
             alarm_data.setOnClickListener(getDataOnClickListener((MusicAlarm) alarms.get(groupPosition), groupPosition));
         if(alarms.get(groupPosition) instanceof RadioAlarm)
             alarm_data.setOnClickListener(getDataOnClickListener((RadioAlarm) alarms.get(groupPosition), groupPosition));
+        */
+
+        alarm_data.setOnClickListener(alarms.get(groupPosition).getDataOnClickListener(context, groupPosition)); //implementation on Strategy/Visitor Pattern
 
         alarm_isEnabled.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,7 +226,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                 AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), true);
                 callBack.notifyDataSetChanged();
             }
-
         });
 
         alarm_isRepeating.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -262,35 +258,39 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             }
         });
         //this was put into a Runnable due to issue with spinners firing on initialisation
-
-        alarm_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        alarm_type.post(new Runnable() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int selectedPosition, long id) {
+            public void run() {
+                alarm_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int selectedPosition, long id) {
 
-                String className = "";
-                switch (selectedPosition) {
-                    case 0:
-                        className = StandardAlarm.class.toString();
-                        AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
-                        break;
-                    case 1:
-                        className = MusicAlarm.class.toString();
-                        AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
-                        break;
-                    case 2:
-                        className = RadioAlarm.class.toString();
-                        AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
-                        break;
-                    default:
-                        break;
-                }
+                        String className = "";
+                        switch (selectedPosition) {
+                            case 0:
+                                className = StandardAlarm.class.toString();
+                                AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
+                                break;
+                            case 1:
+                                className = MusicAlarm.class.toString();
+                                AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
+                                break;
+                            case 2:
+                                className = RadioAlarm.class.toString();
+                                AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
+                                break;
+                            default:
+                                break;
+                        }
 
-                Log.e("selectedPosition", "selectedPosition" + selectedPosition);
+                        Log.e("selectedPosition", "selectedPosition" + selectedPosition);
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        //no action is taken
+                    }
+                });
 
             }
         });
@@ -383,13 +383,12 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                 alarm_data.setText(alarmMedia.title);
             }
             else
-                alarm_data.setText(RadioStationsManager.getInstance().getRadioStation(Long.parseLong(alarms.get(groupPosition).getData())).getName());//alarms.get(groupPosition).getData());
+                alarm_data.setText(RadioStationsManager.retrieveRadioStation(Long.parseLong(alarms.get(groupPosition).getData())).getName());//alarms.get(groupPosition).getData());
         }
         else
             alarm_data.setText("Select Audio");
 
-
-        int alarm_type_position = 0;
+        int alarm_type_position = 0; //default case which is alarm
 
         if (alarms.get(groupPosition).getClass().toString().equalsIgnoreCase(MusicAlarm.class.toString()))
             alarm_type_position = 1;
@@ -426,8 +425,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
         }
 
-        Log.e("Expandable",""+alarms.get(groupPosition).getDuration()+":"+alarms.get(groupPosition).getEasing());
-
         alarm_duration.setText("Duration:" + alarms.get(groupPosition).getDuration());
         alarm_easing.setText("Easing:" + alarms.get(groupPosition).getEasing());
 
@@ -437,75 +434,5 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
-    }
-
-    private View.OnClickListener getDataOnClickListener(final StandardAlarm alarm, final int groupPosition){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(context,"StandardAlarm", Toast.LENGTH_SHORT).show();
-
-                final RingtoneManager ringtoneManager = new RingtoneManager(context);
-                ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
-                Cursor cursor = ringtoneManager.getCursor();
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder
-                        .setTitle("Select Alarm")
-                        .setSingleChoiceItems(cursor, -1, "title", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Toast.makeText(context, ringtoneManager.getRingtoneUri(which).toString(), Toast.LENGTH_SHORT).show();
-                                alarm.setData(ringtoneManager.getRingtoneUri(which).toString());
-                                AlarmsManager.getInstance().update(groupPosition, alarm, false);
-                                AlarmsManager.getInstance().notifyObservers();
-                            }
-                        })
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                AlarmsManager.getInstance().notifyObservers();
-                            }
-                        })
-                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                AlarmsManager.getInstance().notifyObservers();
-                            }
-                        });
-
-                builder.create().show();
-            }
-        };
-    }
-
-    private View.OnClickListener getDataOnClickListener(MusicAlarm alarm, final int groupPosition){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, MusicSelectActivity.class);
-                ((ManageActivity) context).startActivityForResult(intent, groupPosition);
-            }
-        };
-    }
-
-    private View.OnClickListener getDataOnClickListener(RadioAlarm alarm, final int groupPosition){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(context, "RadioAlarm", Toast.LENGTH_SHORT).show();
-                //alarms.get(groupPosition).setData("http://www.internet-radio.com/servers/tools/playlistgenerator/?u=http://205.164.36.17:80/listen.pls&t=.pls");
-                //alarms.get(groupPosition).setData("http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/http-icy-aac-lc-a/format/pls/vpid/bbc_radio_three.pls");
-                Intent intent = new Intent(context, RadioSelectActivity.class);
-                ((ManageActivity) context).startActivityForResult(intent, groupPosition);
-            }
-        };
-    }
-
-    private View.OnClickListener getDataOnClickListener(Alarm alarm, final int groupPosdwition){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"Alarm:cast did not work", Toast.LENGTH_SHORT).show();
-            }
-        };
     }
 }

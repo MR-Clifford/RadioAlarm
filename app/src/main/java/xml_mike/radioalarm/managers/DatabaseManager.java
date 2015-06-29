@@ -26,6 +26,7 @@ import xml_mike.radioalarm.models.RadioStream;
 /**
  * Created by MClifford on 23/03/15.
  * This class acts as a medium for collection and storing all the relational data, via the broker pattern
+ * Every time a database object is called/changed this class will update the fields required.
  */
 public class DatabaseManager {
     private static DatabaseManager ourInstance = new DatabaseManager();
@@ -43,6 +44,10 @@ public class DatabaseManager {
         return ourInstance;
     }
 
+    /**
+     * add a new alarm object to the database, then update its id field to one stored in the database
+     * @param alarm
+     */
     public void addDatabaseItem(Alarm alarm){
         SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -68,6 +73,10 @@ public class DatabaseManager {
         //Global.getInstance().updateAlarm(alarm);
     }
 
+    /**
+     * update the database with the object provided
+     * @param alarm
+     */
     public void updateDataBaseItem(Alarm alarm){
         SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
 
@@ -87,23 +96,32 @@ public class DatabaseManager {
 
         String selection = AlarmSchema.ID + " = "+alarm.getId();
 
-        String[] selectionArgs = null;//{"'"+String.valueOf(alarm.getId())+"'"};
+        String[] selectionArgs = {};//{"'"+String.valueOf(alarm.getId())+"'"};
 
         db.update(AlarmSchema.TABLE_NAME,values, selection, selectionArgs);
         db.close();
     }
 
+    /**
+     * remove the provided object from the database,
+     * @param alarm
+     */
     public void removeDatabaseItem(Alarm alarm){
         SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
         // Define 'where' part of query.
-        String selection = AlarmSchema.ID + " = ";
+        String selection = AlarmSchema.ID + " = ?";
         // Specify arguments in placeholder order.
+        Log.e("Try to delete","id:"+(alarm.getId()));
         String[] selectionArgs = {String.valueOf(alarm.getId())};
         // Issue SQL statement.
         db.delete(AlarmSchema.TABLE_NAME, selection, selectionArgs);
         db.close();
     }
 
+    /**
+     * get all the alarm items stored in the database in an arrayList
+     * @return
+     */
     public ArrayList<Alarm> getAlarmDatabaseItems(){
 
         ArrayList<Alarm> returnList = new ArrayList<>();
@@ -176,10 +194,18 @@ public class DatabaseManager {
         return returnList;
     }
 
+    /**
+     * return all media items from database
+     * @return
+     */
     public List<AlarmMedia> getMediaList(){
         return songsList;
     }
 
+    /**
+     * return all local media from phone, this is ringtones and normal alarm sounds
+     * @return
+     */
     private ArrayList<AlarmMedia> getLocalMedia(){
 
         String[] projection = {
@@ -209,6 +235,11 @@ public class DatabaseManager {
         return songs;
     }
 
+    /**
+     * this returns all the various details from a given id, this id is known by the android operating system
+     * @param id
+     * @return
+     */
     public AlarmMedia getAlarmMedia(String id){
 
         AlarmMedia alarmMedia = new AlarmMedia();
@@ -246,6 +277,10 @@ public class DatabaseManager {
         return alarmMedia;
     }
 
+    /**
+     * this adds a radio station to the database
+     * @param radioStation
+     */
     public void addRadioStation(RadioStation radioStation){
         SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
         try{
@@ -305,8 +340,61 @@ public class DatabaseManager {
 
     public RadioStation getRadioStation(long id){
 
-        return null;
+        RadioStation returnStation = new RadioStation();
+
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getReadableDatabase();
+
+        String[] projection = {
+                RadioStationSchema.ID,
+                RadioStationSchema.COUNTRY,
+                RadioStationSchema.DESCRIPTION,
+                RadioStationSchema.NAME,
+                RadioStationSchema.SLUG,
+                RadioStationSchema.UPDATED,
+                RadioStationSchema.WEBSITE
+        };
+
+        //initialise variables
+        String sortOrder = RadioStationSchema.NAME + " Desc";
+        String selection = RadioStationSchema.ID+" = "+id  ;
+
+        Cursor cursor = db.query(RadioStationSchema.TABLE_NAME, projection, selection, null, null, null, sortOrder);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount() > 0){
+            do{
+                //Collect data needed to create objects
+                String RADIO_ID = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.ID));
+                String RADIO_NAME = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.NAME));
+                String RADIO_COUNTRY = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.COUNTRY));
+                String RADIO_DESCRIPTION = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.DESCRIPTION));
+                String RADIO_SLUG = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.SLUG));
+                String RADIO_WEBSITE = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.WEBSITE));
+                String RADIO_UPDATED = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationSchema.UPDATED));
+
+                returnStation = RadioFactory.generateRadionStation(
+                        Long.parseLong(RADIO_ID),
+                        RADIO_NAME,
+                        RADIO_DESCRIPTION,
+                        RADIO_SLUG,
+                        RADIO_COUNTRY,
+                        RADIO_WEBSITE,
+                        RADIO_UPDATED,
+                        this.getRadioStationStreams(Long.parseLong(RADIO_ID)),
+                        this.getRadioStationCategories(Long.parseLong(RADIO_ID))
+                );
+            } while(cursor.moveToNext());
+        }
+
+        Log.e("TESTDATABASE", "Total:"+returnStation.toString()+": cursor:"+cursor.getCount());
+        cursor.close();
+        db.close();
+
+        return returnStation;
     }
+
+
 
     public ArrayList<RadioStation> getAllRadioStations(){
         ArrayList<RadioStation> returnArrayList = new ArrayList<>();
@@ -367,8 +455,8 @@ public class DatabaseManager {
 
     /**
      *
-     * @param id
-     * @return
+     * @param id id of radio station associated with this stream
+     * @return return all the streams for a radio station, default used is 0
      */
     public ArrayList<RadioStream> getRadioStationStreams(long id){
 

@@ -30,4 +30,18 @@
     </string-array>
     <string name="title_activity_music_select">MusicSelectActivity</string>
     <string name="title_activity_radio_select">RadioSelectActivity</string>
+
+    <string name="stop_message">Stop</string>
+    <string name="snooze_message">Snooze</string>
+    <string name="filter_description">search</string>
+    <string name="alarm_name_filler">alarm</string>
+    <string name="clock_time_0">00:00</string>
+    <string name="alarm_active_text">Active</string>
+    <string name="alarm_data_default_text">Select Audio</string>
+    <string name="repeating_text">Repeating</string>
+    <string name="vibrate_text">Vibrate</string>
+    <string name="duration_text">Duration:</string>
+    <string name="volume_easing_text">Volume Easing:</string>
+    <string name="delete_alarm_text">Delete Alarm</string>
+
 </resources>

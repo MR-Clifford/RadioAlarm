@@ -3,7 +3,7 @@ package xml_mike.radioalarm.models;
 /**
  * Created by MClifford on 17/04/15.
  */
-public class AlarmMedia {
+public class AlarmMedia implements MediaPlayerView{
     public String id;
     public String artist;
     public String title;
@@ -27,5 +27,25 @@ public class AlarmMedia {
         this.data = "";
         this.displayName = "";
         this.duration = "";
+    }
+
+    @Override
+    public String getName() {
+        return title;
+    }
+
+    @Override
+    public String getDescription() {
+        return artist;
+    }
+
+    @Override
+    public String getStringId() {
+        return id;
+    }
+
+    @Override
+    public String getData() {
+        return data;
     }
 }

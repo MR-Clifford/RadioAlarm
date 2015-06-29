@@ -5,6 +5,6 @@ package xml_mike.radioalarm.views;
  */
 public interface FilterableType {
 
-    public String getType();
-    public void setType(String t);
+    String getType();
+    void setType(String t);
 }

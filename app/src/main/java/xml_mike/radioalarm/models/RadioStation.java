@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by MClifford on 13/05/15.
  */
-public class RadioStation {
+public class RadioStation implements MediaPlayerView{
 
     long id;
     String name;
@@ -40,6 +40,11 @@ public class RadioStation {
         this.categories = categories;
     }
 
+    @Override
+    public String getStringId() {
+        return ""+id;
+    }
+
     public long getId() {
         return id;
     }
@@ -48,6 +53,7 @@ public class RadioStation {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -56,6 +62,7 @@ public class RadioStation {
         this.name = name;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
@@ -110,6 +117,11 @@ public class RadioStation {
 
     public void setCategories(ArrayList<RadioCategory> categories) {
         this.categories = categories;
+    }
+
+    @Override
+    public String getData() {
+        return streams.get(0).url;
     }
 }
 

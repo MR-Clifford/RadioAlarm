@@ -1,6 +1,8 @@
 package xml_mike.radioalarm.models;
 
+import android.media.MediaPlayer;
 import android.os.Parcel;
+import android.util.Log;
 
 /**
  * Created by MClifford on 22/02/15.
@@ -19,14 +21,41 @@ public abstract class AlarmAbstract implements Alarm {
     private String name = "Alarm";
     private String data = "";
 
-    public AlarmAbstract(){
+    AlarmAbstract(){
         repeatingDays = new boolean[7];
         repeating = false;
         vibrate = false;
         isEnabled = false;
     }
+    public AlarmAbstract(Parcel in){
+
+        this.id = in.readLong();
+
+        int[] ints = new int[2];
+        in.readIntArray(ints);
+        this.timeHour = ints[0];
+        this.timeMinute = ints[1];
+
+        String[] strings = new String[2];
+        in.readStringArray(strings);
+            this.name = strings[0];
+            this.data = strings[1];
+
+        boolean[] booleans = new boolean[3];
+        in.readBooleanArray(booleans);
+            this.repeating = booleans[0];
+            this.vibrate = booleans[1];
+            this.isEnabled = booleans[2];
+
+        this.repeatingDays = new boolean[7];
+        in.readBooleanArray(repeatingDays);
+    }
+
     @Override
     public long getId(){return this.id;}
+
+    @Override
+    public void setId(long id){this.id = id;}
 
     @Override
     public int getIntId(){
@@ -36,9 +65,6 @@ public abstract class AlarmAbstract implements Alarm {
         }
         return (int) id;
     }
-
-    @Override
-    public void setId(long id){this.id = id;}
 
     @Override
     public int getTimeMinute() {
@@ -101,22 +127,22 @@ public abstract class AlarmAbstract implements Alarm {
     }
 
     @Override
-    public void setRepeatingDays(boolean[] daysOfWeek) { repeatingDays = daysOfWeek; }
-
-    @Override
     public boolean[] getRepeatingDays() { return repeatingDays; }
 
     @Override
-    public void setData(String data) { this.data = data; }
+    public void setRepeatingDays(boolean[] daysOfWeek) { repeatingDays = daysOfWeek; }
 
     @Override
     public String getData() { return this.data; }
 
     @Override
-    public void setVibrate(boolean vibrate) { this.vibrate = vibrate;}
+    public void setData(String data) { this.data = data; }
 
     @Override
     public boolean isVibrate() {return vibrate;}
+
+    @Override
+    public void setVibrate(boolean vibrate) { this.vibrate = vibrate;}
 
     @Override
     public String getDBRepeatingDays() {
@@ -146,36 +172,18 @@ public abstract class AlarmAbstract implements Alarm {
         dest.writeBooleanArray(repeatingDays);
     }
 
-    public AlarmAbstract(Parcel in){
-
-        this.id = in.readLong();
-
-        int[] ints = new int[2];
-        in.readIntArray(ints);
-        this.timeHour = ints[0];
-        this.timeMinute = ints[1];
-
-        String[] strings = new String[2];
-        in.readStringArray(strings);
-            this.name = strings[0];
-            this.data = strings[1];
-
-        boolean[] booleans = new boolean[3];
-        in.readBooleanArray(booleans);
-            this.repeating = booleans[0];
-            this.vibrate = booleans[1];
-            this.isEnabled = booleans[2];
-
-        this.repeatingDays = new boolean[7];
-        in.readBooleanArray(repeatingDays);
+    @Override
+    public int getDuration(){
+        return duration;
     }
 
     public void setDuration(int time){
         duration = time;
     }
+
     @Override
-    public int getDuration(){
-        return duration;
+    public int getEasing() {
+        return increasingDuration;
     }
 
     @Override
@@ -183,9 +191,15 @@ public abstract class AlarmAbstract implements Alarm {
         increasingDuration = time;
     }
 
-    @Override
-    public int getEasing() {
-        return increasingDuration;
+    protected MediaPlayer.OnPreparedListener getOnPreparedListener() {
+
+        return new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                Log.e("Start Media:","OMG");
+                mp.start();
+            }
+        };
     }
 }
 

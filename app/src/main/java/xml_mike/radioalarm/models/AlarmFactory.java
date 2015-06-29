@@ -39,7 +39,6 @@ public class AlarmFactory {
         alarm.setRepeating(repeating != 0);
         alarm.setVibrate(vibrating !=0);
 
-
         return alarm;
     }
 

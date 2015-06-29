@@ -1,24 +1,34 @@
 package xml_mike.radioalarm.models;
 
+import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Parcelable;
+import android.view.View;
 
 /**
  * Created by MClifford on 22/02/15.
+ *
+ * this interface will apply the strategy & visitor patterns. changing how the program/alarm behaves depending on type.
  */
 public interface Alarm extends Parcelable{
 
-    void setId(long id);
     long getId();
+
+    void setId(long id);
+
     int  getIntId();
 
-    void setName(String name);
     String getName();
 
-    void setData(String data);
+    void setName(String name);
+
     String getData();
 
-    void setEnabled(boolean enable);
+    void setData(String data);
+
     boolean isEnabled();
+
+    void setEnabled(boolean enable);
 
     boolean isRepeating();
     void setRepeating(boolean repeatWeekly);
@@ -32,17 +42,25 @@ public interface Alarm extends Parcelable{
     void setRepeatingDay(int dayOfWeek, boolean value);
     boolean getRepeatingDay(int dayOfWeek);
 
-    void setRepeatingDays(boolean[] daysOfWeek);
     boolean[] getRepeatingDays();
 
-    void setVibrate(boolean vibrate);
+    void setRepeatingDays(boolean[] daysOfWeek);
+
     boolean isVibrate();
 
-    void setDuration(int time);
+    void setVibrate(boolean vibrate);
+
     int getDuration();
 
-    void setEasing(int time);
+    void setDuration(int time);
+
     int getEasing();
 
+    void setEasing(int time);
+
     String getDBRepeatingDays();
+
+    View.OnClickListener getDataOnClickListener( Context context,int groupPosition);
+
+    void setupAlarmData(final Context context, final MediaPlayer mMediaPlayer) throws java.io.IOException;
 }

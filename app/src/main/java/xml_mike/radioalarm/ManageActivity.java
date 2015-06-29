@@ -149,20 +149,7 @@ public class ManageActivity extends ActionBarActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    public void initialiseUI(){
-
-    }
-
-    public void startPlaying(){
-
-    }
-
-    public void stopPlaying(){
-
-    }
-
+    
     public void createNewAlarm(View v){
 
         //Log.e("Testing Button click","uber test");
@@ -213,18 +200,18 @@ public class ManageActivity extends ActionBarActivity
 
                 Log.i("OnActivityResult", "" + requestCode);
                 Alarm alarm = AlarmsManager.getInstance().getAlarms().get(requestCode);
-                long result = data.getLongExtra("result",-1L);
+                String result = data.getStringExtra("result");
                 String alarmType = data.getStringExtra("alarm_type");
 
                 if(alarmType != null){
                     if(alarmType.equals(RadioAlarm.class.toString())) {
-                        if (result != -1l) {
-                            alarm.setData(""+result);
+                        if (result != null) {
+                            alarm.setData(result);
                             AlarmsManager.getInstance().update(requestCode, alarm, false);
                             this.update(null, null);
                         }
                     } else {
-                        if (result != -1l) {
+                        if (result != null) {
                             alarm.setData(""+result);
                             AlarmsManager.getInstance().update(requestCode, alarm, false);
                             this.update(null, null);

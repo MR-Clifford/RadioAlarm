@@ -20,6 +20,8 @@ public class AlarmBootReceiver extends BroadcastReceiver {
         // an Intent broadcast.
         //throw new UnsupportedOperationException("Not yet implemented");
 
+        //if the device has just booted restart all alarms so that they will run on time.
+        //this is becuase android resets all alarms on restart/shutdown.
         if(intent.getAction() != null) {
             if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
                 AlarmsManager.getInstance().scheduleAllAlarms();
