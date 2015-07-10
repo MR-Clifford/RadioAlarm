@@ -179,7 +179,7 @@ public class AlarmsManager extends Observable {
         calendar.add(Calendar.MINUTE, 1);
 
         Intent intent = new Intent(Global.getInstance().getBaseContext(), AlarmReceiver.class);
-        Log.e(this.getClass().getSimpleName(), "context:" + Global.getInstance().getApplicationContext());
+        //Log.e(this.getClass().getSimpleName(), "context:" + Global.getInstance().getApplicationContext());
         intent.putExtra("alarmId", alarm.getId());
         intent.setAction("xml_mike.radioalarm.intent.SNOOZE");
 

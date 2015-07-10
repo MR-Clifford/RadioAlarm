@@ -2,19 +2,21 @@ package xml_mike.radioalarm.models;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
 
 import java.io.IOException;
 
-import xml_mike.radioalarm.ManageActivity;
-import xml_mike.radioalarm.MusicSelectActivity;
+import xml_mike.radioalarm.controllers.ManageActivity;
+import xml_mike.radioalarm.controllers.MusicSelectActivity;
 import xml_mike.radioalarm.managers.DatabaseManager;
+import xml_mike.radioalarm.managers.ThreadedMediaPlayer;
 
 /**
  * Created by MClifford on 22/02/15.
+ *
+ * handles single song alarm, sets on repeat & implements strategy pattern
  */
 public class MusicAlarm extends AlarmAbstract {
 
@@ -47,11 +49,8 @@ public class MusicAlarm extends AlarmAbstract {
     }
 
     @Override
-    public void setupAlarmData(Context context, MediaPlayer mMediaPlayer) throws IOException {
+    public void setupAlarmData(Context context, ThreadedMediaPlayer mediaPlayer) throws IOException {
         AlarmMedia alarmMedia = DatabaseManager.getInstance().getAlarmMedia(getData());
-        mMediaPlayer.setDataSource(alarmMedia.data);
-        mMediaPlayer.setLooping(true);
-        mMediaPlayer.setOnPreparedListener(super.getOnPreparedListener());
-        mMediaPlayer.prepareAsync();
+        mediaPlayer.changeDataSource(alarmMedia.data);
     }
 }

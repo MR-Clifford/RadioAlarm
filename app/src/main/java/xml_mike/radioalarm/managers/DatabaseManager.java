@@ -29,7 +29,7 @@ import xml_mike.radioalarm.models.RadioStream;
  * Every time a database object is called/changed this class will update the fields required.
  */
 public class DatabaseManager {
-    private static DatabaseManager ourInstance = new DatabaseManager();
+    private static DatabaseManager ourInstance;
     private ArrayList<AlarmMedia> songsList;
 
     private DatabaseManager() {
@@ -69,7 +69,6 @@ public class DatabaseManager {
         alarm.setId(id);
 
         db.close();
-
         //Global.getInstance().updateAlarm(alarm);
     }
 
@@ -111,7 +110,7 @@ public class DatabaseManager {
         // Define 'where' part of query.
         String selection = AlarmSchema.ID + " = ?";
         // Specify arguments in placeholder order.
-        Log.e("Try to delete","id:"+(alarm.getId()));
+        Log.d("Try to delete","id:"+(alarm.getId()));
         String[] selectionArgs = {String.valueOf(alarm.getId())};
         // Issue SQL statement.
         db.delete(AlarmSchema.TABLE_NAME, selection, selectionArgs);
@@ -224,13 +223,18 @@ public class DatabaseManager {
         String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
         Cursor cursor = cr.query(uri2, projection, selection, null, sortOrder);
 
-        Log.i("DataBaseManager", "Total Media on phone:" + cursor.getCount());
-
         ArrayList<AlarmMedia> songs = new ArrayList<>();
-        while(cursor.moveToNext())
-            songs.add(new AlarmMedia(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5) ));
 
-        cursor.close();
+        if(cursor != null) {
+            Log.d("DataBaseManager", "Total Media on phone:" + cursor.getCount());
+
+            while(cursor.moveToNext())
+                songs.add(new AlarmMedia(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5) ));
+
+            cursor.close();
+        }
+        else
+            Log.e("DatabaseManager","Cursor was null");
 
         return songs;
     }
@@ -271,7 +275,7 @@ public class DatabaseManager {
                 );
             cursor.close();
         }catch (Exception e){
-            Log.e("DatabaseManager",e.toString());
+            Log.d("DatabaseManager",e.toString());
         }
 
         return alarmMedia;
@@ -331,7 +335,7 @@ public class DatabaseManager {
                 }
             }
         }catch (Exception e){
-            Log.e("Database Issue", radioStation.getId()+" :Exception"+e.toString());
+            Log.d("Database Issue", radioStation.getId()+" :Exception"+e.toString());
         }
         finally {
             db.close();
@@ -387,7 +391,7 @@ public class DatabaseManager {
             } while(cursor.moveToNext());
         }
 
-        Log.e("TESTDATABASE", "Total:"+returnStation.toString()+": cursor:"+cursor.getCount());
+        Log.d("TESTDATABASE", "Total:"+returnStation.toString()+": cursor:"+cursor.getCount());
         cursor.close();
         db.close();
 
@@ -395,7 +399,10 @@ public class DatabaseManager {
     }
 
 
-
+    /**
+     * get all the radio stations stored on device
+     * @return
+     */
     public ArrayList<RadioStation> getAllRadioStations(){
         ArrayList<RadioStation> returnArrayList = new ArrayList<>();
 
@@ -446,9 +453,8 @@ public class DatabaseManager {
             } while(cursor.moveToNext());
         }
 
-        Log.e("TESTDATABASE", "Total:"+returnArrayList.size()+": cursor:"+cursor.getCount());
-        cursor.close();
-        db.close();
+        cursor.close(); //close database connection
+        db.close(); //close database link
 
         return returnArrayList;
     }
@@ -534,7 +540,7 @@ public class DatabaseManager {
                 } while(cursor.moveToNext());
             }
         } catch(Exception e){
-            Log.e("error",e.toString());
+            Log.d("error",e.toString());
         } finally {
             if(cursor != null) cursor.close();
             db.close();
@@ -572,6 +578,10 @@ public class DatabaseManager {
         return returnFlag;
     }
 
+
+    /**
+     * Located below are all static references of database objects found in database
+     */
     private class DatabaseSchema implements BaseColumns {
         private static final int DATABASE_VERSION = 2;
         private static final String DATABASE_NAME = "RadioAlarm";

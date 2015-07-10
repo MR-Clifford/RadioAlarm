@@ -1,12 +1,18 @@
-package xml_mike.radioalarm;
+package xml_mike.radioalarm.controllers;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.managers.AlarmService;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
@@ -14,20 +20,55 @@ import xml_mike.radioalarm.models.Alarm;
 /**
  * @author MClifford
  *
- * this class will be the main one intiated once the alarm goes off,
- * it will be bound to the alarm Service so that a user can easily cancel it,
+ * This class will be the main one intiated once the alarm goes off,
+ * it will be bound to the alarm Service so that a user can easily cancel it
  */
-public class AlarmActivity extends ActionBarActivity {
+public class AlarmActivity extends AppCompatActivity {
+
+    long alarmId;
+    AlarmService mService;
+    boolean mBound = false;
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            AlarmService.LocalBinder binder = (AlarmService.LocalBinder) service;
+            mService = binder.getService();
+            mService.startAudio("");
+            mBound = true;
+
+            Log.e("service","connected1");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
+        alarmId = this.getIntent().getLongExtra("alarmId", -1L);
 
-        long alarmId = this.getIntent().getLongExtra("alarmId", -1L);
-        if(alarmId >= 0)
-            startService(getAlarmService());
+        if(alarmId >= 0) {
+            bindService(getAlarmService(), mConnection, Context.BIND_AUTO_CREATE);
+        } else {
+            Log.e("an Issue happend","wrong id");
+        }
+
+        //startService(getAlarmService());
     }
 
     @Override
@@ -55,19 +96,12 @@ public class AlarmActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent(getBaseContext(), AlarmService.class);
-        intent.setAction("com.example.action.STOP");
-        startService(intent);
-}
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Intent intent = new Intent(getBaseContext(), AlarmService.class);
-        intent.setAction("com.example.action.STOP");
-        startService(intent);
     }
-
 
     private Intent getAlarmService(){
 
@@ -84,17 +118,22 @@ public class AlarmActivity extends ActionBarActivity {
 
     public void stopAlarmService(View view){
 
-        Intent intent = new Intent(getBaseContext(), AlarmService.class);
-        intent.setAction("com.example.action.STOP");
-        startService(intent);
+        if (mBound) {
+            mService.stopAudio();
+            unbindService(mConnection);
+            mBound = false;
+        }
 
         finish();
     }
 
     public void pauseAlarmService(View view){
-        Intent intent = new Intent(getBaseContext(), AlarmService.class);
-        intent.setAction("com.example.action.STOP");
-        startService(intent);
+
+        if (mBound) {
+            mService.stopAudio();
+            unbindService(mConnection);
+            mBound = false;
+        }
 
         Long alarmId = this.getIntent().getLongExtra("alarmId", -1L);
         if(alarmId >= 0L) {
@@ -103,4 +142,6 @@ public class AlarmActivity extends ActionBarActivity {
         }
         finish();
     }
+
+
 }

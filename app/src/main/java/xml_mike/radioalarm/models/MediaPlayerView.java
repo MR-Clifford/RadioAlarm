@@ -2,6 +2,8 @@ package xml_mike.radioalarm.models;
 
 /**
  * Created by MClifford on 26/06/15.
+ *
+ *
  */
 public interface MediaPlayerView {
 
@@ -9,4 +11,6 @@ public interface MediaPlayerView {
     String getName();
     String getDescription();
     String getData();
+    boolean isPlaying();
+    boolean setPlaying(boolean boo);
 }

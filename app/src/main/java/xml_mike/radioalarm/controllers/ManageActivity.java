@@ -1,4 +1,4 @@
-package xml_mike.radioalarm;
+package xml_mike.radioalarm.controllers;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
@@ -10,7 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +23,9 @@ import android.widget.TimePicker;
 import java.util.Observable;
 import java.util.Observer;
 
-import xml_mike.radioalarm.managers.AlarmService;
+import xml_mike.radioalarm.Global;
+import xml_mike.radioalarm.NavigationDrawerFragment;
+import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.managers.RadioStationsManager;
 import xml_mike.radioalarm.models.Alarm;
@@ -32,8 +34,11 @@ import xml_mike.radioalarm.models.StandardAlarm;
 import xml_mike.radioalarm.views.ExpandableAlarmAdapter;
 
 
-public class ManageActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TimePickerDialog.OnTimeSetListener, ExpandableListView.OnGroupCollapseListener, Observer{
+/**
+ * Main view of the mobile alarm app
+ */
+public class ManageActivity extends AppCompatActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ExpandableListView.OnGroupCollapseListener, Observer {
 
     ExpandableListView mExpandableList;
     private int currentAlarm = -1;
@@ -152,42 +157,29 @@ public class ManageActivity extends ActionBarActivity
     
     public void createNewAlarm(View v){
 
-        //Log.e("Testing Button click","uber test");
-        //Toast.makeText(this, "Test Button Click", Toast.LENGTH_SHORT).show();
-
         currentAlarm = -1;
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, this, 0,0,true) ;
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener(){
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                Alarm nAlarm = new StandardAlarm() ;
+
+                nAlarm.setTimeHour(hourOfDay);
+                nAlarm.setTimeMinute(minute);
+
+                if(currentAlarm < 0 && view.isShown())
+                    AlarmsManager.getInstance().add(nAlarm);
+
+                currentAlarm = -1;
+
+                Log.e("datePicker",view.toString());
+                Log.e("datePicker","Called 1");
+            }
+
+
+        }, 0,0,true);
         timePickerDialog.show();
-
-    }
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-
-        Alarm nAlarm = new StandardAlarm() ;
-
-        nAlarm.setTimeHour(hourOfDay);
-        nAlarm.setTimeMinute(minute);
-
-        if(currentAlarm < 0)
-            AlarmsManager.getInstance().add(nAlarm);
-
-        currentAlarm = -1;
-
-    }
-
-    public void serviceTest(){
-        Intent intent = new Intent(getBaseContext(), AlarmService.class);
-        Long alarmId = this.getIntent().getLongExtra("alarmId", 1L);
-
-        if(alarmId >= 0)
-            intent.putExtra("alarmId",alarmId);
-
-        intent.setAction("com.example.action.PLAY");
-
-        startService(intent);
     }
 
     @Override
@@ -219,10 +211,10 @@ public class ManageActivity extends ActionBarActivity
                     }
                 }
                 else
-                    Log.e("onActivityResult", "F:" + requestCode + ":" + alarm.getData()); //somehow the wrong result was made, if case please analyse
+                    Log.d("onActivityResult", "F:" + requestCode + ":" + alarm.getData()); //somehow the wrong result was made, if case please analyse
             }
             else
-                Log.e("onActivityResult", "F:" + requestCode); //somehow the wrong result was made, if case please analyse
+                Log.d("onActivityResult", "F:" + requestCode); //somehow the wrong result was made, if case please analyse
         }
     }
 

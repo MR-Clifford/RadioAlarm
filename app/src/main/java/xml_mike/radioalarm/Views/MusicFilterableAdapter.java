@@ -3,7 +3,6 @@ package xml_mike.radioalarm.views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +11,19 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import xml_mike.radioalarm.R;
-import xml_mike.radioalarm.managers.TestAudioService;
+import xml_mike.radioalarm.managers.AudioService;
 import xml_mike.radioalarm.models.MediaPlayerView;
 
 /**
  * Created by MClifford on 17/04/15.
+ *
+ * TODO do init in seperate thread
+ *
  */
 public class MusicFilterableAdapter extends BaseAdapter implements Filterable, FilterableType {
 
@@ -32,8 +33,10 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
     private Context context = null;
     private LayoutInflater mInflator = null;
     private ItemFilter mFilter = new ItemFilter();
+    private Button previousItem;
 
     public MusicFilterableAdapter(Context context, List<MediaPlayerView> data ){
+        super();
         this.originalData = data;
         this.context = context;
         this.mInflator = LayoutInflater.from(context);
@@ -63,7 +66,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
         final ViewHolder holder;
 
         if (convertView == null) {
-             convertView = mInflator.inflate(R.layout.list_item_select_media, null);
+             convertView = mInflator.inflate(R.layout.list_item_select_media, parent, false);
 
             // Creates a ViewHolder and store references to the two children views
             // we want to bind data to.
@@ -98,28 +101,19 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
         holder.testAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("test1",holder.testAudio.getText().toString());
+
                 if(holder.testAudio.getText().toString().equalsIgnoreCase("play")) {
-                    Log.e("test2",holder.testAudio.getText().toString());
 
                     holder.testAudio.setText("Stop");
-                    Toast.makeText(context, "Testing this function", Toast.LENGTH_SHORT).show();
+                    ((AudioService) context).startAudio(filteredData.get(position).getData());
 
-                    Intent intent = new Intent(context, TestAudioService.class);
+                    if(previousItem !=null && previousItem != holder.testAudio )
+                        previousItem.setText("Play");
+                    previousItem = holder.testAudio;
 
-                    intent.putExtra("test", filteredData.get(position).getData());
-                    intent.setAction("com.example.action.PLAY");
-
-                    context.startService(intent);
                 } else {
-                    Log.e("asd","asd");
                     holder.testAudio.setText("Play");
-                    Intent intent = new Intent(context, TestAudioService.class);
-
-                    intent.putExtra("test", filteredData.get(position).getData());
-                    intent.setAction("com.example.action.STOP");
-
-                    context.startService(intent);
+                    ((AudioService) context).stopAudio();
                 }
             }
         });
@@ -159,7 +153,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
             final List<MediaPlayerView> list = originalData;
 
             int count = list.size();
-            final ArrayList<MediaPlayerView> nlist = new ArrayList<MediaPlayerView>(count);
+            final ArrayList<MediaPlayerView> nlist = new ArrayList<>(count);
 
             MediaPlayerView filterableAlarm ;
 
@@ -182,6 +176,6 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
             filteredData = (ArrayList<MediaPlayerView>) results.values;
             notifyDataSetChanged();
         }
-
     }
+
 }

@@ -7,7 +7,7 @@ import android.util.Log;
 
 import java.util.Calendar;
 
-import xml_mike.radioalarm.managers.AlarmService;
+import xml_mike.radioalarm.controllers.AlarmActivity;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
 
@@ -20,7 +20,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         StaticWakeLock.lockOn(context);
         if(intent.getAction() == null)
-            Log.e(this.getClass().getSimpleName(),"the intent action was null");
+            Log.d(this.getClass().getSimpleName(),"the intent action was null");
         else if (intent.getAction().equals("xml_mike.radioalarm.intent.START_ALARM")) {
 
             Long alarmId = intent.getLongExtra("alarmId", -1L);
@@ -32,16 +32,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
 
-                if (alarm.getRepeatingDay(day-1) && alarm.isRepeating()) {
-                        //Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
-                        Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmService.class);
-                        newIntent.putExtra("alarmId", alarmId);
-                        //newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        newIntent.setAction("com.example.action.PLAY");
-                        //Global.getInstance().startActivity(newIntent);
-                        startWakefulService(Global.getInstance().getBaseContext(), newIntent );
-
-                }
+                if (alarm.getRepeatingDay(day-1) && alarm.isRepeating())
+                    this.startService(context, intent);
                 else if(!alarm.isRepeating()){
                     alarm.setEnabled(false);
                     AlarmsManager.getInstance().update(alarm);
@@ -56,16 +48,21 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             alarmId = intent.getLongExtra("alarmId", alarmId);
             Alarm alarm = AlarmsManager.getInstance().getAlarm(alarmId);
 
-            if(alarm.getId() >= 0L) {
-                //Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
-                Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmService.class);
-                newIntent.putExtra("alarmId", alarmId);
-                //newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                newIntent.setAction("com.example.action.PLAY");
-                //Global.getInstance().startActivity(newIntent);
-                startWakefulService(Global.getInstance().getBaseContext(), newIntent);
-            }
+            if(alarm.getId() >= 0L)
+                startService(context,intent);
         }
+    }
+
+    private void startService(Context context, Intent intent){
+        Long alarmId = 0L;
+        alarmId = intent.getLongExtra("alarmId", alarmId);
+
+        Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        newIntent.setAction("com.example.action.PLAY");
+        newIntent.putExtra("alarmId", alarmId);
+
+        context.startActivity(newIntent);
     }
 }
 

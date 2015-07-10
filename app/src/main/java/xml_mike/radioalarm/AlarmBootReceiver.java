@@ -24,9 +24,9 @@ public class AlarmBootReceiver extends BroadcastReceiver {
         //this is becuase android resets all alarms on restart/shutdown.
         if(intent.getAction() != null) {
             if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
-                AlarmsManager.getInstance().scheduleAllAlarms();
+                AlarmsManager.getInstance().scheduleAllAlarms(); //schedule all active alarms
 
-            Log.e("AlarmBookReceiver", intent.getAction());
+            Log.d("AlarmBookReceiver", intent.getAction());
         }
     }
 }

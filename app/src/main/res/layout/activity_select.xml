@@ -4,7 +4,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="xml_mike.radioalarm.MusicSelectActivity">
+    tools:context="xml_mike.radioalarm.controllers.MusicSelectActivity">
 
     <EditText
         android:id="@+id/selection_filter"
@@ -19,11 +19,33 @@
         android:hint="Song name" />
 
     <ListView
-        android:id="@+id/selection_filter_list"
+        android:id="@android:id/list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/selection_filter"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:choiceMode="singleChoice" />
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No results Found"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="false" />
+
+
 </RelativeLayout>

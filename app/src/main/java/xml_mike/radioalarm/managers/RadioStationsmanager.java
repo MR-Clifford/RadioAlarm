@@ -18,6 +18,8 @@ import xml_mike.radioalarm.models.RadioStation;
 
 /**
  * Created by MClifford on 13/05/15.
+ *
+ * all streams located in database interface, gets all database objects and adds them to a list.
  */
 public class RadioStationsManager {
     private static final String baseURl = "http://api.dirble.com/v2/countries/"; //params[0]
@@ -26,7 +28,7 @@ public class RadioStationsManager {
     private static final String per_page = "30";  //params[3]
     private static final String token = "&token=b3b1e7e015ac9cb7104006f1e0"; //params[4]
     private static RadioStationsManager ourInstance;
-    private ArrayList<RadioStation> radioStations;
+    private ArrayList<RadioStation> radioStations; //potentially convert to hash map for quicker retrieval
     private RadioStationsManager() {
         radioStations = DatabaseManager.getInstance().getAllRadioStations();
     }

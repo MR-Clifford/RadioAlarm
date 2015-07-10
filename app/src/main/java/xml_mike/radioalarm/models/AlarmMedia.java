@@ -11,6 +11,7 @@ public class AlarmMedia implements MediaPlayerView{
     public String displayName;
     public String duration;
 
+
     public AlarmMedia(String id, String artist, String title, String data, String displayName, String duration) {
         this.id = id;
         this.artist = artist;

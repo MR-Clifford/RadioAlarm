@@ -1,9 +1,10 @@
 package xml_mike.radioalarm.models;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Parcelable;
 import android.view.View;
+
+import xml_mike.radioalarm.managers.ThreadedMediaPlayer;
 
 /**
  * Created by MClifford on 22/02/15.
@@ -62,5 +63,5 @@ public interface Alarm extends Parcelable{
 
     View.OnClickListener getDataOnClickListener( Context context,int groupPosition);
 
-    void setupAlarmData(final Context context, final MediaPlayer mMediaPlayer) throws java.io.IOException;
+    void setupAlarmData(final Context context, final ThreadedMediaPlayer mediaPlayer) throws java.io.IOException;
 }

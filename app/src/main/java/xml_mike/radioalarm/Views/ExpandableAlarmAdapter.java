@@ -193,28 +193,19 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                        alarms.get(currentAlarm).setTimeMinute(minute);
-                        alarms.get(currentAlarm).setTimeHour(hourOfDay);
+                        if(view.isShown()) {
+                            alarms.get(currentAlarm).setTimeMinute(minute);
+                            alarms.get(currentAlarm).setTimeHour(hourOfDay);
 
-                        //Global.getInstance().setAlarms(alarms);
-                        AlarmsManager.getInstance().update(currentAlarm, alarms.get(currentAlarm), true);
-                        callBack.notifyDataSetChanged();
-
+                            //Global.getInstance().setAlarms(alarms);
+                            AlarmsManager.getInstance().update(currentAlarm, alarms.get(currentAlarm), true);
+                            callBack.notifyDataSetChanged();
+                        }
                     }
                 }, 0, 0, true);
                 timePickerDialog.show();
             }
         });
-
-
-        /*
-        if(alarms.get(groupPosition) instanceof StandardAlarm)
-            alarm_data.setOnClickListener(getDataOnClickListener((StandardAlarm) alarms.get(groupPosition), groupPosition));
-        if(alarms.get(groupPosition) instanceof MusicAlarm)
-            alarm_data.setOnClickListener(getDataOnClickListener((MusicAlarm) alarms.get(groupPosition), groupPosition));
-        if(alarms.get(groupPosition) instanceof RadioAlarm)
-            alarm_data.setOnClickListener(getDataOnClickListener((RadioAlarm) alarms.get(groupPosition), groupPosition));
-        */
 
         alarm_data.setOnClickListener(alarms.get(groupPosition).getDataOnClickListener(context, groupPosition)); //implementation on Strategy/Visitor Pattern
 
@@ -257,6 +248,16 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
             }
         });
+
+        int alarm_type_position = 0; //default case which is alarm
+
+        if (alarms.get(groupPosition).getClass().toString().equalsIgnoreCase(MusicAlarm.class.toString()))
+            alarm_type_position = 1;
+        if (alarms.get(groupPosition).getClass().toString().equalsIgnoreCase(RadioAlarm.class.toString()))
+            alarm_type_position = 2;
+
+        alarm_type.setSelection(alarm_type_position, false);
+
         //this was put into a Runnable due to issue with spinners firing on initialisation
         alarm_type.post(new Runnable() {
             @Override
@@ -265,7 +266,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int selectedPosition, long id) {
 
-                        String className = "";
+                        String className;
                         switch (selectedPosition) {
                             case 0:
                                 className = StandardAlarm.class.toString();
@@ -283,7 +284,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                                 break;
                         }
 
-                        Log.e("selectedPosition", "selectedPosition" + selectedPosition);
+                        Log.d("selectedPosition", "selectedPosition" + selectedPosition);
 
                     }
                     @Override
@@ -294,7 +295,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
             }
         });
-
 
         alarm_duration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -387,15 +387,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         }
         else
             alarm_data.setText("Select Audio");
-
-        int alarm_type_position = 0; //default case which is alarm
-
-        if (alarms.get(groupPosition).getClass().toString().equalsIgnoreCase(MusicAlarm.class.toString()))
-            alarm_type_position = 1;
-        if (alarms.get(groupPosition).getClass().toString().equalsIgnoreCase(RadioAlarm.class.toString()))
-            alarm_type_position = 2;
-
-        alarm_type.setSelection(alarm_type_position, false);
 
         if (!alarms.get(groupPosition).isRepeating())
             daysLayout.setAlpha(0.5f);

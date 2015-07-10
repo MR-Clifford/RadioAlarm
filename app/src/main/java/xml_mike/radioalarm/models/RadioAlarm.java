@@ -2,7 +2,6 @@ package xml_mike.radioalarm.models;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcel;
@@ -10,13 +9,10 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.view.View;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import xml_mike.radioalarm.ManageActivity;
-import xml_mike.radioalarm.RadioSelectActivity;
+import xml_mike.radioalarm.controllers.ManageActivity;
+import xml_mike.radioalarm.controllers.RadioSelectActivity;
 import xml_mike.radioalarm.managers.RadioStationsManager;
+import xml_mike.radioalarm.managers.ThreadedMediaPlayer;
 import xml_mike.radioalarm.managers.parsers.FileParser;
 
 /**
@@ -56,39 +52,26 @@ public class RadioAlarm extends AlarmAbstract {
     }
 
     @Override
-    public void setupAlarmData(final Context context, final MediaPlayer mMediaPlayer) throws java.io.IOException {
-        final ExecutorService queue = Executors.newSingleThreadExecutor();
+    public void setupAlarmData(final Context context, final ThreadedMediaPlayer mediaPlayer) throws java.io.IOException {
+        //final ExecutorService queue = Executors.newSingleThreadExecutor();
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
-        //final String radioData = alarm.getData();
         if(ni != null){
             if(getData().contains(".pls") || getData().contains(".m3u") || getData().contains(".asx") || getData().contains(".ashx")) {
-                final Runnable runner = new Runnable() {
+                Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         String realUrl = FileParser.getURL(RadioAlarm.this.getData());
-                        try {
-                            mMediaPlayer.setDataSource(realUrl);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        mMediaPlayer.setOnPreparedListener(RadioAlarm.this.getOnPreparedListener());
-                        mMediaPlayer.prepareAsync();
+                        mediaPlayer.changeDataSource(realUrl);
                     }
-                };
-                queue.execute(runner);
+                });
+                thread.start();
             } else {
                 RadioStation radioStation = RadioStationsManager.retrieveRadioStation(Long.parseLong(getData()));
-                mMediaPlayer.setDataSource(radioStation.getStreams().get(0).url); //grab first stream associated to internet radio station TODO allow user to choose stream
-                mMediaPlayer.setOnPreparedListener(RadioAlarm.this.getOnPreparedListener());
-                mMediaPlayer.prepareAsync();
+                mediaPlayer.changeDataSource(radioStation.getStreams().get(0).url); //grab first stream associated to internet radio station TODO allow user to choose stream
             }
-        } else {
-            mMediaPlayer.setDataSource(context,Settings.System.DEFAULT_ALARM_ALERT_URI); //if phone is not connected to the internet play phones default alarm tone.
-            mMediaPlayer.setOnPreparedListener(this.getOnPreparedListener());
-            mMediaPlayer.setLooping(true);
-            mMediaPlayer.prepare();
         }
+        else
+            mediaPlayer.changeDataSource(context,Settings.System.DEFAULT_ALARM_ALERT_URI); //if phone is not connected to the internet play phones default alarm tone.
     }
 }
