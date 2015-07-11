@@ -88,6 +88,7 @@ public class RadioSelectActivity extends ListActivity implements AudioService {
     protected void onStop() {
         super.onStop();
         if (mBound) {
+            stopAudio();
             unbindService(mConnection);
             mBound = false;
         }

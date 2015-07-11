@@ -266,23 +266,25 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int selectedPosition, long id) {
 
-                        String className;
-                        switch (selectedPosition) {
-                            case 0:
-                                className = StandardAlarm.class.toString();
-                                AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
-                                break;
-                            case 1:
-                                className = MusicAlarm.class.toString();
-                                AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
-                                break;
-                            case 2:
-                                className = RadioAlarm.class.toString();
-                                AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
-                                break;
-                            default:
-                                break;
-                        }
+                        //if(groupPosition == alarms.size()+1) {
+                            String className;
+                            switch (selectedPosition) {
+                                case 0:
+                                    className = StandardAlarm.class.toString();
+                                    AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
+                                    break;
+                                case 1:
+                                    className = MusicAlarm.class.toString();
+                                    AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
+                                    break;
+                                case 2:
+                                    className = RadioAlarm.class.toString();
+                                    AlarmsManager.getInstance().update(groupPosition, AlarmFactory.convertAlarm(className, alarms.get(groupPosition)), false);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        //}
 
                         Log.d("selectedPosition", "selectedPosition" + selectedPosition);
 

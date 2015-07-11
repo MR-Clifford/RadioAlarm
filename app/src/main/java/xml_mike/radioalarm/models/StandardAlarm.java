@@ -16,6 +16,7 @@ import java.io.IOException;
 import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.managers.ThreadedMediaPlayer;
+import xml_mike.radioalarm.views.AlarmMediaAdapter;
 
 /**
  * Created by MClifford on 23/02/15.
@@ -52,23 +53,43 @@ public class StandardAlarm extends AlarmAbstract {
             public void onClick(View v) {
                 //Toast.makeText(context,"StandardAlarm", Toast.LENGTH_SHORT).show();
 
-                final RingtoneManager ringtoneManager = new RingtoneManager(context);
-                ringtoneManager.setType(RingtoneManager.TYPE_ALARM | RingtoneManager.TYPE_RINGTONE);
-                Cursor cursor = ringtoneManager.getCursor();
+                final RingtoneManager ringtoneManager = new RingtoneManager(Global.getInstance().getApplicationContext());
+                ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
+                Cursor ringtones = ringtoneManager.getCursor();
 
-                Log.e("Number of tones",""+cursor.getCount());
+                int i = 0;
+                AlarmMedia[] alarmMedias = new AlarmMedia[ringtones.getCount()] ;
+
+                for (ringtones.moveToFirst(); !ringtones.isAfterLast(); ringtones.moveToNext()) {
+
+
+                    String name = ringtones.getString(RingtoneManager.TITLE_COLUMN_INDEX);
+                    String data = "";//ringtoneManager.getRingtoneUri(0).toString();//ringtones.getString(RingtoneManager.URI_COLUMN_INDEX);
+                    String id = ringtones.getString(RingtoneManager.ID_COLUMN_INDEX);
+
+                    Log.e("data", data);
+
+                    alarmMedias[i] = new AlarmMedia(id, "", name, data, name, "0");
+
+                    i++;
+                }
+
+                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, android.R.layout.simple_list_item_1,alarmMedias);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                if(cursor.getCount() > 0) {
+                if(ringtones.getCount() > 0) {
                     builder
                             .setTitle("Select Alarm")
-                            .setSingleChoiceItems(cursor, -1, "title", new DialogInterface.OnClickListener() {
+                            .setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //Toast.makeText(context, ringtoneManager.getRingtoneUri(which).toString(), Toast.LENGTH_SHORT).show();
+                                    //StandardAlarm.this.setData(adapter.getItem(groupPosition).getData());
                                     StandardAlarm.this.setData(ringtoneManager.getRingtoneUri(which).toString());
+
                                     AlarmsManager.getInstance().update(groupPosition, StandardAlarm.this, false);
                                     AlarmsManager.getInstance().notifyObservers();
+                                    dialog.dismiss();
                                 }
                             })
                             .setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -81,41 +102,14 @@ public class StandardAlarm extends AlarmAbstract {
                                     AlarmsManager.getInstance().notifyObservers();
                                 }
                             });
+                    Log.e("","");
                 } else {
-                    // if the original Ringtone manager could not find a ringtone show all available ringtones
-
-                    Toast.makeText(Global.getInstance(), "No TONES", Toast.LENGTH_SHORT);
-
-                    final RingtoneManager BackupRingtoneManager = new RingtoneManager(context);
-                    BackupRingtoneManager.setType(RingtoneManager.TYPE_ALL);
-                    cursor = BackupRingtoneManager.getCursor();
-
-                    builder
-                            .setTitle("Select Alarm")
-                            .setSingleChoiceItems(cursor, -1, "title", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //Toast.makeText(context, ringtoneManager.getRingtoneUri(which).toString(), Toast.LENGTH_SHORT).show();
-                                    StandardAlarm.this.setData(BackupRingtoneManager.getRingtoneUri(which).toString());
-                                    AlarmsManager.getInstance().update(groupPosition, StandardAlarm.this, false);
-                                    AlarmsManager.getInstance().notifyObservers();
-                                }
-                            })
-                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    AlarmsManager.getInstance().notifyObservers();
-                                }
-                            })
-                            .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    AlarmsManager.getInstance().notifyObservers();
-                                }
-                            });
+                    Toast.makeText(context, "No local Alarm Sounds found", Toast.LENGTH_SHORT).show();
                 }
 
                 builder.create().show();
-                Log.e("local","Total:"+cursor.getCount());
-                cursor.close();
+                Log.e("local", "Total:" + ringtones.getCount());
+                //ringtones.close();
 
             }
         };

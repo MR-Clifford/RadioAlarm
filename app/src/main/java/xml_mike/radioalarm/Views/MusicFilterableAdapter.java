@@ -33,7 +33,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
     private Context context = null;
     private LayoutInflater mInflator = null;
     private ItemFilter mFilter = new ItemFilter();
-    private Button previousItem;
+    private int previousItem;
 
     public MusicFilterableAdapter(Context context, List<MediaPlayerView> data ){
         super();
@@ -102,21 +102,33 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
             @Override
             public void onClick(View v) {
 
-                if(holder.testAudio.getText().toString().equalsIgnoreCase("play")) {
 
-                    holder.testAudio.setText("Stop");
+                if(!filteredData.get(position).isPlaying()){
+
+                    if(previousItem > -1 && previousItem != position ) {
+                        filteredData.get(previousItem).setPlaying(false);
+                        ((AudioService) context).stopAudio();
+                        previousItem = position;
+                    }
+
+                    filteredData.get(position).setPlaying(true);
+
                     ((AudioService) context).startAudio(filteredData.get(position).getData());
 
-                    if(previousItem !=null && previousItem != holder.testAudio )
-                        previousItem.setText("Play");
-                    previousItem = holder.testAudio;
 
                 } else {
-                    holder.testAudio.setText("Play");
                     ((AudioService) context).stopAudio();
+                    filteredData.get(position).setPlaying(false);
                 }
+
+                MusicFilterableAdapter.this.notifyDataSetChanged();
             }
         });
+
+        if(filteredData.get(position).isPlaying())
+            holder.testAudio.setText("Stop");
+        else
+            holder.testAudio.setText("Play");
 
         return convertView;
     }

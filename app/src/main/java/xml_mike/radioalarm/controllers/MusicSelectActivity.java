@@ -29,7 +29,7 @@ import xml_mike.radioalarm.models.MediaPlayerView;
 import xml_mike.radioalarm.views.MusicFilterableAdapter;
 
 /**
- *
+ * Controller for Music Select Activity,
  */
 public class MusicSelectActivity extends ListActivity implements AudioService {
 
@@ -53,6 +53,10 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
         }
     };
 
+    /**
+     * Threaded callback using handler to update GUI thread.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,39 +78,6 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
                 });
             }
         }).start();
-/*
-        EditText editText = (EditText) findViewById(R.id.selection_filter);
-        ListView listview = (ListView) findViewById(R.id.selection_filter_list);
-
-        List<AlarmMedia> files = DatabaseManager.getInstance().getMediaList();
-        List<MediaPlayerView> convertedList = new ArrayList<>();
-
-        for(AlarmMedia currentMedia:files)
-            convertedList.add(currentMedia);
-
-        final MusicFilterableAdapter adapter = new MusicFilterableAdapter(this, convertedList);
-
-        listview.setAdapter(adapter);
-
-        editText.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                System.out.println("Text ["+s+"]");
-
-                adapter.getFilter().filter(s.toString());
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-*/
     }
 
     @Override
@@ -145,6 +116,7 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
     protected void onStop() {
         super.onStop();
         if (mBound) {
+            stopAudio();
             unbindService(mConnection);
             mBound = false;
         }

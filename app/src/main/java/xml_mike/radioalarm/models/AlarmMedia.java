@@ -10,6 +10,7 @@ public class AlarmMedia implements MediaPlayerView{
     public String data;
     public String displayName;
     public String duration;
+    public boolean playing;
 
 
     public AlarmMedia(String id, String artist, String title, String data, String displayName, String duration) {
@@ -19,6 +20,7 @@ public class AlarmMedia implements MediaPlayerView{
         this.data = data;
         this.displayName = displayName;
         this.duration = duration;
+        this.playing = false;
     }
 
     public AlarmMedia(){
@@ -48,5 +50,16 @@ public class AlarmMedia implements MediaPlayerView{
     @Override
     public String getData() {
         return data;
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    @Override
+    public boolean setPlaying(boolean boo) {
+        playing = boo;
+        return playing;
     }
 }
