@@ -5,8 +5,10 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,8 +104,60 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         CheckBox isEnabled = (CheckBox) convertView.findViewById(R.id.is_enabled);
         LinearLayout view = (LinearLayout) convertView.findViewById(R.id.alarm_item);
 
+        //view.setVisibility((isExpanded) ? View.INVISIBLE : View.VISIBLE);
+        alarm_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        view.setVisibility((isExpanded) ? View.INVISIBLE : View.VISIBLE);
+                final EditText input = new EditText(context);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+
+                alertDialog.setMessage("Set Alarm Name");
+                alertDialog.setView(input);
+                alertDialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        alarms.get(groupPosition).setName(input.getText().toString());
+                        AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), false);
+                        //Global.getInstance().setAlarms(alarms);
+                        callBack.notifyDataSetChanged();
+                    }
+                })
+                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+
+                alertDialog.create().show();
+            }
+        });
+
+        alarm_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentAlarm = groupPosition;
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        if(view.isShown()) {
+                            alarms.get(currentAlarm).setTimeMinute(minute);
+                            alarms.get(currentAlarm).setTimeHour(hourOfDay);
+
+                            //Global.getInstance().setAlarms(alarms);
+                            AlarmsManager.getInstance().update(currentAlarm, alarms.get(currentAlarm), true);
+                            callBack.notifyDataSetChanged();
+                        }
+                    }
+                }, 0, 0, true);
+                timePickerDialog.show();
+            }
+        });
 
         isEnabled.setOnClickListener(new View.OnClickListener() {
                                          @Override
@@ -267,6 +321,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                     public void onItemSelected(AdapterView<?> parent, View view, int selectedPosition, long id) {
 
                         //if(groupPosition == alarms.size()+1) {
+                        try {
                             String className;
                             switch (selectedPosition) {
                                 case 0:
@@ -284,6 +339,9 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                                 default:
                                     break;
                             }
+                        } catch(IndexOutOfBoundsException e){
+                            //error occured
+                        }
                         //}
 
                         Log.d("selectedPosition", "selectedPosition" + selectedPosition);
@@ -390,10 +448,18 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         else
             alarm_data.setText("Select Audio");
 
-        if (!alarms.get(groupPosition).isRepeating())
-            daysLayout.setAlpha(0.5f);
-        else
-            daysLayout.setAlpha(1f);
+        //compatibility
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+            if (!alarms.get(groupPosition).isRepeating())
+                daysLayout.setAlpha(0.2f);
+            else
+                daysLayout.setAlpha(1f);
+        } else {
+            if (!alarms.get(groupPosition).isRepeating())
+                daysLayout.setVisibility(View.INVISIBLE);
+            else
+                daysLayout.setVisibility((View.VISIBLE));
+        }
 
         for (int i = 0; i < daysLayout.getChildCount(); i++) {
             final int currentday = i;
@@ -408,10 +474,16 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             });
 
             if (alarms.get(groupPosition).getRepeatingDay(i)) {
-                daysLayout.getChildAt(i).setBackgroundResource(R.color.text_background_selected);
-                ((TextView) daysLayout.getChildAt(i)).setTextColor(thisResource.getColor(R.color.text_selected));
+                //daysLayout.getChildAt(i).setBackgroundResource(R.color.text_background_selected);
+                daysLayout.getChildAt(i).setBackgroundResource(R.drawable.button_selected);
+                ((TextView) daysLayout.getChildAt(i)).setShadowLayer(3, 0, 0, R.color.background_color);
+                ((TextView) daysLayout.getChildAt(i)).setTypeface(null, Typeface.BOLD);
+                ((TextView) daysLayout.getChildAt(i)).setTextColor(thisResource.getColor(R.color.background_color));
+
             } else {
-                daysLayout.getChildAt(i).setBackgroundResource(R.color.text_background_unselected);
+                //daysLayout.getChildAt(i).setBackgroundResource(R.color.text_background_unselected);
+                daysLayout.getChildAt(i).setBackgroundResource(R.drawable.button_unselected);
+                ((TextView) daysLayout.getChildAt(i)).setTypeface(null, Typeface.NORMAL);
                 ((TextView) daysLayout.getChildAt(i)).setTextColor(thisResource.getColor(R.color.text_unselected));
             }
             daysLayout.getChildAt(i).setEnabled(alarms.get(groupPosition).isRepeating());

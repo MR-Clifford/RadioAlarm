@@ -9,12 +9,12 @@ android {
             storePassword 'trickmaster1'
         }
     }
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId "xml_mike.radioalarm"
-        minSdkVersion 16
-        targetSdkVersion 19
+        minSdkVersion 10
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         signingConfig signingConfigs.config

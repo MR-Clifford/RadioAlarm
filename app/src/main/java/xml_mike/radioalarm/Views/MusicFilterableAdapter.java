@@ -28,7 +28,7 @@ import xml_mike.radioalarm.models.MediaPlayerView;
 public class MusicFilterableAdapter extends BaseAdapter implements Filterable, FilterableType {
 
     private String type = null;
-    private List<MediaPlayerView>  originalData = null;
+    private List<MediaPlayerView> originalData = null;
     private List<MediaPlayerView> filteredData = null;
     private Context context = null;
     private LayoutInflater mInflator = null;
@@ -37,13 +37,12 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
 
     public MusicFilterableAdapter(Context context, List<MediaPlayerView> data ){
         super();
-        this.originalData = data;
+        this.originalData = this.filteredData =data;
         this.context = context;
         this.mInflator = LayoutInflater.from(context);
-        this.filteredData = new ArrayList<>();
 
-        for (int i = 0; i < originalData.size(); i++)
-            filteredData.add(originalData.get(i));
+        //for (int i = 0; i < originalData.size(); i++)
+          //  filteredData.add(originalData.get(i));
     }
 
     @Override
@@ -101,7 +100,6 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
         holder.testAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 if(!filteredData.get(position).isPlaying()){
 
@@ -167,7 +165,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
             int count = list.size();
             final ArrayList<MediaPlayerView> nlist = new ArrayList<>(count);
 
-            MediaPlayerView filterableAlarm ;
+            MediaPlayerView filterableAlarm;
 
             for (int i = 0; i < count; i++) {
                 filterableAlarm = list.get(i);

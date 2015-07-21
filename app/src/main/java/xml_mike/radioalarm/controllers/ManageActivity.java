@@ -2,8 +2,11 @@ package xml_mike.radioalarm.controllers;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -79,7 +82,7 @@ public class ManageActivity extends AppCompatActivity
 
         boolean firstRun = p.getBoolean(Global.PREFERENCE_FIRST_RUN, true);
 
-        if(firstRun){
+        if(firstRun && isNetworkAvailable()){
             RadioStationsManager.getInstance().downloadStations();
             p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
         }
@@ -256,5 +259,12 @@ public class ManageActivity extends AppCompatActivity
             ((ManageActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

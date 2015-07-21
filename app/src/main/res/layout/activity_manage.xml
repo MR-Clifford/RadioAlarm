@@ -29,15 +29,18 @@
             android:animateLayoutChanges="true"/>
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Alarm"
+            android:layout_width="48dp"
+            android:layout_height="46dp"
+            android:drawableTop="@drawable/ic_alarm_add_black_48dp"
             android:id="@+id/button"
             android:layout_gravity="center_horizontal|bottom"
             android:onClick="createNewAlarm"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:background="@drawable/button_round"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp"/>
 
     </RelativeLayout>
 

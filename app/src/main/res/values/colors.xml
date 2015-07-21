@@ -13,11 +13,10 @@
     <item name="darkred" type="color">#FFCC0000</item>
 
     <item name="text_color" type="color">#FF000000</item>
-    <item name="text_selected" type="color">#CCCCCC</item>
-    <item name="text_unselected" type="color">#333333</item>
-    <item name="text_background_selected" type="color">#222222</item>
-    <item name="text_background_unselected" type="color">#DDDDDD</item>
-    <item name="background_color" type="color">#FF000000</item>
+    <item name="text_selected" type="color">#333333</item>
+    <item name="text_unselected" type="color">#CCCCCC</item>
+    <item name="text_background_selected" type="color">#DDDDDD</item>
+    <item name="text_background_unselected" type="color">#222222</item>
     <item name="border_color" type="color">#FF000000</item>
 
     <integer-array name="androidcolors">
@@ -32,5 +31,15 @@
         <item>@color/darkorange</item>
         <item>@color/darkred</item>
     </integer-array>
+
+    <color name="primary">#673AB7</color>
+    <color name="primary_dark">#512DA8</color>
+    <color name="primary_light">#D1C4E9</color>
+    <color name="accent">#FFC107</color>
+    <color name="primary_text">#0069ff</color>
+    <color name="secondary_text">#cc9f09</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#373737</color>
+    <color name="background_color">#141414</color>
 
 </resources>

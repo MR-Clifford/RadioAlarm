@@ -50,12 +50,6 @@ public class AlarmActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
@@ -65,7 +59,7 @@ public class AlarmActivity extends AppCompatActivity {
         if(alarmId >= 0) {
             bindService(getAlarmService(), mConnection, Context.BIND_AUTO_CREATE);
         } else {
-            Log.e("an Issue happend","wrong id");
+            Log.e("an Issue happened","wrong id");
         }
 
         //startService(getAlarmService());
@@ -94,13 +88,9 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
+    public boolean isFinishing() {
+        Log.e("Finish","why is this not finished");
+        return super.isFinishing();
     }
 
     private Intent getAlarmService(){
@@ -124,7 +114,8 @@ public class AlarmActivity extends AppCompatActivity {
             mBound = false;
         }
 
-        finish();
+        this.finish();
+        return;
     }
 
     public void pauseAlarmService(View view){
@@ -140,7 +131,8 @@ public class AlarmActivity extends AppCompatActivity {
             Alarm alarm = AlarmsManager.getInstance().getAlarm(alarmId);
             AlarmsManager.getInstance().setSnoozeAlarm(alarm);
         }
-        finish();
+        this.finish();
+        return;
     }
 
 

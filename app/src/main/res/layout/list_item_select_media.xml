@@ -3,7 +3,9 @@
     android:id="@+id/source" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,6 +40,8 @@
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_selected"
+            android:textColor="@color/background_color"
             android:text="Play" />
     </LinearLayout>
 </LinearLayout>

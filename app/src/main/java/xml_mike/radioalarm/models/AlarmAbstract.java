@@ -12,8 +12,8 @@ public abstract class AlarmAbstract implements Alarm {
     private long id = -1;
     private int timeHour = 0;
     private int timeMinute = 0;
-    private int duration = 0;
-    private int increasingDuration = 0;
+    private int duration = 10;
+    private int increasingDuration = 1;
     private boolean repeatingDays[];
     private boolean repeating = true;
     private boolean vibrate = false;
