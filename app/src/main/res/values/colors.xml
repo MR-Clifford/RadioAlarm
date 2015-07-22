@@ -32,11 +32,11 @@
         <item>@color/darkred</item>
     </integer-array>
 
-    <color name="primary">#673AB7</color>
-    <color name="primary_dark">#512DA8</color>
+    <color name="primary">#243db7</color>
+    <color name="primary_dark">#1d05a8</color>
     <color name="primary_light">#D1C4E9</color>
     <color name="accent">#FFC107</color>
-    <color name="primary_text">#0069ff</color>
+    <color name="primary_text">#ffffff</color>
     <color name="secondary_text">#cc9f09</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#373737</color>

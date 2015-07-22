@@ -74,6 +74,7 @@ public class ManageActivity extends AppCompatActivity
         mExpandableList = (ExpandableListView) findViewById(R.id.managedAlarms);
         ExpandableAlarmAdapter expandableAlarmAdapter = new ExpandableAlarmAdapter(this, LayoutInflater.from(this), AlarmsManager.getInstance().getAlarms() );
         mExpandableList.setAdapter(expandableAlarmAdapter);
+        mExpandableList.setGroupIndicator(null);
 
         AlarmsManager.getInstance().addObserver(this);
         AlarmsManager.getInstance().notifyObservers();

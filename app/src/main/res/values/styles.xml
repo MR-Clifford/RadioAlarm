@@ -9,6 +9,8 @@
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorActivatedHighlight">@color/accent</item>
+        <item name="android:color">@color/accent</item>
         <item name="android:colorBackground">@color/background_color</item>
         <item name="android:windowBackground">@color/background_color</item>
         <item name="android:textColorPrimary">@color/primary_text</item>
@@ -17,8 +19,41 @@
         <item name="android:divider">@color/divider</item>
         <item name="android:childDivider">@color/divider</item>
         <item name="android:listDivider">@color/divider</item>
+        <item name="android:buttonStyle">@style/default_button</item>
+        <!--<item name="android:alertDialogTheme">@color/background_color</item> -->
 
         <!--<item name="android:buttonStyle">@color/primary</item>-->
     </style>
+
+    <!-- define styles for all alert dialogs -->
+    <style name="default_alarmDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <!--<item name="android:windowTitleStyle">...</item>
+        <item name="android:textAppearanceMedium">...</item>
+        <item name="android:borderlessButtonStyle">1</item>
+        <item name="android:buttonBarStyle">1</item> -->
+    </style>
+
+    <!-- define styles for all buttons -->
+    <style name="default_button" >
+        <item name="android:layout_width" >fill_parent</item>
+        <item name="android:layout_height" >wrap_content</item>
+        <item name="android:textColor" >#ffffff</item>
+        <item name="android:gravity" >center</item>
+        <item name="android:layout_margin" >3dp</item>
+        <item name="android:textSize" >30dp</item>
+        <item name="android:textStyle" >bold</item>
+        <item name="android:shadowColor" >#000000</item>
+        <item name="android:shadowDx" >1</item>
+        <item name="android:shadowDy" >1</item>
+        <item name="android:shadowRadius" >2</item>
+        <item name="android:background">@drawable/button_selected</item>
+    </style>
+
 
 </resources>

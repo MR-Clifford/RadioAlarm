@@ -14,6 +14,17 @@
         android:paddingRight="5dp"
         android:paddingLeft="5dp">
 
+        <CheckBox
+            android:id="@+id/is_enabled"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:checked="false"
+            android:focusable="false"
+            android:textColor="@color/primary_text"
+            android:height="48dp"
+            android:width="48dp" />
+
         <TextView
             android:id="@+id/alarm_name"
             android:layout_width="fill_parent"
@@ -41,18 +52,6 @@
             android:shadowRadius="8"
             android:shadowColor="@color/primary_text"
             android:textSize="35sp" />
-
-        <CheckBox
-            android:id="@+id/is_enabled"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:checked="false"
-            android:focusable="false"
-            android:textColor="@color/primary_text"
-            android:text="Active"
-            android:textSize="17sp" />
-
     </LinearLayout>
 
 </LinearLayout>
