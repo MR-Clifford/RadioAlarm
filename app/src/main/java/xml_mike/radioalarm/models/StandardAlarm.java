@@ -74,7 +74,7 @@ public class StandardAlarm extends AlarmAbstract {
                     i++;
                 }
 
-                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, android.R.layout.simple_spinner_item,alarmMedias);
+                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, android.R.layout.simple_list_item_1, alarmMedias);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 if(ringtones.getCount() > 0) {
@@ -110,7 +110,6 @@ public class StandardAlarm extends AlarmAbstract {
                 builder.create().show();
                 Log.e("local", "Total:" + ringtones.getCount());
                 //ringtones.close();
-
             }
         };
     }

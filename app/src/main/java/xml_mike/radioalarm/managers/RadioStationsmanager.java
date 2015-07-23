@@ -23,9 +23,9 @@ import xml_mike.radioalarm.models.RadioStation;
  */
 public class RadioStationsManager {
     private static final String baseURl = "http://api.dirble.com/v2/countries/"; //params[0]
-    private static final String country = "GB/"; //params[1]
-    private static final String type = "stations/"; //params[2]
-    private static final String per_page = "30";  //params[3]
+    private static final String country = "GB/"; //params[1] //TODO load Country code based on region
+    private static final String type = "stations/"; //params[2] //
+    private static final String per_page = "30";  //params[3] //30 is max page size
     private static final String token = "&token=b3b1e7e015ac9cb7104006f1e0"; //params[4]
     private static RadioStationsManager ourInstance;
     private ArrayList<RadioStation> radioStations; //potentially convert to hash map for quicker retrieval
@@ -80,6 +80,11 @@ public class RadioStationsManager {
         radioStations.set(i, radioStation);
     }
 
+    /**
+     * Download all radio stations in region.
+     *
+     * it is possible to download all radio stations at once but due to memory limitations on most android devices this is loaded incrementally and with pagination
+     */
     private class StationDownloader extends AsyncTask<String , String, String> {
 
         @Override
@@ -131,7 +136,7 @@ public class RadioStationsManager {
                    if(returnArray.length() < Integer.parseInt(per_page))
                         responseEmpty = true;
 
-                    Log.e("End","}("+page+")");
+                    Log.e("End","}(Page:"+page+") (total:"+radioStations.size()+")");
                     page++;
                 } while(!responseEmpty);
 

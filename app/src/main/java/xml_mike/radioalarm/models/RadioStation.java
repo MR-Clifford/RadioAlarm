@@ -1,5 +1,7 @@
 package xml_mike.radioalarm.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -66,7 +68,15 @@ public class RadioStation implements MediaPlayerView{
 
     @Override
     public String getDescription() {
-        return description;
+        if(description.length() >0)
+            return description;
+        else {
+            String returnString ="";
+            for(RadioCategory category : categories)
+                returnString = returnString+" "+category.description;
+            Log.e("[test]", returnString);
+            return returnString;
+        }
     }
 
     public void setDescription(String description) {

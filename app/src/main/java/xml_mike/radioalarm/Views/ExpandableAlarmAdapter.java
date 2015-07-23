@@ -184,6 +184,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
     /*
         warning this is GUI code with the creation of new onclick listeners, very large method.
      */
+    //TODO add 2.3.3 functionality as this will only work on honeycomb & up
     @Override
     public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
@@ -202,8 +203,8 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         LinearLayout daysLayout = (LinearLayout) convertView.findViewById(R.id.days);
         final Spinner alarm_type = (Spinner) convertView.findViewById(R.id.alarm_type);
         Button deleteButton = (Button) convertView.findViewById(R.id.alarm_delete);
-        TextView alarm_duration = (TextView) convertView.findViewById(R.id.duration);
-        TextView alarm_easing = (TextView) convertView.findViewById(R.id.easing);
+        Button alarm_duration = (Button) convertView.findViewById(R.id.duration);
+        Button alarm_easing = (Button) convertView.findViewById(R.id.easing);
 
         final ExpandableAlarmAdapter callBack = this;
 
@@ -476,7 +477,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             if (alarms.get(groupPosition).getRepeatingDay(i)) {
                 //daysLayout.getChildAt(i).setBackgroundResource(R.color.text_background_selected);
                 daysLayout.getChildAt(i).setBackgroundResource(R.drawable.button_selected);
-                ((TextView) daysLayout.getChildAt(i)).setShadowLayer(3, 0, 0, R.color.background_color);
+                ((TextView) daysLayout.getChildAt(i)).setShadowLayer(1,0, 0, R.color.background_color);
                 ((TextView) daysLayout.getChildAt(i)).setTypeface(null, Typeface.BOLD);
                 ((TextView) daysLayout.getChildAt(i)).setTextColor(thisResource.getColor(R.color.background_color));
 

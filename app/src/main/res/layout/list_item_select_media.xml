@@ -38,10 +38,9 @@
 
         <Button
             android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selected"
-            android:textColor="@color/background_color"
-            android:text="Play" />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Play"
+            android:gravity="center_vertical|center_horizontal" />
     </LinearLayout>
 </LinearLayout>

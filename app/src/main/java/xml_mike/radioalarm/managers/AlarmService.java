@@ -25,9 +25,11 @@ import xml_mike.radioalarm.models.Alarm;
 
 /**
  * Created by MClifford on 09/04/15.
- * this will handle all the various events in regards to alarm. Service is only on or off, and if it is on it will play the audio
+ * This will handle all the various events in regards to alarm. Service is only on or off, and if it is on it will play the audio
  */
 public class AlarmService extends Service implements AudioService {
+
+    //TODO move these to global as static final strings or enums
     private static final String ACTION_PLAY = "com.example.action.PLAY";
     private static final String ACTION_STOP = "com.example.action.STOP";
     private static final String ACTION_PAUSE = "com.example.action.PAUSE";

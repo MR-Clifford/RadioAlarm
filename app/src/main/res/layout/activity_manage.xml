@@ -7,17 +7,17 @@
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <RelativeLayout android:id="@+id/container" android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:padding="3dp">
 
         <ExpandableListView
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:id="@+id/managedAlarms"
             android:layout_gravity="center_horizontal|top"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_above="@+id/button"
             android:descendantFocusability="afterDescendants"
             tools:listitem="@layout/alarm_item"
             android:dividerHeight="2dp"
@@ -26,7 +26,8 @@
             android:drawSelectorOnTop="true"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            android:animateLayoutChanges="true"/>
+            android:animateLayoutChanges="true"
+            android:layout_alignParentBottom="true" />
 
         <Button
             android:layout_width="48dp"

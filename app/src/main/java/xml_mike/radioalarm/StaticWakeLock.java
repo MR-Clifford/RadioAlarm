@@ -2,6 +2,7 @@ package xml_mike.radioalarm;
 
 /**
  * Created by MClifford on 29/04/15.
+ * This creates a static wake lock that can be activated or deactivated at any timew
  */
 
 import android.content.Context;

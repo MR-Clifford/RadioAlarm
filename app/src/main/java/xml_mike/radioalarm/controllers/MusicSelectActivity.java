@@ -155,6 +155,7 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
 
         listview.setAdapter(adapter);
         listview.setEmptyView(emptyView);
+        listview.setDividerHeight(2);
         progressBar.setVisibility(View.GONE);
 
         editText.addTextChangedListener(new TextWatcher() {

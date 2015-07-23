@@ -23,11 +23,6 @@
         <item>http://www.listenlive.eu/bbcradio2.m3u</item>
         <item>http://www.listenlive.eu/bbcradio3.m3u</item>
     </string-array>
-    <string-array name="radio_station_names">
-        <item>BBC1</item>
-        <item>BBC2</item>
-        <item>BBC3</item>
-    </string-array>
     <string name="title_activity_music_select">MusicSelectActivity</string>
     <string name="title_activity_radio_select">RadioSelectActivity</string>
 

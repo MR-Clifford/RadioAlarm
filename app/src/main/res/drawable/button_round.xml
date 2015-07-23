@@ -5,6 +5,10 @@
     <corners android:radius="18dp"/> <!-- if you want clear round shape then make radius size is half of your button`s height. -->
     <solid android:color="@color/accent"/>
 
+    <stroke android:width="1dp"
+        android:color="@color/background_color"
+        />
+
     <padding
         android:bottom="15dp"
         android:left="10dp"
