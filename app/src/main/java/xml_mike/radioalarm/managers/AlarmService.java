@@ -180,11 +180,11 @@ public class AlarmService extends Service implements AudioService {
            synchronized (this) {
                if (threadedMediaPlayer != null && alarm != null) {
                    if (alarm.getEasing() != 0) {
-                       int timing = ((1000 * 60 * alarm.getEasing()) / 100);
+                       int timing = ((1000 * 60 * alarm.getEasing()) / 1000);
                        float easing = 0.00f;
-                       for (int i = 0; i < 100; i++) {
+                       while(easing < 1f) {
                            if (!isCancelled()) {
-                               easing += 0.01f;//*maxVolume;
+                               easing += 0.001f;//*maxVolume;
                                threadedMediaPlayer.setVolume(easing);
                                android.os.SystemClock.sleep(timing);
                                //Log.i("Service",maxVolume +" increase Volume to " + easing);
@@ -192,8 +192,10 @@ public class AlarmService extends Service implements AudioService {
                                break;
                            }
                        }
-                   } else
-                       threadedMediaPlayer.setVolume(1.0f);
+
+                   }
+
+                   threadedMediaPlayer.setVolume(1f);
                }
            }
             return "";

@@ -55,29 +55,29 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/button_selected"
             android:entries="@array/alarm_types_array"
             android:gravity="center"
-            android:textColor="@color/background_color"
-            android:background="@drawable/button_selected"
-            android:layout_margin="5dp"
             android:padding="5dp"
-            
-            android:spinnerMode="dialog" />
+            android:spinnerMode="dialog"
+
+            android:textColor="@color/background_color" />
 
         <TextView
             android:id="@+id/data"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Select Audio"
-            android:textColor="@color/background_color"
-            android:background="@drawable/button_selected"
             android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_selected"
+            android:gravity="center"
             android:padding="5dp"
+            android:text="Select Audio"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/background_color"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -93,27 +93,27 @@
             android:id="@+id/repeating"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/button_selected"
             android:checked="true"
             android:focusable="false"
-            android:textColor="@color/background_color"
-            android:background="@drawable/button_selected"
-            android:layout_margin="5dp"
-            android:padding="5dp"
-            android:text="Repeating" />
+            android:padding="15dp"
+            android:text="Repeating"
+            android:textColor="@color/background_color" />
 
         <CheckBox
             android:id="@+id/vibrating"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/button_selected"
             android:checked="false"
             android:focusable="false"
-            android:textColor="@color/background_color"
-            android:background="@drawable/button_selected"
-            android:layout_margin="5dp"
-            android:padding="5dp"
-            android:text="Vibrate" />
+            android:padding="15dp"
+            android:text="Vibrate"
+            android:textColor="@color/background_color" />
     </LinearLayout>
 
     <LinearLayout
@@ -129,19 +129,21 @@
             android:id="@+id/day1"
             android:layout_width="fill_parent"
             android:layout_height="36dp"
+            android:layout_gravity="top"
             android:layout_margin="3dp"
             android:layout_weight="1"
+            android:elegantTextHeight="false"
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/sunday"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:elegantTextHeight="false" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/day2"
             android:layout_width="fill_parent"
             android:layout_height="36dp"
+            android:layout_gravity="top"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
@@ -155,6 +157,7 @@
             android:id="@+id/day3"
             android:layout_width="fill_parent"
             android:layout_height="36dp"
+            android:layout_gravity="top"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
@@ -168,6 +171,7 @@
             android:id="@+id/day4"
             android:layout_width="fill_parent"
             android:layout_height="36dp"
+            android:layout_gravity="top"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
@@ -181,6 +185,7 @@
             android:id="@+id/day5"
             android:layout_width="fill_parent"
             android:layout_height="36dp"
+            android:layout_gravity="top"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
@@ -194,6 +199,7 @@
             android:id="@+id/day6"
             android:layout_width="fill_parent"
             android:layout_height="36dp"
+            android:layout_gravity="top"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
@@ -207,6 +213,7 @@
             android:id="@+id/day7"
             android:layout_width="fill_parent"
             android:layout_height="36dp"
+            android:layout_gravity="top"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
@@ -229,35 +236,29 @@
             android:id="@+id/duration"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
+            android:layout_gravity="top"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/button_selected"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:layout_margin="5dp"
             android:text="Duration:10"
-            android:background="@drawable/button_selected"
-            android:textColor="@color/background_color"
-            android:shadowColor="@color/background_color"
-            android:shadowDy="0"
-            android:shadowDx="0"
-            android:shadowRadius="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/background_color" />
 
         <Button
             android:id="@+id/easing"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:background="@drawable/button_selected"
-            android:textColor="@color/background_color"
-            android:padding="5dp"
+            android:layout_gravity="top"
             android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_selected"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
             android:text="Easing:0"
-            android:shadowColor="@color/background_color"
-            android:shadowDy="0"
-            android:shadowDx="0"
-            android:shadowRadius="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/background_color" />
     </LinearLayout>
 
     <RelativeLayout
@@ -265,20 +266,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
-        android:paddingTop="5dp"
         android:paddingLeft="30dp"
-        android:paddingRight="30dp">
+        android:paddingRight="30dp"
+        android:paddingTop="5dp">
 
         <Button
             android:id="@+id/alarm_delete"
             android:layout_width="80dp"
             android:layout_height="46dp"
-            android:drawableTop="@drawable/ic_delete_black_48dp"
-            android:layout_gravity="center|bottom"
-            android:onClick="createNewAlarm"
-            android:background="@drawable/button_selected"
-            android:padding="10dp"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center|bottom"
+            android:background="@drawable/button_selected"
+            android:drawableTop="@drawable/ic_delete_black_48dp"
+            android:onClick="createNewAlarm"
+            android:padding="10dp" />
     </RelativeLayout>
 </LinearLayout>

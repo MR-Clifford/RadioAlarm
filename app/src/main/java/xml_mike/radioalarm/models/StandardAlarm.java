@@ -42,8 +42,8 @@ public class StandardAlarm extends AlarmAbstract {
 
     /**
      *  Had Memory leak from unclosed cursor resolved, TODO note: on some devices do not have internal ring tones defined, as such will return an empty result
-     * @param context
-     * @param groupPosition
+     * @param context current context/application/activity.
+     * @param groupPosition functionality needed for onclick
      * @return
      */
     @Override
@@ -56,7 +56,6 @@ public class StandardAlarm extends AlarmAbstract {
                 final RingtoneManager ringtoneManager = new RingtoneManager(Global.getInstance().getApplicationContext());
                 ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
                 Cursor ringtones = ringtoneManager.getCursor();
-
                 int i = 0;
                 AlarmMedia[] alarmMedias = new AlarmMedia[ringtones.getCount()] ;
 
@@ -74,7 +73,7 @@ public class StandardAlarm extends AlarmAbstract {
                     i++;
                 }
 
-                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, android.R.layout.simple_list_item_1, alarmMedias);
+                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, android.R.layout.simple_list_item_single_choice, alarmMedias);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 if(ringtones.getCount() > 0) {
@@ -109,7 +108,7 @@ public class StandardAlarm extends AlarmAbstract {
 
                 builder.create().show();
                 Log.e("local", "Total:" + ringtones.getCount());
-                //ringtones.close();
+                //ringtones.close(); //TODO move this to alarm media manager
             }
         };
     }

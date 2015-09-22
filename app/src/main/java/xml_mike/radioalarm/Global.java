@@ -14,6 +14,7 @@ public class Global extends Application {
     public final static String test ="";
     // TODO add all static strings to this global class as a single resource of all declared strings
     public static String PREFERENCE_FIRST_RUN = "PREFERENCE_FIRST_RUN";
+    public static String COUNTRY_CODE = "COUNTRY_CODE";
     //single instance of application
     private static Global singleton;
 

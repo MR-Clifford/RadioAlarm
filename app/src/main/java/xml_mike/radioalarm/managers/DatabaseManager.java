@@ -631,6 +631,7 @@ public class DatabaseManager {
         private static final String DATA = "data";
         private static final String DURATION = "duration";
         private static final String EASING = "easing";
+        private static final String VOLUME = "volume";
 
         private static final String TABLE_CREATE = "CREATE TABLE " +
                 AlarmSchema.TABLE_NAME           + " ( " +
@@ -646,6 +647,7 @@ public class DatabaseManager {
                 AlarmSchema.DATA + " TEXT, " +
                 AlarmSchema.DURATION + " INTEGER, " +
                 AlarmSchema.EASING + " INTEGER " +
+                AlarmSchema.VOLUME + " REAL " +
                 " );" ;
 
         private static final String SQL_DELETE_ENTRIES =

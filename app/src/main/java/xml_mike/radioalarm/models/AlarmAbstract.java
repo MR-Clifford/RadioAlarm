@@ -6,20 +6,23 @@ import android.util.Log;
 
 /**
  * Created by MClifford on 22/02/15.
+ *
+ * Common code repository which all alarms share.
  */
 public abstract class AlarmAbstract implements Alarm {
 
-    private long id = -1;
-    private int timeHour = 0;
-    private int timeMinute = 0;
-    private int duration = 10;
-    private int increasingDuration = 1;
-    private boolean repeatingDays[];
-    private boolean repeating = true;
-    private boolean vibrate = false;
-    private boolean isEnabled = false;
-    private String name = "Alarm";
-    private String data = "";
+    private long id = -1;               // ID in Database; set just after alarm is saved to database
+    private int timeHour = 0;           // time of day in 24hour format
+    private int timeMinute = 0;         // minute
+    private int duration = 10;          // how long the alarm should last.
+    private int increasingDuration = 1; // how long it should take to get to max volume
+    private boolean repeatingDays[];    // what days it should repeat on
+    private boolean repeating = true;   // if it should repeat
+    private boolean vibrate = false;    // Whether or not alarm should vibrate when starting
+    private boolean isEnabled = false;  // IF alarm is set
+    private float maxVolume = 1;        // goes from 0 to 1;
+    private String name = "Alarm";      // Name of alarm for easy identification.
+    private String data = "";           // what Audio is to be played, if this is stream url or local URI
 
     AlarmAbstract(){
         repeatingDays = new boolean[7];
@@ -143,6 +146,12 @@ public abstract class AlarmAbstract implements Alarm {
 
     @Override
     public void setVibrate(boolean vibrate) { this.vibrate = vibrate;}
+
+    @Override
+    public float getMaxVolume() { return maxVolume; }
+
+    @Override
+    public void setMaxVolume(float volume) { this.maxVolume = volume; }
 
     @Override
     public String getDBRepeatingDays() {

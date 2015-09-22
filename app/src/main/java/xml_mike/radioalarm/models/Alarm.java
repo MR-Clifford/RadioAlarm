@@ -64,4 +64,8 @@ public interface Alarm extends Parcelable{
     View.OnClickListener getDataOnClickListener( Context context,int groupPosition);
 
     void setupAlarmData(final Context context, final ThreadedMediaPlayer mediaPlayer) throws java.io.IOException;
+
+    float getMaxVolume();
+
+    void setMaxVolume(float volume);
 }

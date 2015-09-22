@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -81,12 +82,21 @@ public class ManageActivity extends AppCompatActivity
 
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
 
-        boolean firstRun = p.getBoolean(Global.PREFERENCE_FIRST_RUN, true);
+        boolean firstRun = p.getBoolean(Global.PREFERENCE_FIRST_RUN, true); //sets behaviour for first use.
 
         if(firstRun && isNetworkAvailable()){
+
+            TelephonyManager tm = (TelephonyManager)this.getSystemService(TELEPHONY_SERVICE);
+            String countryCodeValue = tm.getNetworkCountryIso();
+
+            p.edit().putString(Global.COUNTRY_CODE, countryCodeValue);
+
             RadioStationsManager.getInstance().downloadStations();
             p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
         }
+
+
+
 
     }
 
@@ -222,6 +232,13 @@ public class ManageActivity extends AppCompatActivity
         }
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -260,12 +277,5 @@ public class ManageActivity extends AppCompatActivity
             ((ManageActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
