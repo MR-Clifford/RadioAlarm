@@ -40,7 +40,8 @@
             android:background="@drawable/button_round"
             android:drawableTop="@drawable/ic_alarm_add_black_48dp"
             android:onClick="createNewAlarm"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:layout_margin="10dp" />
 
     </RelativeLayout>
 
@@ -51,9 +52,9 @@
          android:layout_gravity="left" instead. -->
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->
-    <fragment android:id="@+id/navigation_drawer"
-        android:name="xml_mike.radioalarm.NavigationDrawerFragment" android:layout_width="@dimen/navigation_drawer_width"
-        android:layout_height="match_parent" android:layout_gravity="start"
-        tools:layout="@layout/fragment_navigation_drawer" />
+    <!--<fragment android:id="@+id/navigation_drawer"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_gravity="start" android:name="xml_mike.radioalarm.NavigationDrawerFragment"
+        tools:layout="@layout/fragment_navigation_drawer" />-->
 
 </android.support.v4.widget.DrawerLayout>

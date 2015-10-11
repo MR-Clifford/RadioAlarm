@@ -20,7 +20,7 @@ public abstract class AlarmAbstract implements Alarm {
     private boolean repeating = true;   // if it should repeat
     private boolean vibrate = false;    // Whether or not alarm should vibrate when starting
     private boolean isEnabled = false;  // IF alarm is set
-    private float maxVolume = 1;        // goes from 0 to 1;
+    private int maxVolume = 100;        // goes from 0 to 1;
     private String name = "Alarm";      // Name of alarm for easy identification.
     private String data = "";           // what Audio is to be played, if this is stream url or local URI
 
@@ -28,7 +28,7 @@ public abstract class AlarmAbstract implements Alarm {
         repeatingDays = new boolean[7];
         repeating = false;
         vibrate = false;
-        isEnabled = false;
+        isEnabled = true;
     }
     public AlarmAbstract(Parcel in){
 
@@ -148,10 +148,10 @@ public abstract class AlarmAbstract implements Alarm {
     public void setVibrate(boolean vibrate) { this.vibrate = vibrate;}
 
     @Override
-    public float getMaxVolume() { return maxVolume; }
+    public int getMaxVolume() { return maxVolume; }
 
     @Override
-    public void setMaxVolume(float volume) { this.maxVolume = volume; }
+    public void setMaxVolume(int volume) { this.maxVolume = volume; }
 
     @Override
     public String getDBRepeatingDays() {

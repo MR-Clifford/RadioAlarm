@@ -1,7 +1,6 @@
 package xml_mike.radioalarm.views;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ public class AlarmMediaAdapter extends ArrayAdapter<AlarmMedia> {
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         AlarmMedia alarm = getItem(position);
-        Log.e("alarm name",alarm.getName());
+        //Log.e("alarm name",alarm.getName());
                 // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_checked, parent, false);

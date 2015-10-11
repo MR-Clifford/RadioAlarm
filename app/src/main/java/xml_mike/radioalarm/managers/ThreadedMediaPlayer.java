@@ -180,6 +180,7 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
 
                 try {
                     mediaplayer.reset();
+                    mediaplayer.setLooping(true);
                     mediaplayer.setDataSource(location);
                     mediaplayer.prepareAsync();
                 } catch (IllegalArgumentException | IllegalStateException | IOException e) {
@@ -201,6 +202,7 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
                 try {
                     Uri uriConverted = Uri.parse(uri);
                     mediaplayer.reset();
+                    mediaplayer.setLooping(true);
                     mediaplayer.setDataSource(context, uriConverted);
                     mediaplayer.prepareAsync();
                 } catch (IllegalArgumentException | IllegalStateException | IOException e) {
@@ -222,8 +224,10 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
                 try {
                     //Uri uriConverted = Uri.parse(uri);
                     mediaplayer.reset();
+                    mediaplayer.setLooping(true);
                     mediaplayer.setDataSource(context, uri);
                     mediaplayer.prepareAsync();
+
                 } catch (IllegalArgumentException | IllegalStateException | IOException e) {
                     e.printStackTrace();
                 }

@@ -63,7 +63,7 @@ public class StandardAlarm extends AlarmAbstract {
 
 
                     String name = ringtones.getString(RingtoneManager.TITLE_COLUMN_INDEX);
-                    String data = "";//ringtoneManager.getRingtoneUri(0).toString();//ringtones.getString(RingtoneManager.URI_COLUMN_INDEX);
+                    String data = ""; //ringtoneManager.getRingtoneUri(0).toString();//ringtones.getString(RingtoneManager.URI_COLUMN_INDEX);
                     String id = ringtones.getString(RingtoneManager.ID_COLUMN_INDEX);
 
                     Log.e("data", data);

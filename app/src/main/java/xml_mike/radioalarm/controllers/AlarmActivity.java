@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.managers.AlarmService;
@@ -53,6 +54,11 @@ public class AlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         alarmId = this.getIntent().getLongExtra("alarmId", -1L);
 
@@ -131,8 +137,8 @@ public class AlarmActivity extends AppCompatActivity {
             Alarm alarm = AlarmsManager.getInstance().getAlarm(alarmId);
             AlarmsManager.getInstance().setSnoozeAlarm(alarm);
         }
+
         this.finish();
-        return;
     }
 
 

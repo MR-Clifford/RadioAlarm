@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -28,7 +27,7 @@ import android.widget.ListView;
  *
  * TODO remove this class, no longer necessary
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
 
     /**
      * Remember the position of the selected item.

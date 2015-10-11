@@ -32,15 +32,19 @@
         <item>@color/darkred</item>
     </integer-array>
 
-    <color name="primary">#dddddd</color>
-    <color name="primary_dark">#bbbbbb</color>
+    <color name="primary">#222222</color>
+    <color name="primary_dark">#444444</color>
     <color name="primary_light">#ffffff</color>
-    <color name="accent">#FFC107</color>
+    <color name="accent">#ffc107</color>
     <color name="primary_text">#ffffff</color>
     <color name="secondary_text">#cc9f09</color>
     <color name="tertiary_text">#111111</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#595959</color>
     <color name="background_color">#141414</color>
+    <color name="secondary_background_color">#333333</color>
+    <color name="primary_background_default_material_dark">#333333</color>
+    <color name="primary_text_default_material_dark">#ffc107</color>
+    <color name="statusBarColor">#160303</color>
 
 </resources>

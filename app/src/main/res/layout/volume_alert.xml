@@ -4,44 +4,50 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/mv_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Max Volume" />
+        android:text="Max Volume : 0%" />
 
     <SeekBar
-        android:id="@+id/MVseekBar"
+        android:id="@+id/mv_seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:indeterminate="false" />
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="90" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/d_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Duration" />
+        android:text="Duration : 0m" />
 
     <SeekBar
-        android:id="@+id/DseekBar"
+        android:id="@+id/d_seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:indeterminate="false" />
+        android:indeterminate="false"
+        android:max="120"
+        android:progress="10" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/c_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Crescendo" />
+        android:text="Crescendo : 0m" />
 
     <SeekBar
-        android:id="@+id/CseekBar"
+        android:id="@+id/c_seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:indeterminate="false" />
+        android:indeterminate="false"
+        android:max="30"
+        android:progress="2" />
 </LinearLayout>

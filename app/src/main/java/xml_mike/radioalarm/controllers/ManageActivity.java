@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
@@ -63,6 +62,7 @@ public class ManageActivity extends AppCompatActivity
 
         //this.deleteDatabase("RadioAlarm.db");
 
+/*
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -71,6 +71,7 @@ public class ManageActivity extends AppCompatActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+*/
 
         mExpandableList = (ExpandableListView) findViewById(R.id.managedAlarms);
         ExpandableAlarmAdapter expandableAlarmAdapter = new ExpandableAlarmAdapter(this, LayoutInflater.from(this), AlarmsManager.getInstance().getAlarms() );
@@ -143,15 +144,15 @@ public class ManageActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+//        if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
-        }
-        return super.onCreateOptionsMenu(menu);
+//        }
+//        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -165,6 +166,12 @@ public class ManageActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+
+        switch(id){
+            case R.id.action_reload_stations :
+                break;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -276,6 +283,26 @@ public class ManageActivity extends AppCompatActivity
             super.onAttach(activity);
             ((ManageActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
+
+    /**
+     *
+     */
+    private void reload_radio_stations(){
+
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean firstRun = p.getBoolean(Global.PREFERENCE_FIRST_RUN, true); //sets behaviour for first use.
+
+        if(firstRun && isNetworkAvailable()){
+
+            TelephonyManager tm = (TelephonyManager)this.getSystemService(TELEPHONY_SERVICE);
+            String countryCodeValue = tm.getNetworkCountryIso();
+
+            p.edit().putString(Global.COUNTRY_CODE, countryCodeValue);
+
+            RadioStationsManager.getInstance().downloadStations();
+            p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
         }
     }
 }

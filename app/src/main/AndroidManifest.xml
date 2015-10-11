@@ -19,7 +19,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/RadioAppTheme">
         <activity
 
             android:name=".controllers.ManageActivity"
@@ -36,6 +36,7 @@
             android:name=".controllers.AlarmActivity"
             android:label="@string/title_activity_alarm"
             android:launchMode="singleTask"
+            android:showOnLockScreen="true"
             android:noHistory="true"
             android:screenOrientation="portrait" >
         </activity>

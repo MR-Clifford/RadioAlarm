@@ -65,7 +65,7 @@ public interface Alarm extends Parcelable{
 
     void setupAlarmData(final Context context, final ThreadedMediaPlayer mediaPlayer) throws java.io.IOException;
 
-    float getMaxVolume();
+    int getMaxVolume();
 
-    void setMaxVolume(float volume);
+    void setMaxVolume(int volume);
 }

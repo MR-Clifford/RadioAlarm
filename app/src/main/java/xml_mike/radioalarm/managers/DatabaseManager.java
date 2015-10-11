@@ -61,6 +61,7 @@ public class DatabaseManager {
         values.put(AlarmSchema.IS_ENABLED,alarm.getName());
         values.put(AlarmSchema.TYPE,alarm.getName());
         values.put(AlarmSchema.DATA,alarm.getName());
+        values.put(AlarmSchema.VOLUME,alarm.getMaxVolume());
         values.put(AlarmSchema.DURATION,alarm.getDuration());
         values.put(AlarmSchema.EASING,alarm.getEasing());
 
@@ -69,7 +70,6 @@ public class DatabaseManager {
         alarm.setId(id);
 
         db.close();
-        //Global.getInstance().updateAlarm(alarm);
     }
 
     /**
@@ -90,6 +90,7 @@ public class DatabaseManager {
         values.put(AlarmSchema.IS_ENABLED,alarm.isEnabled() ? 1:0);
         values.put(AlarmSchema.TYPE,alarm.getClass().toString());
         values.put(AlarmSchema.DATA,alarm.getData());
+        values.put(AlarmSchema.VOLUME,alarm.getMaxVolume());
         values.put(AlarmSchema.DURATION,alarm.getDuration());
         values.put(AlarmSchema.EASING,alarm.getEasing());
 
@@ -138,6 +139,7 @@ public class DatabaseManager {
                 AlarmSchema.IS_ENABLED,
                 AlarmSchema.TYPE,
                 AlarmSchema.DATA, //changes depending on alarm type
+                AlarmSchema.VOLUME, //buggy atm
                 AlarmSchema.DURATION,
                 AlarmSchema.EASING
         };
@@ -164,6 +166,7 @@ public class DatabaseManager {
                 int ALARM_IS_VIBRATING = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.IS_VIBRATING));
                 String ALARM_TYPE = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.TYPE));
                 String ALARM_DATA = cursor.getString(cursor.getColumnIndexOrThrow(AlarmSchema.DATA));
+                int ALARM_VOLUME = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.VOLUME));
                 int ALARM_DURATION = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.DURATION));
                 int ALARM_EASING = cursor.getInt(cursor.getColumnIndexOrThrow(AlarmSchema.EASING));
 
@@ -178,6 +181,7 @@ public class DatabaseManager {
                         ALARM_IS_ENABLED,
                         ALARM_REPEAT,
                         ALARM_IS_VIBRATING,
+                        ALARM_VOLUME,
                         ALARM_DURATION,
                         ALARM_EASING
                 );
@@ -298,7 +302,7 @@ public class DatabaseManager {
             values.put(RadioStationSchema.WEBSITE, radioStation.getWebsite());
             values.put(RadioStationSchema.UPDATED, radioStation.getUpdated());
 
-            Log.d("Test:RadioStation", "Id" + radioStation.getId() + " Name:" + radioStation.getName() + " Slug:" + radioStation.getSlug() + " Country:" + radioStation.getCountry());
+            //Log.d("Test:RadioStation", "Id" + radioStation.getId() + " Name:" + radioStation.getName() + " Slug:" + radioStation.getSlug() + " Country:" + radioStation.getCountry());
 
             if(!ifRecordExists(RadioStationSchema.TABLE_NAME, "" + radioStation.getId())){
                 db.insert(RadioStationSchema.TABLE_NAME, "NULL", values);
@@ -388,10 +392,10 @@ public class DatabaseManager {
                         this.getRadioStationStreams(Long.parseLong(RADIO_ID)),
                         this.getRadioStationCategories(Long.parseLong(RADIO_ID))
                 );
-            } while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
-        Log.d("TESTDATABASE", "Total:"+returnStation.toString()+": cursor:"+cursor.getCount());
+        //Log.d("TESTDATABASE", "Total:"+returnStation.toString()+": cursor:"+cursor.getCount());
         cursor.close();
         db.close();
 
@@ -487,7 +491,6 @@ public class DatabaseManager {
 
             if (cursor.getCount() > 0) {
                 do {
-                    Log.d("Paramount SQL:", "" + cursor.getCount());
                     String ID = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationStreamSchema.ID));
                     String RADIO_ID = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationStreamSchema.RADIO_ID));
                     String URL = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationStreamSchema.URL));
@@ -524,8 +527,6 @@ public class DatabaseManager {
 
             if(cursor.getCount() > 0){
                 do {
-                    Log.d("Paramount SQL:",""+cursor.getCount());
-
                     String ID = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationCategorySchema.ID));
                     String TITLE = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationCategorySchema.TITLE));
                     String SLUG = cursor.getString(cursor.getColumnIndexOrThrow(RadioStationCategorySchema.SLUG));
@@ -583,7 +584,7 @@ public class DatabaseManager {
      * Located below are all static references of database objects found in database
      */
     private class DatabaseSchema implements BaseColumns {
-        private static final int DATABASE_VERSION = 2;
+        private static final int DATABASE_VERSION = 1;
         private static final String DATABASE_NAME = "RadioAlarm";
     }
 
@@ -594,10 +595,12 @@ public class DatabaseManager {
 
         DataBaseManagerHelper(Context context) {
             super(context, DatabaseSchema.DATABASE_NAME, null, DatabaseSchema.DATABASE_VERSION);
+            //context.deleteDatabase(DatabaseSchema.DATABASE_NAME);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+
             //db.execSQL(AlarmSchema.SQL_DELETE_ENTRIES);
             db.execSQL(AlarmSchema.TABLE_CREATE);
             db.execSQL(RadioStationSchema.TABLE_CREATE);
@@ -607,13 +610,21 @@ public class DatabaseManager {
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-            db.execSQL(AlarmSchema.SQL_DELETE_ENTRIES);
-            db.execSQL(RadioStationSchema.SQL_DELETE_ENTRIES);
-            db.execSQL(RadioStationStreamSchema.SQL_DELETE_ENTRIES);
-            db.execSQL(RadioStationCategorySchema.SQL_DELETE_ENTRIES);
-            db.execSQL(RadioStationCategoryRelationSchema.SQL_DELETE_ENTRIES);
-            onCreate(db);
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+            if(oldVersion < newVersion) {
+                db.execSQL(AlarmSchema.SQL_DELETE_ENTRIES);
+                db.execSQL(RadioStationSchema.SQL_DELETE_ENTRIES);
+                db.execSQL(RadioStationStreamSchema.SQL_DELETE_ENTRIES);
+                db.execSQL(RadioStationCategorySchema.SQL_DELETE_ENTRIES);
+                db.execSQL(RadioStationCategoryRelationSchema.SQL_DELETE_ENTRIES);
+
+                db.execSQL("PRAGMA writable_schema = 1;\n" +
+                        "delete from sqlite_master where type = 'table';\n" +
+                        "PRAGMA writable_schema = 0;");
+
+                onCreate(db);
+            }
         }
     }
 
@@ -645,9 +656,10 @@ public class DatabaseManager {
                 AlarmSchema.IS_VIBRATING + " INTEGER, " +
                 AlarmSchema.TYPE + " TEXT, " +
                 AlarmSchema.DATA + " TEXT, " +
+                AlarmSchema.VOLUME + " INTEGER, " +
                 AlarmSchema.DURATION + " INTEGER, " +
                 AlarmSchema.EASING + " INTEGER " +
-                AlarmSchema.VOLUME + " REAL " +
+
                 " );" ;
 
         private static final String SQL_DELETE_ENTRIES =

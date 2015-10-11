@@ -41,6 +41,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="Play"
+            android:background="@drawable/button_selected"
             android:gravity="center_vertical|center_horizontal" />
     </LinearLayout>
 </LinearLayout>

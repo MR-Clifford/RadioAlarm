@@ -1,53 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="1dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/alarm_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="30sp"
-        android:paddingBottom="30sp"
+        android:paddingTop="15sp"
+        android:paddingBottom="15sp"
         android:paddingRight="5dp"
         android:paddingLeft="5dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:visibility="visible">
 
-        <CheckBox
+        <TextView
             android:id="@+id/is_enabled"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_weight="4"
             android:checked="false"
             android:focusable="false"
 
-            />
+            android:text="Off"
+            android:gravity="center"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp" />
 
         <TextView
             android:id="@+id/alarm_name"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.5"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:text="Alarm"
-            android:layout_marginLeft="40dp" />
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:layout_alignTop="@+id/alarm_time"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:id="@+id/alarm_time"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_weight="2.6"
-            android:gravity="center_horizontal"
-            android:padding="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="5dp"
             android:text="00:00"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="8"
             android:shadowColor="@color/primary_text"
-            android:textSize="35sp" />
+            android:textSize="35sp"
+            android:minWidth="40sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/days"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:background="@color/secondary_background_color"
+        android:padding="3dp">
+
+        <TextView
+            android:id="@+id/alarm_details"
+            android:layout_width="fill_parent"
+            android:layout_height="36dp"
+            android:layout_gravity="top"
+            android:layout_margin="3dp"
+            android:layout_weight="2"
+            android:elegantTextHeight="false"
+            android:text="Alarm"
+            android:textAlignment="center"
+            android:textColor="@color/accent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp"
+            android:gravity="center_vertical" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/alarm_details_icon"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:src="@android:drawable/arrow_down_float" />
+
     </LinearLayout>
 
 </LinearLayout>

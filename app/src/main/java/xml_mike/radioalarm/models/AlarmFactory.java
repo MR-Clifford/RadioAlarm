@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class AlarmFactory {
 
-    public static Alarm createAlarm(long id, String alarmType, String name, String data, String repeatingDays, int timeHour, int timeMinute, int isEnabled, int repeating, int vibrating, int duration, int easing){
+    public static Alarm createAlarm(long id, String alarmType, String name, String data, String repeatingDays, int timeHour, int timeMinute, int isEnabled, int repeating, int vibrating, int volume, int duration, int easing){
 
         Alarm alarm = generateType(alarmType);
 
@@ -33,6 +33,7 @@ public class AlarmFactory {
 
         alarm.setTimeHour(timeHour);
         alarm.setTimeMinute(timeMinute);
+        alarm.setMaxVolume(volume);
         alarm.setDuration(duration);
         alarm.setEasing(easing);
         alarm.setEnabled(isEnabled != 0);

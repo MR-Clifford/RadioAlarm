@@ -36,6 +36,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                     this.startService(context, intent);
                 else if(!alarm.isRepeating()){
                     alarm.setEnabled(false);
+                    this.startService(context, intent);
                     AlarmsManager.getInstance().update(alarm);
                 }
 

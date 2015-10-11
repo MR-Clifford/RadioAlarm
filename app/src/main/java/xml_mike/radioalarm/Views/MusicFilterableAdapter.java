@@ -34,6 +34,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
     private LayoutInflater mInflator = null;
     private ItemFilter mFilter = new ItemFilter();
     private int previousItem;
+    final private MusicFilterableAdapter thisClass = this;
 
     public MusicFilterableAdapter(Context context, List<MediaPlayerView> data ){
         super();
@@ -101,22 +102,24 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
             @Override
             public void onClick(View v) {
 
-                if(!filteredData.get(position).isPlaying()){
+                int originalDataPosition = thisClass.getOriginalReference(filteredData.get(position).getStringId());
+
+                if(!originalData.get(originalDataPosition).isPlaying()){
 
                     if(previousItem > -1 && previousItem != position ) {
-                        filteredData.get(previousItem).setPlaying(false);
+                        originalData.get(previousItem).setPlaying(false);
                         ((AudioService) context).stopAudio();
                         previousItem = position;
                     }
 
-                    filteredData.get(position).setPlaying(true);
+                    originalData.get(originalDataPosition).setPlaying(true);
 
-                    ((AudioService) context).startAudio(filteredData.get(position).getData());
+                    ((AudioService) context).startAudio(originalData.get(originalDataPosition).getData());
 
 
                 } else {
                     ((AudioService) context).stopAudio();
-                    filteredData.get(position).setPlaying(false);
+                    originalData.get(originalDataPosition).setPlaying(false);
                 }
 
                 MusicFilterableAdapter.this.notifyDataSetChanged();
@@ -152,6 +155,9 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
         Button testAudio;
     }
 
+    /**
+     * based on android tutorials and best practices
+     */
     private class ItemFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -186,6 +192,21 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
             filteredData = (ArrayList<MediaPlayerView>) results.values;
             notifyDataSetChanged();
         }
+    }
+
+    /**
+     * So only original data is called upon not the filtered data,
+     * if the filtered data is changed then any functionality called it causes errors.
+     * @param id of element in filtered list
+     * @return position of element in original data
+     */
+    private int getOriginalReference(String id){
+
+        for (int i = 0; i < originalData.size(); i++) {
+            if(originalData.get(i).getStringId().equals(id)) return i;
+        }
+
+        return -1;
     }
 
 }

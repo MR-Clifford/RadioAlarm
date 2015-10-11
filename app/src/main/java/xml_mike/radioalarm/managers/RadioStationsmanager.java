@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import xml_mike.radioalarm.models.RadioFactory;
 import xml_mike.radioalarm.models.RadioStation;
@@ -23,10 +24,10 @@ import xml_mike.radioalarm.models.RadioStation;
  */
 public class RadioStationsManager {
     private static final String baseURl = "http://api.dirble.com/v2/countries/"; //params[0]
-    private static final String country = "GB/"; //params[1] //TODO load Country code based on region
-    private static final String type = "stations/"; //params[2] //
-    private static final String per_page = "30";  //params[3] //30 is max page size
-    private static final String token = "&token=b3b1e7e015ac9cb7104006f1e0"; //params[4]
+    private static final String country =  Locale.getDefault().getCountry();// = "GB/"; //params[1] //TODO load Country code based on region
+    private static final String type = "stations"; //params[2] //
+    private static final String per_page = "30";  //params[3] //30 is max page size //paginate to stop memory issues.
+    private static final String token = "b3b1e7e015ac9cb7104006f1e0"; //params[4]
     private static RadioStationsManager ourInstance;
     private ArrayList<RadioStation> radioStations; //potentially convert to hash map for quicker retrieval
     private RadioStationsManager() {
@@ -99,7 +100,7 @@ public class RadioStationsManager {
                do{
                     inputStream = null;
                     connection = null;
-                    URL url = new URL(baseURl+country+type+"?per_page="+per_page+"&page="+page+token); //Complied URL from static Strings
+                    URL url = new URL(baseURl+country+"/"+type+"/?per_page="+per_page+"&page="+page+"&token="+token); //Complied URL from static Strings
                     connection = (HttpURLConnection) url.openConnection();
                     connection.connect();
                     Log.e("Begin", "(" + page+"){" );
@@ -127,9 +128,9 @@ public class RadioStationsManager {
 
                     if(returnArray.length() > 0) {
                         for (int i = 0; i < returnArray.length(); i++) {
-                            RadioStation rad = RadioFactory.generateRadionStation(returnArray.getJSONObject(i));
-                            if(rad.getStreams().size() >0)
-                                addRadioStation(rad) ;
+                            RadioStation radio = RadioFactory.generateRadionStation(returnArray.getJSONObject(i));
+                            if(radio.getStreams().size() >0)
+                                addRadioStation(radio) ;
                         }
                     }
 
@@ -156,5 +157,4 @@ public class RadioStationsManager {
             return "Complete";
         }
     }
-
 }
