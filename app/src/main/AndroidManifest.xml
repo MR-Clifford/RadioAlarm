@@ -36,35 +36,35 @@
             android:name=".controllers.AlarmActivity"
             android:label="@string/title_activity_alarm"
             android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:noHistory="true"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:showOnLockScreen="true" >
         </activity>
 
         <receiver
-            android:name=".AlarmBootReceiver"
+            android:name=".receivers.AlarmBootReceiver"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".receivers.AlarmReceiver" />
+
         <receiver android:name=".MusicIntentReceiver" >
             <intent-filter>
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".managers.AlarmService" ></service>
-        <service android:name=".managers.TestAudioService" >
-
-        </service>
+        <service android:name=".managers.AlarmService" />
+        <service android:name=".managers.TestAudioService" />
 
         <activity
             android:name=".controllers.MusicSelectActivity"
             android:label="@string/title_activity_music_select" >
         </activity>
+
         <activity
             android:name=".controllers.RadioSelectActivity"
             android:label="@string/title_activity_radio_select" >

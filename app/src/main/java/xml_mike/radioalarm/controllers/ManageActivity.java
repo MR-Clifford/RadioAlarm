@@ -121,17 +121,6 @@ public class ManageActivity extends AppCompatActivity
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
     }
 
     public void restoreActionBar() {
@@ -247,6 +236,26 @@ public class ManageActivity extends AppCompatActivity
     }
 
     /**
+     *
+     */
+    private void reload_radio_stations(){
+
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean firstRun = p.getBoolean(Global.PREFERENCE_FIRST_RUN, true); //sets behaviour for first use.
+
+        if(firstRun && isNetworkAvailable()){
+
+            TelephonyManager tm = (TelephonyManager)this.getSystemService(TELEPHONY_SERVICE);
+            String countryCodeValue = tm.getNetworkCountryIso();
+
+            p.edit().putString(Global.COUNTRY_CODE, countryCodeValue);
+
+            RadioStationsManager.getInstance().downloadStations();
+            p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
+        }
+    }
+
+    /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
@@ -283,26 +292,6 @@ public class ManageActivity extends AppCompatActivity
             super.onAttach(activity);
             ((ManageActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
-        }
-    }
-
-    /**
-     *
-     */
-    private void reload_radio_stations(){
-
-        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean firstRun = p.getBoolean(Global.PREFERENCE_FIRST_RUN, true); //sets behaviour for first use.
-
-        if(firstRun && isNetworkAvailable()){
-
-            TelephonyManager tm = (TelephonyManager)this.getSystemService(TELEPHONY_SERVICE);
-            String countryCodeValue = tm.getNetworkCountryIso();
-
-            p.edit().putString(Global.COUNTRY_CODE, countryCodeValue);
-
-            RadioStationsManager.getInstance().downloadStations();
-            p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
         }
     }
 }

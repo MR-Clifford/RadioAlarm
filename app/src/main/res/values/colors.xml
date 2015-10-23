@@ -13,7 +13,7 @@
     <item name="darkred" type="color">#FFCC0000</item>
 
     <item name="text_color" type="color">#FF000000</item>
-    <item name="text_selected" type="color">#333333</item>
+    <!--<item name="text_selected" type="color">#333333</item>-->
     <item name="text_unselected" type="color">#CCCCCC</item>
     <item name="text_background_selected" type="color">#DDDDDD</item>
     <item name="text_background_unselected" type="color">#222222</item>
@@ -32,10 +32,11 @@
         <item>@color/darkred</item>
     </integer-array>
 
-    <color name="primary">#222222</color>
+    <color name="primary">#ffc107</color>
     <color name="primary_dark">#444444</color>
     <color name="primary_light">#ffffff</color>
     <color name="accent">#ffc107</color>
+    <color name="accent_material_dark">#cc9f09</color>
     <color name="primary_text">#ffffff</color>
     <color name="secondary_text">#cc9f09</color>
     <color name="tertiary_text">#111111</color>
@@ -46,5 +47,8 @@
     <color name="primary_background_default_material_dark">#333333</color>
     <color name="primary_text_default_material_dark">#ffc107</color>
     <color name="statusBarColor">#160303</color>
+    <!--<color name="secondary_text_material_dark">#ffffff</color>-->
+    <color name="text_selected">#333333</color>
+    <!--<color name="text_selected">#111111</color>-->
 
 </resources>

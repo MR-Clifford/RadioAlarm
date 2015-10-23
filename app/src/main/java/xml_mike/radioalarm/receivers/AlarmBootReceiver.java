@@ -1,4 +1,4 @@
-package xml_mike.radioalarm;
+package xml_mike.radioalarm.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -1,8 +1,8 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="RadioAppTheme" parent="@style/Theme.AppCompat.NoActionBar">
-        <item name="android:colorActivatedHighlight">@color/accent</item>
+    <style name="RadioAppTheme" parent="@style/Theme.AppCompat">
+        <item name="android:colorActivatedHighlight">@color/background_color</item>
         <item name="android:color">@color/accent</item>
         <!--<item name="android:background">@color/background_color</item>-->
         <item name="android:windowBackground">@color/background_color</item>
@@ -16,8 +16,7 @@
         <!--<item name="android:buttonStyle">@style/default_button</item>-->
         <item name="android:alertDialogStyle">@style/default_alarmDialog</item>
         <!--<item name="android:timePickerDialogTheme">@style/default_alarmDialog</item>-->
-        <item name="colorAccent">@color/accent</item>
-
+        <item name="colorAccent">@color/background_color</item>
     </style>
 
     <!-- define styles for all alert dialogs -->
@@ -51,18 +50,6 @@
         <item name="android:paddingLeft" >15dp</item>
         <item name="android:paddingRight" >15dp</item>
         <item name="android:background">@color/accent</item>
-    </style>
-
-    <!-- the theme applied to the application or activity -->
-    <style name="CustomActionBarTheme"
-        parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-    </style>
-
-    <!-- ActionBar styles -->
-    <style name="MyActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <!-- <item name="android:background">@drawable/actionbar_background</item> -->
     </style>
 
     <style name="Dialog.Theme" parent="@style/Theme.AppCompat">

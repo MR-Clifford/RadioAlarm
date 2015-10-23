@@ -154,7 +154,7 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
         try {
             mediaplayer.setVolume(volume, volume);
         } catch(IllegalStateException e) {
-            Log.e("TEST","error");
+            Log.e("SetVolumeError","Tried to Change Volume on inactive MediaPlayer");
         }
 
     }

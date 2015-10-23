@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Observable;
 
-import xml_mike.radioalarm.AlarmReceiver;
 import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.models.Alarm;
 import xml_mike.radioalarm.models.StandardAlarm;
+import xml_mike.radioalarm.receivers.AlarmReceiver;
 
 /**
  * Created by MClifford on 01/04/15.

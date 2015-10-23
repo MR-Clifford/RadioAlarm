@@ -1,8 +1,10 @@
 package xml_mike.radioalarm.controllers;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -13,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import xml_mike.radioalarm.Global;
+import xml_mike.radioalarm.GlobalStrings;
 import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.managers.AlarmService;
 import xml_mike.radioalarm.managers.AlarmsManager;
@@ -26,10 +30,10 @@ import xml_mike.radioalarm.models.Alarm;
  */
 public class AlarmActivity extends AppCompatActivity {
 
+    public static boolean isRunning = false;
     long alarmId;
     AlarmService mService;
     boolean mBound = false;
-
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -41,12 +45,31 @@ public class AlarmActivity extends AppCompatActivity {
             mService.startAudio("");
             mBound = true;
 
-            Log.e("service","connected1");
+            Log.e("service","Service connected to Activity");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
+        }
+    };
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Long alarmId = 0L;
+            alarmId = intent.getLongExtra("alarmId", alarmId);
+
+            AlarmActivity.this.stopAlarmService(null); //pass null as there is no Gui View passed in.
+
+            Intent restartIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
+            restartIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NEW_TASK);
+            restartIntent.setAction("com.example.action.PLAY");
+            restartIntent.putExtra("alarmId", alarmId);
+
+            context.startActivity(restartIntent);
+
+            Log.e("Stopping alarm","alarm stopped?");
         }
     };
 
@@ -60,6 +83,7 @@ public class AlarmActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
+        /*
         alarmId = this.getIntent().getLongExtra("alarmId", -1L);
 
         if(alarmId >= 0) {
@@ -67,6 +91,9 @@ public class AlarmActivity extends AppCompatActivity {
         } else {
             Log.e("an Issue happened","wrong id");
         }
+
+
+*/
 
         //startService(getAlarmService());
     }
@@ -95,8 +122,26 @@ public class AlarmActivity extends AppCompatActivity {
 
     @Override
     public boolean isFinishing() {
-        Log.e("Finish","why is this not finished");
+        Log.e("Finish", "why is this not finished");
         return super.isFinishing();
+    }
+
+    @Override
+    protected void onStart() {
+
+        alarmId = this.getIntent().getLongExtra("alarmId", -1L);
+
+
+        if(alarmId >= 0) {
+            bindService(getAlarmService(), mConnection, Context.BIND_AUTO_CREATE);
+        } else {
+            Log.e("an Issue happened","wrong id");
+        }
+
+        registerReceiver(broadcastReceiver, new IntentFilter(GlobalStrings.STOP_ALARM_BROADCAST.toString()));
+
+        isRunning = true;
+        super.onStart();
     }
 
     private Intent getAlarmService(){
@@ -104,7 +149,7 @@ public class AlarmActivity extends AppCompatActivity {
         Intent intent = new Intent(getBaseContext(), AlarmService.class);
         Long alarmId = this.getIntent().getLongExtra("alarmId", -1L);
 
-        if(alarmId >= 0)
+        if (alarmId >= 0)
             intent.putExtra("alarmId",alarmId);
 
         intent.setAction("com.example.action.PLAY");
@@ -120,8 +165,10 @@ public class AlarmActivity extends AppCompatActivity {
             mBound = false;
         }
 
+        unregisterReceiver(broadcastReceiver);
+
+        isRunning = false;
         this.finish();
-        return;
     }
 
     public void pauseAlarmService(View view){
@@ -138,8 +185,15 @@ public class AlarmActivity extends AppCompatActivity {
             AlarmsManager.getInstance().setSnoozeAlarm(alarm);
         }
 
+        unregisterReceiver(broadcastReceiver);
+        isRunning = false;
         this.finish();
     }
 
-
+    class StopAlarmReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AlarmActivity.this.stopAlarmService(null);
+        }
+    }
 }
