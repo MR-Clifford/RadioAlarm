@@ -97,7 +97,7 @@ public class AlarmService extends Service implements AudioService {
     protected Notification.Builder generateNotification(){
 
         Intent intent = new Intent(getApplicationContext() , AlarmActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         // assign the song name to songName
         PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0,
@@ -105,8 +105,9 @@ public class AlarmService extends Service implements AudioService {
 
         Notification.Builder nBuilder = new Notification.Builder(this)
                 //.setTicker(alarm.getName())
-                .setSmallIcon(R.drawable.ic_drawer)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setAutoCancel(true)
+                .setUsesChronometer(true)
                 .setContentTitle(alarm.getName()+""+alarm.getData())
                 .setContentText("")
                 .setContentIntent(pi);
@@ -162,7 +163,7 @@ public class AlarmService extends Service implements AudioService {
         Log.e("MaxVolume Tracking", "Vol:"+myAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
 
         notificationBuilder = generateNotification();
-        updateNotification("none");
+        updateNotification(alarm.getTimeHour()+":"+alarm.getTimeMinute());
 
         easingQueue = new EasingThread();
         durationQueue=  new DurationThread();
@@ -181,6 +182,7 @@ public class AlarmService extends Service implements AudioService {
 
     @Override
     public boolean onUnbind(Intent intent) {
+
         return super.onUnbind(intent);
     }
 
@@ -224,9 +226,9 @@ public class AlarmService extends Service implements AudioService {
 
                     for (int i = 0; i < duration; i++) {
                         if (!isCancelled()) {
-                            Log.d("Update Notification", ":" + (duration - i)); //what should be shown inside the notification
+                            //Log.d("Update Notification", ":" + (duration - i)); //what should be shown inside the notification
                             android.os.SystemClock.sleep(oneSecond);
-                            AlarmService.this.updateNotification("TimeLeft:" + (duration - i));
+                            //AlarmService.this.updateNotification("TimeLeft:" + (duration - i));
                         } else {
                             break;
                         }

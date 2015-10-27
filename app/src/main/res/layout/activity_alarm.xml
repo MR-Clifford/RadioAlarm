@@ -14,10 +14,9 @@
         android:background="@drawable/button_selected"
         android:textColor="@color/background_color"
         android:text="@string/stop_message"
-        android:layout_below="@+id/analogClock"
-        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/adView"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="93dp" />
+        android:layout_marginBottom="16dp" />
 
     <Button
         android:id="@+id/button3"
@@ -27,9 +26,7 @@
         android:background="@drawable/button_selected"
         android:textColor="@color/background_color"
         android:text="Snooze"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
-        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/button2"
         android:layout_alignParentEnd="true" />
 
     <AnalogClock
@@ -41,5 +38,16 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
+
 
 </RelativeLayout>

@@ -72,7 +72,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             context.sendBroadcast(broadCastIntent);
             Log.e("Alarm:running","true");
         } else {
-
             Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
             newIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NEW_TASK);
             newIntent.setAction("com.example.action.PLAY");

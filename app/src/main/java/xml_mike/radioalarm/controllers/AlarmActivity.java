@@ -15,12 +15,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.GlobalStrings;
 import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.managers.AlarmService;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.models.Alarm;
+
 
 /**
  * @author MClifford
@@ -63,7 +67,7 @@ public class AlarmActivity extends AppCompatActivity {
             AlarmActivity.this.stopAlarmService(null); //pass null as there is no Gui View passed in.
 
             Intent restartIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
-            restartIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NEW_TASK);
+            restartIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             restartIntent.setAction("com.example.action.PLAY");
             restartIntent.putExtra("alarmId", alarmId);
 
@@ -82,6 +86,14 @@ public class AlarmActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        adRequest.isTestDevice(this);
+        mAdView.loadAd(adRequest);
 
         /*
         alarmId = this.getIntent().getLongExtra("alarmId", -1L);
@@ -195,5 +207,21 @@ public class AlarmActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             AlarmActivity.this.stopAlarmService(null);
         }
+    }
+
+    @Override
+    protected void onStop() {
+
+        if (mBound) {
+            mService.stopAudio();
+            unbindService(mConnection);
+            mBound = false;
+        }
+
+        unregisterReceiver(broadcastReceiver);
+        isRunning = false;
+
+
+        super.onStop();
     }
 }
