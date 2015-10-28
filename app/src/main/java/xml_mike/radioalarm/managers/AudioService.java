@@ -1,5 +1,7 @@
 package xml_mike.radioalarm.managers;
 
+import android.widget.TextView;
+
 /**
  * Created by MClifford on 02/07/15.
  *
@@ -8,6 +10,5 @@ package xml_mike.radioalarm.managers;
 public interface AudioService {
 
     void stopAudio();
-    void startAudio(String audio_path);
-
+    void startAudio(String audio_path, TextView view);
 }

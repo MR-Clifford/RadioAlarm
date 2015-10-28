@@ -62,13 +62,13 @@ public class RadioAlarm extends AlarmAbstract {
                     @Override
                     public void run() {
                         String realUrl = FileParser.getURL(RadioAlarm.this.getData());
-                        mediaPlayer.changeDataSource(realUrl);
+                        mediaPlayer.changeDataSource(realUrl, null);
                     }
                 });
                 thread.start();
             } else {
                 RadioStation radioStation = RadioStationsManager.retrieveRadioStation(Long.parseLong(getData()));
-                mediaPlayer.changeDataSource(radioStation.getStreams().get(0).url); //grab first stream associated to internet radio station TODO allow user to choose stream
+                mediaPlayer.changeDataSource(radioStation.getStreams().get(0).url, null); //grab first stream associated to internet radio station TODO allow user to choose stream
             }
         }
         else

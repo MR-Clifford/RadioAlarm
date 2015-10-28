@@ -11,9 +11,9 @@
     <string name="title_activity_alarm">AlarmActivity</string>
 
     <string-array name="alarm_types_array">
-        <item>Standard</item>
-        <item>Music</item>
-        <item>Radio</item>
+        <item>Standard Alarm</item>
+        <item>Music Alarm</item>
+        <item>Radio Alarm</item>
     </string-array>
     <string-array name="radio_station_values">
         <item>http://www.listenlive.eu/bbcradio1.m3u</item>

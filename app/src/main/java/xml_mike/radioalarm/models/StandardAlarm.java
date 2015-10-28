@@ -115,6 +115,6 @@ public class StandardAlarm extends AlarmAbstract {
 
     @Override
     public void setupAlarmData(Context context, ThreadedMediaPlayer mediaPlayer) throws IOException {
-        mediaPlayer.changeDataSource(context, getData());
+        mediaPlayer.changeDataSource(context, getData(), null);
     }
 }

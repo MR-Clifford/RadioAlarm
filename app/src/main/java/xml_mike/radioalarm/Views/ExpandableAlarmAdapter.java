@@ -418,7 +418,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                 final TextView d_textview = (TextView) volume_alert_view.findViewById(R.id.d_textview);
                 final TextView c_textview = (TextView) volume_alert_view.findViewById(R.id.c_textview);
 
-                mv_seekbar.setProgress((int) alarms.get(groupPosition).getMaxVolume());
+                mv_seekbar.setProgress(alarms.get(groupPosition).getMaxVolume());
                 d_seekbar.setProgress(alarms.get(groupPosition).getDuration());
                 c_seekbar.setProgress( alarms.get(groupPosition).getEasing());
 

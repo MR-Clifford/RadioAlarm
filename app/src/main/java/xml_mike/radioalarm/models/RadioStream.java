@@ -11,6 +11,7 @@ public class RadioStream{
     public String description;
     public String slug;
     public String url;
+    public boolean status;
 
     public RadioStream(){
         this.id=0L;
@@ -19,6 +20,7 @@ public class RadioStream{
         this.description="Not Initialised Correctly";
         this.slug="Not Initialised Correctly";
         this.url="Not Initialised Correctly";
+        this.status = false;
     } //default constructor, needed for creating lists
 
     /**

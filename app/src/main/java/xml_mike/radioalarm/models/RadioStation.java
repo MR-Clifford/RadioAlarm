@@ -17,6 +17,7 @@ public class RadioStation implements MediaPlayerView{
     String website;
     String updated;
     boolean playing;
+    boolean status;
 
     ArrayList<RadioStream> streams; //one radio station can have many streams but never less than one.
     ArrayList<RadioCategory> categories; //one radio station can have many categories and one category can have many radio stations, as referenced in database
@@ -30,6 +31,7 @@ public class RadioStation implements MediaPlayerView{
         website="";
         updated="";
         playing = false;
+        status = false;
     }
 
     public RadioStation(long id, String name, String description, String slug, String country, String website, String updated, ArrayList<RadioStream> streams, ArrayList<RadioCategory> categories) {
@@ -42,6 +44,8 @@ public class RadioStation implements MediaPlayerView{
         this.updated = updated;
         this.streams = streams;
         this.categories = categories;
+
+
     }
 
     @Override

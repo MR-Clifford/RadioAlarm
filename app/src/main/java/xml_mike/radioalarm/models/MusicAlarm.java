@@ -51,6 +51,6 @@ public class MusicAlarm extends AlarmAbstract {
     @Override
     public void setupAlarmData(Context context, ThreadedMediaPlayer mediaPlayer) throws IOException {
         AlarmMedia alarmMedia = DatabaseManager.getInstance().getAlarmMedia(getData());
-        mediaPlayer.changeDataSource(alarmMedia.data);
+        mediaPlayer.changeDataSource(alarmMedia.data, null);
     }
 }

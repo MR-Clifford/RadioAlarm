@@ -114,8 +114,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
 
                     originalData.get(originalDataPosition).setPlaying(true);
 
-                    ((AudioService) context).startAudio(originalData.get(originalDataPosition).getData());
-
+                    ((AudioService) context).startAudio(originalData.get(originalDataPosition).getData(), holder.testAudio);
 
                 } else {
                     ((AudioService) context).stopAudio();
@@ -127,7 +126,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
         });
 
         if(filteredData.get(position).isPlaying())
-            holder.testAudio.setText("Stop");
+            holder.testAudio.setText("Loading");
         else
             holder.testAudio.setText("Play");
 

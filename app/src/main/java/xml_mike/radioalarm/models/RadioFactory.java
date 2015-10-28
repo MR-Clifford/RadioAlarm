@@ -58,6 +58,7 @@ public class RadioFactory {
             if(jsonObject.has("updated"))
                 newRadioStation.setUpdated(jsonObject.getString("updated"));
 
+
             newRadioStation.setStreams(getStreams(jsonObject.getLong("id"), jsonObject.getJSONArray("streams")));
             newRadioStation.setCategories(getCategories(jsonObject.getJSONArray("categories")));
 
@@ -77,7 +78,7 @@ public class RadioFactory {
                 JSONObject tempJsonObject = streamJSONObjects.getJSONObject(i);
 
                 if(tempJsonObject.has("stream")) {
-                    if (tempJsonObject.getString("stream").length() > 0) {
+                    if (tempJsonObject.getString("stream").length() > 0 && tempJsonObject.getInt("status") == 1 ) {
                         RadioStream newStream = new RadioStream();
                         newStream.radioId = radioid;
                         newStream.url = tempJsonObject.getString("stream");

@@ -13,10 +13,10 @@ android {
     buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId "xml_mike.radioalarm"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "4.0"
         signingConfig signingConfigs.config
     }
     buildTypes {

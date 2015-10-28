@@ -13,7 +13,7 @@ public enum GlobalStrings {
     /**
      * @param text
      */
-    private GlobalStrings(final String text) {
+    GlobalStrings(final String text) {
         this.text = text;
     }
 

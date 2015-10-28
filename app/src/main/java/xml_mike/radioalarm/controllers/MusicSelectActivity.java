@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,8 +130,8 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
     }
 
     @Override
-    public void startAudio(String path) {
-        mService.startAudio(path);
+    public void startAudio(String path, TextView view) {
+        mService.startAudio(path, view);
     }
 
     @Override

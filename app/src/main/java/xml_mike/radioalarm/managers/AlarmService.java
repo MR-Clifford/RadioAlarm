@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -147,7 +148,7 @@ public class AlarmService extends Service implements AudioService {
     }
 
     @Override
-    public void startAudio(String path) {
+    public void startAudio(String path, TextView view) {
         vibrator= (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
         if(alarm.isVibrate() && vibrator.hasVibrator()) {
             long[] pattern = {0, 300, 1000};

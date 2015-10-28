@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.PowerManager;
 import android.util.Log;
 import android.widget.MediaController;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ import xml_mike.radioalarm.Global;
 public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, MediaPlayer.OnPreparedListener, AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
     MediaPlayer mediaplayer;
+    private TextView view = null;
 
     public ThreadedMediaPlayer(){
         initialiseMediaPlayer();
@@ -98,6 +100,8 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        if(view != null)
+            view.setText("Stop");
         mp.start();
     }
 
@@ -171,7 +175,10 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
         //thread.start();
     }
 
-    public void changeDataSource(final String location){
+    public void changeDataSource(final String location, TextView view){
+        if(view != null)
+            this.view = view;
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -188,10 +195,13 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
                 }
             }
         });
+
         thread.start();
     }
 
-    public void changeDataSource(final Context context,final  String uri){
+    public void changeDataSource(final Context context, final String uri, TextView view){
+        if(view != null)
+            this.view = view;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -210,6 +220,7 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
                 }
             }
         });
+
         thread.start();
     }
 
@@ -242,6 +253,10 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+
+        if(view != null)
+            view.setText("Connection Error");
+
         Log.e("ThreadedMediaPlayer",""+what);
         return true;
     }

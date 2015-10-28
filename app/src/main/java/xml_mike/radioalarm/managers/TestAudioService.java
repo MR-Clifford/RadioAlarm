@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.TextView;
 
 /**
  * Created by MClifford on 08/06/15.
@@ -60,8 +61,8 @@ public class TestAudioService extends Service implements AudioService {
     }
 
     @Override
-    public void startAudio(String path) {
-        threadedMediaPlayer.changeDataSource(path);
+    public void startAudio(String path, TextView view) {
+        threadedMediaPlayer.changeDataSource(path, view);
     }
 
     @Override

@@ -46,7 +46,7 @@ public class AlarmActivity extends AppCompatActivity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             AlarmService.LocalBinder binder = (AlarmService.LocalBinder) service;
             mService = binder.getService();
-            mService.startAudio("");
+            mService.startAudio("", null);
             mBound = true;
 
             Log.e("service","Service connected to Activity");
@@ -177,7 +177,7 @@ public class AlarmActivity extends AppCompatActivity {
             mBound = false;
         }
 
-        unregisterReceiver(broadcastReceiver);
+        //unregisterReceiver(broadcastReceiver);
 
         isRunning = false;
         this.finish();
@@ -197,7 +197,7 @@ public class AlarmActivity extends AppCompatActivity {
             AlarmsManager.getInstance().setSnoozeAlarm(alarm);
         }
 
-        unregisterReceiver(broadcastReceiver);
+        //unregisterReceiver(broadcastReceiver);
         isRunning = false;
         this.finish();
     }
@@ -217,6 +217,7 @@ public class AlarmActivity extends AppCompatActivity {
             unbindService(mConnection);
             mBound = false;
         }
+
 
         unregisterReceiver(broadcastReceiver);
         isRunning = false;
