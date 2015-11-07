@@ -58,11 +58,10 @@ public class RadioFactory {
             if(jsonObject.has("updated"))
                 newRadioStation.setUpdated(jsonObject.getString("updated"));
 
-
             newRadioStation.setStreams(getStreams(jsonObject.getLong("id"), jsonObject.getJSONArray("streams")));
             newRadioStation.setCategories(getCategories(jsonObject.getJSONArray("categories")));
 
-        }catch(JSONException e){
+        } catch(JSONException e) {
             Log.e("JsonError",e.toString());
         }
 
@@ -91,7 +90,7 @@ public class RadioFactory {
             }
         }
         catch(JSONException e){
-            Log.e("RadioFactory:","getStreams"+e.toString());
+            Log.d("RadioFactory:","getStreams"+e.toString());
         }
 
         return streams;
@@ -118,7 +117,7 @@ public class RadioFactory {
             }
         }
         catch(JSONException e){
-            Log.e("RadioFactory:","getCategories"+e.toString());
+            Log.d("RadioFactory:","getCategories"+e.toString());
         }
 
         return categories;

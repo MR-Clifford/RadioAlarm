@@ -1,6 +1,8 @@
 package xml_mike.radioalarm.managers;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -12,8 +14,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Locale;
 
+import xml_mike.radioalarm.Global;
+import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.models.RadioFactory;
 import xml_mike.radioalarm.models.RadioStation;
 
@@ -24,10 +27,10 @@ import xml_mike.radioalarm.models.RadioStation;
  */
 public class RadioStationsManager {
     private static final String baseURl = "http://api.dirble.com/v2/countries/"; //params[0]
-    private static final String country =  Locale.getDefault().getCountry();// = "GB/"; //params[1] //TODO load Country code based on region
     private static final String type = "stations"; //params[2] //
     private static final String per_page = "30";  //params[3] //30 is max page size //paginate to stop memory issues.
     private static final String token = "b3b1e7e015ac9cb7104006f1e0"; //params[4]
+    private static String country =  "";// = "GB/"; //params[1] //TODO load Country code based on region
     private static RadioStationsManager ourInstance;
     private ArrayList<RadioStation> radioStations; //potentially convert to hash map for quicker retrieval
 
@@ -38,6 +41,8 @@ public class RadioStationsManager {
     public static RadioStationsManager getInstance() {
         if(ourInstance == null)
             ourInstance = new RadioStationsManager();
+
+
 
         return ourInstance;
     }
@@ -55,6 +60,10 @@ public class RadioStationsManager {
     }
 
     public void downloadStations(){
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Global.getInstance());
+        country = sharedPreferences.getString(Global.getInstance().getString(R.string.pref_current_country_key), "US");
+
         new StationDownloader().execute(baseURl, country, type, per_page, token);
     }
 
@@ -82,8 +91,11 @@ public class RadioStationsManager {
         radioStations.set(i, radioStation);
     }
 
-    public void reDownloadDatabase(){
+    public void reDownloadRadioStations(){
+        DatabaseManager.getInstance().deleteAllRadioStationEntries();
+        this.downloadStations();
 
+        Log.d("country",""+country);
     }
 
     /**
@@ -108,16 +120,14 @@ public class RadioStationsManager {
                     URL url = new URL(baseURl+country+"/"+type+"/?per_page="+per_page+"&page="+page+"&token="+token); //Complied URL from static Strings
                     connection = (HttpURLConnection) url.openConnection();
                     connection.connect();
-                    Log.e("Begin", "(" + page+"){" );
+
+                    Log.e("Begin", "(" + page+"){" ); //log the beginning & end of each json page
+
                     // expect HTTP 200 OK, so we don't mistakenly save error report
                     // instead of the file
                     if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                         break;
                     }
-
-                    // this will be useful to display download percentage
-                    // might be -1: server did not report the length
-                    int fileLength = connection.getContentLength(); //may be used later
 
                     // download the file
                     inputStream = connection.getInputStream();

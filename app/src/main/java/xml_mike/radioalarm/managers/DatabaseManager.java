@@ -579,6 +579,14 @@ public class DatabaseManager {
         return returnFlag;
     }
 
+    public void deleteAllRadioStationEntries(){
+        SQLiteDatabase db = new DataBaseManagerHelper(Global.getInstance().getApplicationContext()).getWritableDatabase();
+        db.execSQL(AlarmSchema.SQL_DELETE_ALL_ENTRIES);
+        db.execSQL(RadioStationSchema.SQL_DELETE_ALL_ENTRIES);
+        db.execSQL(RadioStationStreamSchema.SQL_DELETE_ALL_ENTRIES);
+        db.execSQL(RadioStationCategorySchema.SQL_DELETE_ALL_ENTRIES);
+        db.execSQL(RadioStationCategoryRelationSchema.SQL_DELETE_ALL_ENTRIES);
+    }
 
     /**
      * Located below are all static references of database objects found in database
@@ -664,6 +672,7 @@ public class DatabaseManager {
 
         private static final String SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS " + AlarmSchema.TABLE_NAME;
+        private static final String SQL_DELETE_ALL_ENTRIES = "DELETE FROM " + AlarmSchema.TABLE_NAME;
     }
 
     /**
@@ -691,6 +700,7 @@ public class DatabaseManager {
                 " );";
         private static final String SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS " + RadioStationSchema.TABLE_NAME;
+        private static final String SQL_DELETE_ALL_ENTRIES = "DELETE FROM " + RadioStationSchema.TABLE_NAME;
     }
 
     private class RadioStationStreamSchema implements BaseColumns{
@@ -708,6 +718,7 @@ public class DatabaseManager {
 
         private static final String SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS " + RadioStationStreamSchema.TABLE_NAME;
+        private static final String SQL_DELETE_ALL_ENTRIES = "DELETE FROM " + RadioStationStreamSchema.TABLE_NAME;
     }
 
     private class RadioStationCategorySchema implements BaseColumns{
@@ -727,6 +738,7 @@ public class DatabaseManager {
 
         private static final String SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS " + RadioStationCategorySchema.TABLE_NAME;
+        private static final String SQL_DELETE_ALL_ENTRIES = "DELETE FROM " + RadioStationCategorySchema.TABLE_NAME;
     }
 
     private class RadioStationCategoryRelationSchema implements BaseColumns{
@@ -741,5 +753,6 @@ public class DatabaseManager {
                 " );";
         private static final String SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS " + RadioStationCategoryRelationSchema.TABLE_NAME;
+        private static final String SQL_DELETE_ALL_ENTRIES = "DELETE FROM " + RadioStationCategoryRelationSchema.TABLE_NAME;
     }
 }

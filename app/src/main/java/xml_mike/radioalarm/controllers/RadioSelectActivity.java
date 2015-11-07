@@ -32,6 +32,7 @@ import xml_mike.radioalarm.views.MusicFilterableAdapter;
  */
 public class RadioSelectActivity extends ListActivity implements AudioService {
 
+    MusicFilterableAdapter adapter = null;
     private TestAudioService mService;
     private boolean mBound = false;
     /** Defines callbacks for service binding, passed to bindService() */
@@ -57,22 +58,7 @@ public class RadioSelectActivity extends ListActivity implements AudioService {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select);
 
-        final Handler handler = new Handler();
-
-        //TODO move to another thread with everything after this being a callback
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final List<RadioStation> files = RadioStationsManager.getInstance().getRadioStations();
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        RadioSelectActivity.this.onDatabaseCallback(files);
-                    }
-                });
-            }
-        }).start();
+        updateViewsFromDatabase();
     }
 
     @Override
@@ -82,7 +68,9 @@ public class RadioSelectActivity extends ListActivity implements AudioService {
         Intent intent = new Intent(this, TestAudioService.class);
         intent.setAction("com.example.action.PLAY");
 
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE );
+        updateViewsFromDatabase();
+
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -98,6 +86,9 @@ public class RadioSelectActivity extends ListActivity implements AudioService {
     @Override
     protected void onPause() {
         super.onPause();
+
+        adapter.refreshItems(new ArrayList<MediaPlayerView>());
+
         stopAudio();
     }
 
@@ -123,7 +114,7 @@ public class RadioSelectActivity extends ListActivity implements AudioService {
         for(RadioStation currentMedia: files)
             convertedList.add(currentMedia);
 
-        final MusicFilterableAdapter adapter = new MusicFilterableAdapter(this, convertedList);
+        adapter = new MusicFilterableAdapter(this, convertedList);
 
         listview.setAdapter(adapter);
         listview.setEmptyView(emptyView);
@@ -142,5 +133,23 @@ public class RadioSelectActivity extends ListActivity implements AudioService {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+    }
+
+    public void updateViewsFromDatabase(){
+        final Handler handler = new Handler();
+        //TODO move to another thread with everything after this being a callback
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    final List<RadioStation> files = RadioStationsManager.getInstance().getRadioStations();
+
+                    @Override
+                    public void run() {
+                        RadioSelectActivity.this.onDatabaseCallback(files);
+                    }
+                });
+            }
+        }).start();
     }
 }

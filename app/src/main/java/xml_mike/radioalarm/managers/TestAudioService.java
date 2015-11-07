@@ -68,6 +68,7 @@ public class TestAudioService extends Service implements AudioService {
     @Override
     public boolean onUnbind(Intent intent) {
         threadedMediaPlayer.stop();
+        threadedMediaPlayer.release();
         return super.onUnbind(intent);
     }
 

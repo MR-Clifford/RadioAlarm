@@ -1,6 +1,6 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Base application theme. All API's below 21-->
     <style name="RadioAppTheme" parent="@style/Theme.AppCompat">
         <item name="android:colorActivatedHighlight">@color/background_color</item>
         <item name="android:color">@color/accent</item>

@@ -73,7 +73,7 @@ public class StandardAlarm extends AlarmAbstract {
                     i++;
                 }
 
-                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, android.R.layout.simple_list_item_single_choice, alarmMedias);
+                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, android.R.layout.simple_selectable_list_item, alarmMedias);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 if(ringtones.getCount() > 0) {

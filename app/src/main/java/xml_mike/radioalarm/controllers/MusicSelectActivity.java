@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,9 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
 
     private TestAudioService mService;
     private boolean mBound = false;
+
+    private MusicFilterableAdapter adapter = null;
+
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -63,22 +67,11 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select);
 
-        final Handler handler = new Handler();
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setBackgroundColor(getResources().getColor(R.color.accent));
 
-        //TODO move to another thread with everything after this being a callback
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final  List<AlarmMedia> files = DatabaseManager.getInstance().getMediaList();
+        updateViewsFromDatabase();
 
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        MusicSelectActivity.this.onDatabaseCallback(files);
-                    }
-                });
-            }
-        }).start();
     }
 
     @Override
@@ -110,6 +103,8 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
         Intent intent = new Intent(this, TestAudioService.class);
         intent.setAction("com.example.action.PLAY");
 
+        updateViewsFromDatabase();
+
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -126,6 +121,9 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
     @Override
     protected void onPause() {
         super.onPause();
+
+        adapter.refreshItems(new ArrayList<MediaPlayerView>());
+        Log.e("Pausing","");
         stopAudio();
     }
 
@@ -152,12 +150,15 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
         for(AlarmMedia currentMedia: files)
             convertedList.add(currentMedia);
 
-        final MusicFilterableAdapter adapter = new MusicFilterableAdapter(this, convertedList);
+        adapter = new MusicFilterableAdapter(this, convertedList);
 
         listview.setAdapter(adapter);
         listview.setEmptyView(emptyView);
         listview.setDividerHeight(2);
-        progressBar.setVisibility(View.GONE);
+
+        //listview.on
+        progressBar.setVisibility(View.INVISIBLE);
+
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -171,5 +172,22 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+    }
+
+    public void updateViewsFromDatabase(){
+        final Handler handler = new Handler();
+        //TODO move to another thread with everything after this being a callback
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    final  List<AlarmMedia> files = DatabaseManager.getInstance().getMediaList();
+                    @Override
+                    public void run() {
+                        MusicSelectActivity.this.onDatabaseCallback(files);
+                    }
+                });
+            }
+        }).start();
     }
 }

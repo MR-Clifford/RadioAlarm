@@ -16,8 +16,11 @@ import xml_mike.radioalarm.models.AlarmMedia;
  */
 public class AlarmMediaAdapter extends ArrayAdapter<AlarmMedia> {
 
+    private int layoutResource = 0;
+
     public AlarmMediaAdapter(Context context, int resource, AlarmMedia[] objects) {
         super(context, resource, objects);
+        layoutResource = resource;
     }
 
 
@@ -28,7 +31,7 @@ public class AlarmMediaAdapter extends ArrayAdapter<AlarmMedia> {
         //Log.e("alarm name",alarm.getName());
                 // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_checked, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(layoutResource, parent, false);
         }
         // Lookup view for data population
         TextView tvName = (TextView) convertView.findViewById(android.R.id.text1);

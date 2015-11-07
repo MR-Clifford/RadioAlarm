@@ -8,6 +8,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -255,9 +256,11 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
     public boolean onError(MediaPlayer mp, int what, int extra) {
 
         if(view != null)
-            view.setText("Connection Error");
+            view.setText("Play");
 
-        Log.e("ThreadedMediaPlayer",""+what);
+        if(what != -38)
+            Toast.makeText(Global.getInstance().getApplicationContext(), "Connection Failed", Toast.LENGTH_SHORT ).show();
+
         return true;
     }
 

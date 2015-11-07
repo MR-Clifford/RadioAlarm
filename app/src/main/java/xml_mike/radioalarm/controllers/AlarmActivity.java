@@ -92,7 +92,7 @@ public class AlarmActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder()
                 //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
-        adRequest.isTestDevice(this);
+        //adRequest.isTestDevice(this);
         mAdView.loadAd(adRequest);
 
         /*
@@ -202,13 +202,6 @@ public class AlarmActivity extends AppCompatActivity {
         this.finish();
     }
 
-    class StopAlarmReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            AlarmActivity.this.stopAlarmService(null);
-        }
-    }
-
     @Override
     protected void onStop() {
 
@@ -224,5 +217,12 @@ public class AlarmActivity extends AppCompatActivity {
 
 
         super.onStop();
+    }
+
+    class StopAlarmReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AlarmActivity.this.stopAlarmService(null);
+        }
     }
 }

@@ -27,6 +27,7 @@ import xml_mike.radioalarm.models.MediaPlayerView;
  */
 public class MusicFilterableAdapter extends BaseAdapter implements Filterable, FilterableType {
 
+    final private MusicFilterableAdapter thisClass = this;
     private String type = null;
     private List<MediaPlayerView> originalData = null;
     private List<MediaPlayerView> filteredData = null;
@@ -34,7 +35,6 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
     private LayoutInflater mInflator = null;
     private ItemFilter mFilter = new ItemFilter();
     private int previousItem;
-    final private MusicFilterableAdapter thisClass = this;
 
     public MusicFilterableAdapter(Context context, List<MediaPlayerView> data ){
         super();
@@ -115,10 +115,12 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
                     originalData.get(originalDataPosition).setPlaying(true);
 
                     ((AudioService) context).startAudio(originalData.get(originalDataPosition).getData(), holder.testAudio);
+                    holder.testAudio.setText("Loading . . .");
 
                 } else {
                     ((AudioService) context).stopAudio();
                     originalData.get(originalDataPosition).setPlaying(false);
+                    holder.testAudio.setText("Play");
                 }
 
                 MusicFilterableAdapter.this.notifyDataSetChanged();
@@ -126,7 +128,7 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
         });
 
         if(filteredData.get(position).isPlaying())
-            holder.testAudio.setText("Loading");
+            holder.testAudio.setText("Stop");
         else
             holder.testAudio.setText("Play");
 
@@ -146,6 +148,26 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
     @Override
     public Filter getFilter() {
         return mFilter;
+    }
+
+    /**
+     * So only original data is called upon not the filtered data,
+     * if the filtered data is changed then any functionality called it causes errors.
+     * @param id of element in filtered list
+     * @return position of element in original data
+     */
+    private int getOriginalReference(String id){
+
+        for (int i = 0; i < originalData.size(); i++) {
+            if(originalData.get(i).getStringId().equals(id)) return i;
+        }
+
+        return -1;
+    }
+
+    public void refreshItems(List<MediaPlayerView> newItems){
+        originalData = newItems;
+        this.notifyDataSetChanged();
     }
 
     static class ViewHolder {
@@ -192,20 +214,4 @@ public class MusicFilterableAdapter extends BaseAdapter implements Filterable, F
             notifyDataSetChanged();
         }
     }
-
-    /**
-     * So only original data is called upon not the filtered data,
-     * if the filtered data is changed then any functionality called it causes errors.
-     * @param id of element in filtered list
-     * @return position of element in original data
-     */
-    private int getOriginalReference(String id){
-
-        for (int i = 0; i < originalData.size(); i++) {
-            if(originalData.get(i).getStringId().equals(id)) return i;
-        }
-
-        return -1;
-    }
-
 }

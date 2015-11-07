@@ -22,7 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -83,22 +85,19 @@ public class ManageActivity extends AppCompatActivity
 
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
 
+
         boolean firstRun = p.getBoolean(Global.PREFERENCE_FIRST_RUN, true); //sets behaviour for first use.
 
         if(firstRun && isNetworkAvailable()){
+            String countryCodeValue = Locale.getDefault().getCountry();
 
-            TelephonyManager tm = (TelephonyManager)this.getSystemService(TELEPHONY_SERVICE);
-            String countryCodeValue = tm.getNetworkCountryIso();
+            p.edit().putString(getString(R.string.pref_current_country_key), countryCodeValue).apply();
 
-            p.edit().putString(Global.COUNTRY_CODE, countryCodeValue);
-
-            RadioStationsManager.getInstance().downloadStations();
-            p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
+            if(isNetworkAvailable()) {
+                RadioStationsManager.getInstance().downloadStations();
+                p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
+            }
         }
-
-
-
-
     }
 
     @Override
@@ -152,7 +151,8 @@ public class ManageActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch(id){
-            case R.id.action_reload_stations :
+            case R.id.action_reload_stations : RadioStationsManager.getInstance().reDownloadRadioStations();
+                Toast.makeText(this, "Reloading RadioStations, please wait", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_settings : startActivity(new Intent(this, SettingsActivity.class));
                 break;

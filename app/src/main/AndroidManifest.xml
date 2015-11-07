@@ -36,7 +36,6 @@
             android:label="@string/title_activity_alarm"
             android:launchMode="singleTask"
             android:noHistory="true"
-            android:screenOrientation="portrait"
             android:showOnLockScreen="true" >
         </activity>
 
