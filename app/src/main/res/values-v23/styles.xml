@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Dialog.Theme" parent="@style/Theme.AppCompat" >
+
+        <item name="android:timePickerDialogTheme">@style/timePickerDialogTheme</item>
+    </style>
+
+    <style name="timePickerDialogTheme" parent="@android:style/Widget.DatePicker">
+        <item name="android:colorForeground">@color/secondary_background_color</item>
+        <item name="android:navigationBarColor">@color/black</item>
+    </style>
+
+</resources>

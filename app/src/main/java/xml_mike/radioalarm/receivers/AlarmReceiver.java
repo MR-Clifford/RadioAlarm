@@ -23,6 +23,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        Log.e("onReceive","Received RTC WAKE");
+
         StaticWakeLock.lockOn(context);
         if(intent.getAction() == null)
             Log.d(this.getClass().getSimpleName(),"the intent action was null");
@@ -37,13 +40,14 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
 
-                if (alarm.getRepeatingDay(day-1) && alarm.isRepeating())
-                    this.startAlarmActivity(context, intent);
-                else if(!alarm.isRepeating()){
+                //if alarm is repeating set again, else set enabled to false & update alarm on database.
+                if (alarm.getRepeatingDay(day-1) && alarm.isRepeating()) {
+                    AlarmsManager.getInstance().scheduleAlarm(alarm);
+                } else if(!alarm.isRepeating()){
                     alarm.setEnabled(false);
-                    this.startAlarmActivity(context, intent);
                     AlarmsManager.getInstance().update(alarm);
                 }
+                this.startAlarmActivity(context, intent);
 
                 Log.i("AlarmReceiver.onReceive", "ID:1: " + alarmId + " CLOCK:" + alarm.getTimeHour() + ":" + alarm.getTimeMinute() );
             }
@@ -56,8 +60,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
             if(alarm.getId() >= 0L)
                 startAlarmActivity(context, intent);
-
-
 
         }
     }
@@ -73,7 +75,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             Log.e("Alarm:running","true");
         } else {
             Intent newIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
-            newIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NEW_TASK);
+            newIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED  );
             newIntent.setAction("com.example.action.PLAY");
             newIntent.putExtra("alarmId", alarmId);
 

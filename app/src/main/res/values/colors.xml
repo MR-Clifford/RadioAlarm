@@ -43,12 +43,14 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#595959</color>
     <color name="background_color">#141414</color>
-    <color name="secondary_background_color">#333333</color>
+    <color name="secondary_background_color">#ee555555</color>
     <color name="primary_background_default_material_dark">#333333</color>
     <color name="primary_text_default_material_dark">#ffc107</color>
     <color name="statusBarColor">#160303</color>
     <!--<color name="secondary_text_material_dark">#ffffff</color>-->
     <color name="text_selected">#333333</color>
+    <color name="black">#000000</color>
+    <color name="secondary_text_default_material_dark">#1effffff</color>
     <!--<color name="text_selected">#111111</color>-->
 
 </resources>

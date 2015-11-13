@@ -1,9 +1,11 @@
 package xml_mike.radioalarm.managers;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -118,7 +120,8 @@ public class AlarmsManager extends Observable {
         Log.i("AlarmsManager", "u" + alarm.getId()+""+pendingIntent);
     }
 
-    private void scheduleAlarm(Alarm alarm){
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void scheduleAlarm(Alarm alarm){
         Calendar calendar = Calendar.getInstance();
         Calendar now = Calendar.getInstance();
         now.setTimeInMillis(System.currentTimeMillis());
@@ -133,10 +136,19 @@ public class AlarmsManager extends Observable {
         PendingIntent pendingIntent = this.generateIntent(alarm);
 
         alarmManager.cancel(pendingIntent);
-        if(alarm.isRepeating())
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        else
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        //if(alarm.isRepeating())
+            if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            } else if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            } else {
+                AlarmManager.AlarmClockInfo alarmClockInfo = new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), pendingIntent);
+                alarmManager.setAlarmClock(alarmClockInfo, pendingIntent);
+            }
+        //else
+            //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
         Log.i("AlarmsManager", "s" + alarm.getId() + ":"+pendingIntent.toString());
     }
 

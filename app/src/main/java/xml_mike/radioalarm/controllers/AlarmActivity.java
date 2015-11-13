@@ -44,7 +44,7 @@ public class AlarmActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            AlarmService.LocalBinder binder = (AlarmService.LocalBinder) service;
+            AlarmService.AlarmServiceBinder binder = (AlarmService.AlarmServiceBinder) service;
             mService = binder.getService();
             mService.startAudio("", null);
             mBound = true;

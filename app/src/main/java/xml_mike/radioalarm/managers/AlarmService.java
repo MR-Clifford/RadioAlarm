@@ -36,7 +36,7 @@ public class AlarmService extends Service implements AudioService {
     private static final String ACTION_STOP = "com.example.action.STOP";
     private static final String ACTION_PAUSE = "com.example.action.PAUSE";
 
-    private final IBinder mBinder = new LocalBinder();
+    private final IBinder mBinder = new AlarmServiceBinder();
 
     //private int maxVolume = 15; //android default
     //private MediaPlayer mMediaPlayer = null;
@@ -74,10 +74,8 @@ public class AlarmService extends Service implements AudioService {
     private void setupMediaPlayer(Alarm alarm){
 
         wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
-                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "xml_mike.radioalarm.wifilock");
         wifiLock.acquire();
-
-
 
         try {
             if(!alarm.getData().equals("") || !alarm.getData().isEmpty()) {
@@ -164,7 +162,7 @@ public class AlarmService extends Service implements AudioService {
         Log.e("MaxVolume Tracking", "Vol:"+myAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
 
         notificationBuilder = generateNotification();
-        updateNotification(alarm.getTimeHour()+":"+alarm.getTimeMinute());
+        updateNotification(alarm.getTimeHour() + ":" + alarm.getTimeMinute());
 
         easingQueue = new EasingThread();
         durationQueue=  new DurationThread();
@@ -243,7 +241,7 @@ public class AlarmService extends Service implements AudioService {
         }
     }
 
-    public class LocalBinder extends Binder {
+    public class AlarmServiceBinder extends Binder {
         public AlarmService getService() {
             // Return this instance of LocalService so clients can call public methods
             return AlarmService.this;
