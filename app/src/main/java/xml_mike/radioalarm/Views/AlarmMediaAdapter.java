@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.models.AlarmMedia;
 
 /**
@@ -34,7 +35,7 @@ public class AlarmMediaAdapter extends ArrayAdapter<AlarmMedia> {
             convertView = LayoutInflater.from(getContext()).inflate(layoutResource, parent, false);
         }
         // Lookup view for data population
-        TextView tvName = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView tvName = (TextView) convertView.findViewById(R.id.text1);
 
         // Populate the data into the template view using the data object
         tvName.setText(alarm.getName());

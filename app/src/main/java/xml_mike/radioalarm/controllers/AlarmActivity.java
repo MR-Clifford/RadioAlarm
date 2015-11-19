@@ -171,25 +171,16 @@ public class AlarmActivity extends AppCompatActivity {
 
     public void stopAlarmService(View view){
 
-        if (mBound) {
-            mService.stopAudio();
-            unbindService(mConnection);
-            mBound = false;
-        }
+        stopAlarmService();
 
         //unregisterReceiver(broadcastReceiver);
 
-        isRunning = false;
         this.finish();
     }
 
     public void pauseAlarmService(View view){
 
-        if (mBound) {
-            mService.stopAudio();
-            unbindService(mConnection);
-            mBound = false;
-        }
+        stopAlarmService();
 
         Long alarmId = this.getIntent().getLongExtra("alarmId", -1L);
         if(alarmId >= 0L) {
@@ -198,12 +189,22 @@ public class AlarmActivity extends AppCompatActivity {
         }
 
         //unregisterReceiver(broadcastReceiver);
-        isRunning = false;
+
         this.finish();
     }
 
     @Override
     protected void onStop() {
+
+        //stopAlarmService();
+
+        unregisterReceiver(broadcastReceiver);
+
+        super.onStop();
+    }
+
+    private void stopAlarmService(){
+        Log.e("Test","android was stopped");
 
         if (mBound) {
             mService.stopAudio();
@@ -211,12 +212,23 @@ public class AlarmActivity extends AppCompatActivity {
             mBound = false;
         }
 
-
-        unregisterReceiver(broadcastReceiver);
         isRunning = false;
+    }
 
+    @Override
+    public void onBackPressed() {
 
-        super.onStop();
+        stopAlarmService();
+
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        stopAlarmService();
+
+        super.onDestroy();
     }
 
     class StopAlarmReceiver extends BroadcastReceiver {

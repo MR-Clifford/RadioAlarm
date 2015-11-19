@@ -87,7 +87,8 @@ public class RadioSelectActivity extends ListActivity implements AudioService {
     protected void onPause() {
         super.onPause();
 
-        adapter.refreshItems(new ArrayList<MediaPlayerView>());
+        if(adapter != null)
+            adapter.refreshItems(new ArrayList<MediaPlayerView>());
 
         stopAudio();
     }
