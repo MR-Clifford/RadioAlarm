@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import xml_mike.radioalarm.Global;
+import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.managers.ThreadedMediaPlayer;
 import xml_mike.radioalarm.views.AlarmMediaAdapter;
@@ -73,7 +74,7 @@ public class StandardAlarm extends AlarmAbstract {
                     i++;
                 }
 
-                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, android.R.layout.simple_selectable_list_item, alarmMedias);
+                final AlarmMediaAdapter adapter = new AlarmMediaAdapter(context, R.layout.list_item_basic, alarmMedias);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 if(ringtones.getCount() > 0) {
