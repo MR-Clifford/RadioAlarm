@@ -147,7 +147,7 @@ public class AlarmActivity extends AppCompatActivity {
         if(alarmId >= 0) {
             bindService(getAlarmService(), mConnection, Context.BIND_AUTO_CREATE);
         } else {
-            Log.e("Bad event","wrong id");
+            Log.e("Bad event","wrong id ");
         }
 
         registerReceiver(broadcastReceiver, new IntentFilter(GlobalStrings.STOP_ALARM_BROADCAST.toString()));
