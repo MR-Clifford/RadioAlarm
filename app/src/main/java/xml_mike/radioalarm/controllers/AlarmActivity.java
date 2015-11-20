@@ -133,12 +133,6 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean isFinishing() {
-        Log.e("Finish", "why is this not finished");
-        return super.isFinishing();
-    }
-
-    @Override
     protected void onStart() {
 
         alarmId = this.getIntent().getLongExtra("alarmId", -1L);
@@ -204,7 +198,7 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     private void stopAlarmService(){
-        Log.d("Test", "android was stopped");
+        Log.e("Test", "android was stopped");
 
         if (mBound) {
             mService.stopAudio();

@@ -73,20 +73,21 @@ public class AlarmService extends Service implements AudioService {
 
     private void setupMediaPlayer(Alarm alarm){
 
-        wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
-                .createWifiLock(WifiManager.WIFI_MODE_FULL, "xml_mike.radioalarm.wifilock");
+        wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "xml_mike.radioalarm.wifilock");
         wifiLock.acquire();
 
         try {
             if(!alarm.getData().equals("") || !alarm.getData().isEmpty()) {
                 //setup mediaplayer based on alarm type
                 alarm.setupAlarmData(Global.getInstance().getApplicationContext(), threadedMediaPlayer);
+                Log.d("Audio Found", ""+alarm.getData());
             }
             else {
                 threadedMediaPlayer.changeDataSource(this, Settings.System.DEFAULT_ALARM_ALERT_URI);
+                Log.d("Audio NOT Found",""+alarm.getId());
             }
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
-            Log.d(this.getClass().toString(),e.toString());
+            Log.e(this.getClass().toString(), e.toString());
         }
     }
 
@@ -129,6 +130,9 @@ public class AlarmService extends Service implements AudioService {
 
     @Override
     public void stopAudio(){
+
+        Log.e("AlarmService","stopAudio");
+
         if(easingQueue != null)
             easingQueue.cancel(true);
         if(durationQueue != null)
@@ -148,6 +152,7 @@ public class AlarmService extends Service implements AudioService {
     @Override
     public void startAudio(String path, TextView view) {
         vibrator= (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
         if(alarm.isVibrate() && vibrator.hasVibrator()) {
             long[] pattern = {0, 300, 1000};
             vibrator.vibrate(pattern, 0);
@@ -158,8 +163,8 @@ public class AlarmService extends Service implements AudioService {
         int maxVolumeToSet = (maxVolumeForAlarm * alarm.getMaxVolume()) / 100; //max volume is anywhere from 1-100; max value is 7;
         myAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolumeToSet, 0);
 
-        Log.e("MaxVolume Tracking", "Vol:" + maxVolumeToSet + ":" + (maxVolumeForAlarm * alarm.getMaxVolume()));
-        Log.e("MaxVolume Tracking", "Vol:"+myAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
+        Log.d("MaxVolume Tracking", "Vol:" + maxVolumeToSet + ":" + (maxVolumeForAlarm * alarm.getMaxVolume()));
+        Log.d("MaxVolume Tracking", "Vol:" + myAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
 
         notificationBuilder = generateNotification();
         updateNotification(alarm.getTimeHour() + ":" + alarm.getTimeMinute());
@@ -181,7 +186,6 @@ public class AlarmService extends Service implements AudioService {
 
     @Override
     public boolean onUnbind(Intent intent) {
-
         return super.onUnbind(intent);
     }
 
