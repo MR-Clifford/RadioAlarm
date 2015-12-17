@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -28,8 +27,6 @@ public class TestAudioService extends Service implements AudioService {
     private String currentTrackUrl = ""; //the main
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        Log.e("test service",currentTrackUrl);
 
         if (intent.getAction().equals(ACTION_PLAY)) {
             //wifiQueue = Executors.newFixedThreadPool(1);

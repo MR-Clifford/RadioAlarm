@@ -24,8 +24,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.e("onReceive","Received RTC WAKE");
-
         StaticWakeLock.lockOn(context);
         if(intent.getAction() == null)
             Log.d(this.getClass().getSimpleName(),"the intent action was null");

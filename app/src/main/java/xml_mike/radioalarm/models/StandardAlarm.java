@@ -9,7 +9,6 @@ import android.graphics.Point;
 import android.media.RingtoneManager;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -71,8 +70,6 @@ public class StandardAlarm extends AlarmAbstract {
                     String data = ""; //ringtoneManager.getRingtoneUri(0).toString();//ringtones.getString(RingtoneManager.URI_COLUMN_INDEX);
                     String id = ringtones.getString(RingtoneManager.ID_COLUMN_INDEX);
 
-                    Log.e("data", data);
-
                     alarmMedias[i] = new AlarmMedia(id, "", name, data, name, "0");
 
                     i++;
@@ -119,12 +116,9 @@ public class StandardAlarm extends AlarmAbstract {
                 int width = (size.x/100) * 80;
                 int height = (size.y/100) * 70;
 
-                Log.e("dimensions","d"+width+":"+height);
-
                 Dialog d = builder.create();
                 d.show();
                 d.getWindow().setLayout(width, height);
-                Log.e("local", "Total:" + ringtones.getCount());
                 //ringtones.close(); //TODO move this to alarm media manager
             }
         };

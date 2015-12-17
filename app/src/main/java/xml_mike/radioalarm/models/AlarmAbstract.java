@@ -2,7 +2,6 @@ package xml_mike.radioalarm.models;
 
 import android.media.MediaPlayer;
 import android.os.Parcel;
-import android.util.Log;
 
 /**
  * Created by MClifford on 22/02/15.
@@ -208,7 +207,6 @@ public abstract class AlarmAbstract implements Alarm {
         return new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                Log.e("Start Media:","OMG");
                 mp.start();
             }
         };

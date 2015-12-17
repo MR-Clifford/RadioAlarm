@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -123,7 +122,6 @@ public class MusicSelectActivity extends ListActivity implements AudioService {
         super.onPause();
 
         adapter.refreshItems(new ArrayList<MediaPlayerView>());
-        Log.e("Pausing","");
         stopAudio();
     }
 

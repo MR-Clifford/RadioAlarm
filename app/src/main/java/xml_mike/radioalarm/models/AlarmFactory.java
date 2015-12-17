@@ -27,7 +27,7 @@ public class AlarmFactory {
         if(data != null)
             alarm.setData(data);
         else
-            Log.e("Something","wrong");
+            Log.e("data is null","data should never be null");
         if(id >-1)
             alarm.setId(id);
 
@@ -78,8 +78,6 @@ public class AlarmFactory {
         returnAlarm.setRepeating(alarm.isRepeating());
         returnAlarm.setEasing(alarm.getEasing());
         returnAlarm.setDuration(alarm.getDuration());
-
-        Log.e("AlarmFactory", "alarm:" + alarm.getClass().toString() + " className:" + classname);
 
         return returnAlarm;
     }

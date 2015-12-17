@@ -104,7 +104,7 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
         if(view != null)
             view.setText("Stop");
         mp.start();
-        Log.e("Prepared","playing");
+        Log.d("Prepared","playing");
     }
 
     @Override

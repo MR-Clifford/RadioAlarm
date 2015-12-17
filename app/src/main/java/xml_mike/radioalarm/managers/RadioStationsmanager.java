@@ -121,8 +121,6 @@ public class RadioStationsManager {
                     connection = (HttpURLConnection) url.openConnection();
                     connection.connect();
 
-                    Log.e("Begin", "(" + page+"){" ); //log the beginning & end of each json page
-
                     // expect HTTP 200 OK, so we don't mistakenly save error report
                     // instead of the file
                     if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -152,7 +150,6 @@ public class RadioStationsManager {
                    if(returnArray.length() < Integer.parseInt(per_page))
                         responseEmpty = true;
 
-                    Log.e("End","}(Page:"+page+") (total:"+radioStations.size()+")");
                     page++;
                 } while(!responseEmpty);
 

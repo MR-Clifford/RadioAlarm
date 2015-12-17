@@ -142,7 +142,7 @@ public class AlarmActivity extends AppCompatActivity {
         if(alarmId >= 0) {
             bindService(getAlarmService(), mConnection, Context.BIND_AUTO_CREATE);
         } else {
-            Log.e("Wrong ID","no id ");
+            Log.e("Wrong ID","no id found");
         }
 
         registerReceiver(broadcastReceiver, new IntentFilter(GlobalStrings.STOP_ALARM_BROADCAST.toString()));
@@ -200,8 +200,6 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     private void stopAlarmService(){
-        Log.e("Test", "android was stopped");
-
         if (mBound) {
             mService.stopAudio();
             unbindService(mConnection);

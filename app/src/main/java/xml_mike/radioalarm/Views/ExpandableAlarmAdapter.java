@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -569,10 +568,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
         if(groupPosition != currentAlarm || currentAlarm != -1){
             this.onGroupCollapsed(currentAlarm);
-            Log.e("was accessed","ugh");
         }
-
-        Log.e("test this function","this was called z" + groupPosition + ":" + currentAlarm);
 
         currentAlarm = groupPosition;
 

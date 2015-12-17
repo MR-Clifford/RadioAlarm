@@ -131,8 +131,6 @@ public class AlarmService extends Service implements AudioService {
     @Override
     public void stopAudio(){
 
-        Log.e("AlarmService","stopAudio");
-
         if(easingQueue != null)
             easingQueue.cancel(true);
         if(durationQueue != null)

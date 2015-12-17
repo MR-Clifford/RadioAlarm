@@ -62,7 +62,7 @@ public class RadioFactory {
             newRadioStation.setCategories(getCategories(jsonObject.getJSONArray("categories")));
 
         } catch(JSONException e) {
-            Log.e("JsonError",e.toString());
+            Log.e("JsonError ",e.toString());
         }
 
         return newRadioStation;
