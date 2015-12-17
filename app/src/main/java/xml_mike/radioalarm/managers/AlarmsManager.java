@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -117,21 +118,14 @@ public class AlarmsManager extends Observable {
 
         alarmManager.cancel(pendingIntent);
 
-        Log.i("AlarmsManager", "u" + alarm.getId()+""+pendingIntent);
+        Log.i("AlarmsManager", "u" + alarm.getId() + "" + pendingIntent);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void scheduleAlarm(Alarm alarm){
         Calendar calendar = Calendar.getInstance();
-        Calendar now = Calendar.getInstance();
-        now.setTimeInMillis(System.currentTimeMillis());
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, alarm.getTimeHour());
-        calendar.set(Calendar.MINUTE, alarm.getTimeMinute());
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        if(calendar.before(now))//if its in the past increment of day // stop the alarm going off immediately
-            calendar.add(Calendar.DATE,1);
+
+        calculatAlarmDay(calendar, alarm);
 
         PendingIntent pendingIntent = this.generateIntent(alarm);
 
@@ -149,7 +143,8 @@ public class AlarmsManager extends Observable {
         //else
             //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
-        Log.i("AlarmsManager", "s" + alarm.getId() + ":"+pendingIntent.toString());
+        Log.i("AlarmsManager", "s" + alarm.getId() + ":" + pendingIntent.toString());
+
     }
 
     //always generate the same intent using this function, enables easy cancel
@@ -198,5 +193,55 @@ public class AlarmsManager extends Observable {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getBaseContext(), 0,intent,PendingIntent.FLAG_ONE_SHOT);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    public void calculatAlarmDay(Calendar calendar, Alarm alarm){
+        Calendar now = Calendar.getInstance();
+        now.setTimeInMillis(System.currentTimeMillis());
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        //calendar.set(Calendar.DAY_OF_WEEK, al)
+        calendar.set(Calendar.HOUR_OF_DAY, alarm.getTimeHour());
+        calendar.set(Calendar.MINUTE, alarm.getTimeMinute());
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        int days_to_add = 0; //set
+
+        if(calendar.before(now)) {//if its in the past increment of day // stop the alarm going off immediately
+            days_to_add++;
+        }
+
+        if(!alarm.getRepeatingDay(now.get(Calendar.DAY_OF_WEEK)-1) && alarm.isRepeating()) {
+            boolean[] alarmDays = alarm.getRepeatingDays();
+
+            //loop 7 days circular list until one result returns true
+            int start = now.get(Calendar.DAY_OF_WEEK) -1 ;
+            int current_position = now.get(Calendar.DAY_OF_WEEK) -1 ;
+            int total_checks = 0;
+
+            while( start != current_position || total_checks != 7){
+
+
+                if(alarmDays[current_position])
+                    break;
+                days_to_add++;
+                current_position = current_position < 6 ? current_position + 1 : 0;
+                total_checks++;
+            }
+        }
+
+        calendar.add(Calendar.DATE, days_to_add);
+
+        long time = calendar.getTimeInMillis() - now.getTimeInMillis();
+
+
+        int days = (int) time / (24*60*60*1000) % 7;
+        int hours = (int) time / (60*60*1000) % 24;
+        int minutes =  (int) time / (60*1000) % 60;
+
+        if(days >= 1)
+            Toast.makeText(Global.getInstance(), "Next Alarm in "+ days + " days " + hours + " hours ", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(Global.getInstance(), "Next Alarm in "+ hours + " hours " + minutes + " minutes ", Toast.LENGTH_SHORT).show();
     }
 }

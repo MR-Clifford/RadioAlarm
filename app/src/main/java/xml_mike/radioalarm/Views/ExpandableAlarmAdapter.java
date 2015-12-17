@@ -143,6 +143,8 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         });
 
 
+
+
         alarm_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -536,7 +538,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                 public void onClick(View v) {
                     alarms.get(groupPosition).setRepeatingDay(currentday, (!alarms.get(groupPosition).getRepeatingDay(currentday)));
                     //Global.getInstance().setAlarms(alarms);
-                    AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), false);
+                    AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), true);
                     //callBack.notifyDataSetChanged();
                 }
             });

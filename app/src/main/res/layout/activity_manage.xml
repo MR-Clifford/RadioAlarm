@@ -1,7 +1,10 @@
 <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <!-- As the main content view, the view below consumes the entire
@@ -9,10 +12,16 @@
     <RelativeLayout android:id="@+id/container" android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="3dp">
-
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Please Click on the Add icon below"
+            android:visibility="gone"/>
         <ExpandableListView
             android:id="@+id/managedAlarms"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
@@ -29,19 +38,30 @@
             android:headerDividersEnabled="true"
             tools:listitem="@layout/alarm_item" />
 
+
         <Button
             android:id="@+id/button"
             android:layout_width="48dp"
             android:layout_height="46dp"
-            android:layout_alignBottom="@+id/managedAlarms"
-            android:layout_alignEnd="@+id/managedAlarms"
-            android:layout_alignRight="@+id/managedAlarms"
-            android:layout_gravity="center_horizontal|bottom"
+            android:layout_above="@+id/adView"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
             android:background="@drawable/button_round"
             android:drawableTop="@drawable/ic_alarm_add_black_48dp"
+            android:gravity="center_vertical|center_horizontal"
             android:onClick="createNewAlarm"
-            android:padding="10dp"
-            android:layout_margin="10dp" />
+            android:padding="10dp" />
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_ad_unit_id">
+            </com.google.android.gms.ads.AdView>
 
     </RelativeLayout>
 
@@ -57,4 +77,5 @@
         android:layout_gravity="start" android:name="xml_mike.radioalarm.NavigationDrawerFragment"
         tools:layout="@layout/fragment_navigation_drawer" />-->
 
-</android.support.v4.widget.DrawerLayout>
+
+</android.support.v7.widget.LinearLayoutCompat>

@@ -1,14 +1,18 @@
 package xml_mike.radioalarm.models;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Point;
 import android.media.RingtoneManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -79,7 +83,7 @@ public class StandardAlarm extends AlarmAbstract {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 if(ringtones.getCount() > 0) {
                     builder
-                            .setTitle("Select Alarm")
+                            .setTitle("Select Alarm Media")
                             .setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -102,12 +106,24 @@ public class StandardAlarm extends AlarmAbstract {
                                     AlarmsManager.getInstance().notifyObservers();
                                 }
                             });
-                    Log.e("","");
                 } else {
                     Toast.makeText(context, "No local Alarm Sounds found", Toast.LENGTH_SHORT).show();
                 }
 
-                builder.create().show();
+                WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                Display display = windowManager.getDefaultDisplay();
+
+                Point size = new Point();
+                display.getSize(size);
+
+                int width = (size.x/100) * 80;
+                int height = (size.y/100) * 70;
+
+                Log.e("dimensions","d"+width+":"+height);
+
+                Dialog d = builder.create();
+                d.show();
+                d.getWindow().setLayout(width, height);
                 Log.e("local", "Total:" + ringtones.getCount());
                 //ringtones.close(); //TODO move this to alarm media manager
             }

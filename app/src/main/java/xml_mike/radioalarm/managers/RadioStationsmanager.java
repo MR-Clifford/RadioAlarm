@@ -42,8 +42,6 @@ public class RadioStationsManager {
         if(ourInstance == null)
             ourInstance = new RadioStationsManager();
 
-
-
         return ourInstance;
     }
 
@@ -104,6 +102,8 @@ public class RadioStationsManager {
      * it is possible to download all radio stations at once but due to memory limitations on most android devices this is loaded incrementally and with pagination
      */
     private class StationDownloader extends AsyncTask<String , String, String> {
+
+
 
         @Override
         protected String doInBackground(String... params) {

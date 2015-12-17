@@ -24,6 +24,10 @@ import android.widget.ExpandableListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
@@ -46,12 +50,12 @@ public class ManageActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ExpandableListView.OnGroupCollapseListener, Observer {
 
     ExpandableListView mExpandableList;
+    View emptyView;
     private int currentAlarm = -1;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -75,10 +79,14 @@ public class ManageActivity extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 */
 
+
+        emptyView  = findViewById(R.id.empty);//getLayoutInflater().inflate(R.layout.no_alarms, null);
         mExpandableList = (ExpandableListView) findViewById(R.id.managedAlarms);
         ExpandableAlarmAdapter expandableAlarmAdapter = new ExpandableAlarmAdapter(this, LayoutInflater.from(this), AlarmsManager.getInstance().getAlarms() );
+        //mExpandableList.setEmptyView(emptyView);
         mExpandableList.setAdapter(expandableAlarmAdapter);
         mExpandableList.setGroupIndicator(null);
+
 
         AlarmsManager.getInstance().addObserver(this);
         AlarmsManager.getInstance().notifyObservers();
@@ -98,6 +106,30 @@ public class ManageActivity extends AppCompatActivity
                 p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
             }
         }
+
+        if(expandableAlarmAdapter.isEmpty()){
+            emptyView.setVisibility(View.VISIBLE);
+        }
+
+
+        final AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        //adRequest.isTestDevice(this);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int errorCode) { // On admob interstitial failed to load, request new ad
+                mAdView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                mAdView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -179,14 +211,12 @@ public class ManageActivity extends AppCompatActivity
                     AlarmsManager.getInstance().add(nAlarm);
 
                 currentAlarm = -1;
-
-                Log.e("datePicker",view.toString());
-                Log.e("datePicker","Called 1");
             }
 
 
         }, 0,0,true);
         timePickerDialog.show();
+        emptyView.setVisibility(View.INVISIBLE);
     }
 
     @Override

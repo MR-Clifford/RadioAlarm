@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -88,24 +89,24 @@ public class AlarmActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        final AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
         //adRequest.isTestDevice(this);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int errorCode) { // On admob interstitial failed to load, request new ad
+                mAdView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                mAdView.setVisibility(View.VISIBLE);
+            }
+        });
+
         mAdView.loadAd(adRequest);
-
-        /*
-        alarmId = this.getIntent().getLongExtra("alarmId", -1L);
-
-        if(alarmId >= 0) {
-            bindService(getAlarmService(), mConnection, Context.BIND_AUTO_CREATE);
-        } else {
-            Log.e("an Issue happened","wrong id");
-        }
-
-
-*/
 
         //startService(getAlarmService());
     }

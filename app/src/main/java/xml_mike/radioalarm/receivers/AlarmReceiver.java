@@ -41,13 +41,19 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 int minute = calendar.get(Calendar.MINUTE);
 
                 //if alarm is repeating set again, else set enabled to false & update alarm on database.
-                if (alarm.getRepeatingDay(day-1) && alarm.isRepeating()) {
+
+                if (alarm.isRepeating()) {
                     AlarmsManager.getInstance().scheduleAlarm(alarm);
-                } else if(!alarm.isRepeating()){
+                } else {
                     alarm.setEnabled(false);
                     AlarmsManager.getInstance().update(alarm);
                 }
-                this.startAlarmActivity(context, intent);
+
+                if (alarm.getRepeatingDay(day-1)) {
+                    this.startAlarmActivity(context, intent);
+                }
+
+
 
                 Log.i("AlarmReceiver.onReceive", "ID:1: " + alarmId + " CLOCK:" + alarm.getTimeHour() + ":" + alarm.getTimeMinute() );
             }
