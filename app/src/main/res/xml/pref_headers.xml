@@ -21,5 +21,9 @@
             android:fragment="xml_mike.radioalarm.controllers.SettingsActivity$CountriesPreferenceFragment"
             android:icon="@drawable/ic_my_location_white_24dp"
             android:title="@string/pref_header_countries" />
+    <header
+        android:fragment="xml_mike.radioalarm.controllers.SettingsActivity$NotificationPreferenceFragment"
+        android:icon="@drawable/ic_settings_applications_white_24dp"
+        android:title="Alarm Defaults" />
 
 </preference-headers>
