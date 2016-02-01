@@ -211,7 +211,7 @@ public class AlarmsManager extends Observable {
             days_to_add++;
         }
 
-        if(!alarm.getRepeatingDay(now.get(Calendar.DAY_OF_WEEK)-1) && alarm.isRepeating()) {
+        if(!alarm.getRepeatingDay(now.get(Calendar.DAY_OF_WEEK)) && alarm.isRepeating()) {
             boolean[] alarmDays = alarm.getRepeatingDays();
 
             //loop 7 days circular list until one result returns true
@@ -220,7 +220,6 @@ public class AlarmsManager extends Observable {
             int total_checks = 0;
 
             while( start != current_position || total_checks != 7){
-
 
                 if(alarmDays[current_position])
                     break;

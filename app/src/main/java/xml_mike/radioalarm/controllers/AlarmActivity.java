@@ -74,7 +74,7 @@ public class AlarmActivity extends AppCompatActivity {
 
             context.startActivity(restartIntent);
 
-            Log.e("Stopping alarm","alarm stopped?");
+            Global.writeToLogFile("AlarmActivity.BroadcastReceiver.end ", true);
         }
     };
 
@@ -97,7 +97,7 @@ public class AlarmActivity extends AppCompatActivity {
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int errorCode) { // On admob interstitial failed to load, request new ad
-                mAdView.setVisibility(View.GONE);
+                mAdView.setVisibility(View.INVISIBLE);
             }
 
             @Override

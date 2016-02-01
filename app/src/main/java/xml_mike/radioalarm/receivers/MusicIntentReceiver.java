@@ -1,4 +1,4 @@
-package xml_mike.radioalarm;
+package xml_mike.radioalarm.receivers;
 
 import android.content.Context;
 import android.content.Intent;

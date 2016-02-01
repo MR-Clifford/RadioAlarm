@@ -38,8 +38,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
 
-                //if alarm is repeating set again, else set enabled to false & update alarm on database.
-
+                //if alarm is repeating set again, else set enabled to false & update alarm on database
                 if (alarm.isRepeating()) {
                     AlarmsManager.getInstance().scheduleAlarm(alarm);
                 } else {
@@ -47,13 +46,11 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                     AlarmsManager.getInstance().update(alarm);
                 }
 
-                if (alarm.getRepeatingDay(day-1)) {
+                if (alarm.getRepeatingDay(day) || !alarm.isRepeating()) {
                     this.startAlarmActivity(context, intent);
                 }
 
-
-
-                Log.i("AlarmReceiver.onReceive", "ID:1: " + alarmId + " CLOCK:" + alarm.getTimeHour() + ":" + alarm.getTimeMinute() );
+                Global.writeToLogFile("onReceive:"+day+":"+hour+":"+minute , true);
             }
 
         } else if(intent.getAction().equals("xml_mike.radioalarm.intent.SNOOZE")){
@@ -64,8 +61,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
             if(alarm.getId() >= 0L)
                 startAlarmActivity(context, intent);
-
         }
+
+
+
     }
 
     private void startAlarmActivity(Context context, Intent intent){

@@ -1,6 +1,13 @@
 package xml_mike.radioalarm;
 
 import android.app.Application;
+import android.os.Environment;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
 
 import xml_mike.radioalarm.managers.ResourceManager;
 
@@ -23,6 +30,32 @@ public class Global extends Application {
      */
     public static Global getInstance(){
         return singleton;
+    }
+
+    public static String writeToLogFile(String message,boolean append){
+
+        File logPath = Environment.getExternalStorageDirectory();
+
+        logPath = new File(logPath.getPath() + "/Android/data/com.xml_mike.radioalarm/files");
+
+        if(!logPath.exists()) {
+            logPath.mkdirs();
+        }
+
+        try {
+            File  LogFile = new File(logPath, "debug.log");
+            FileWriter LogWriter = new FileWriter(LogFile, append);
+            BufferedWriter out = new BufferedWriter(LogWriter);
+            Date date = new Date();
+            out.write("L:" + String.valueOf(date.getHours() + ":" + date.getMinutes() + ":->" + message));
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return "";
     }
 
     public final void onCreate(){
