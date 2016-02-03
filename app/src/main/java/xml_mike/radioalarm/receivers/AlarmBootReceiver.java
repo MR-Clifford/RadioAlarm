@@ -16,7 +16,7 @@ public class AlarmBootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
+        // This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         //throw new UnsupportedOperationException("Not yet implemented");
 
@@ -25,7 +25,7 @@ public class AlarmBootReceiver extends BroadcastReceiver {
         if(intent.getAction() != null) {
             if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
                 AlarmsManager.getInstance().scheduleAllAlarms(); //schedule all active alarms
-
+                AlarmsManager.getInstance().start_alarm_verification_service();
             Log.d("AlarmBookReceiver", intent.getAction());
         }
     }

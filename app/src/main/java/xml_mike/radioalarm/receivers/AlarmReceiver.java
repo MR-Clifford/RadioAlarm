@@ -46,7 +46,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                     AlarmsManager.getInstance().update(alarm);
                 }
 
-                if (alarm.getRepeatingDay(day) || !alarm.isRepeating()) {
+                if (alarm.getRepeatingDay(day-1) || !alarm.isRepeating()) {
                     this.startAlarmActivity(context, intent);
                 }
 
@@ -85,6 +85,12 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         }
    }
 
+    /**
+     * Currently dummy function.
+     * @param serviceClass
+     * @param context
+     * @return
+     */
     private boolean isRunning(Class<?> serviceClass, Context context)  {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> tasks = manager.getRunningAppProcesses();

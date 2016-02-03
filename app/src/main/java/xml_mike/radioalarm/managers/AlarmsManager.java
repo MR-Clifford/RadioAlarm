@@ -17,6 +17,7 @@ import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.models.Alarm;
 import xml_mike.radioalarm.models.StandardAlarm;
 import xml_mike.radioalarm.receivers.AlarmReceiver;
+import xml_mike.radioalarm.receivers.ScheduledCheckReceiver;
 
 /**
  * Created by MClifford on 01/04/15.
@@ -125,7 +126,7 @@ public class AlarmsManager extends Observable {
     public void scheduleAlarm(Alarm alarm){
         Calendar calendar = Calendar.getInstance();
 
-        calculatAlarmDay(calendar, alarm);
+        long differenceBetweenCurrentAndAlarmTimes = calculateAlarmDay(calendar, alarm);
 
         PendingIntent pendingIntent = this.generateIntent(alarm);
 
@@ -142,6 +143,15 @@ public class AlarmsManager extends Observable {
             }
         //else
             //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+        int days = (int) differenceBetweenCurrentAndAlarmTimes / (24*60*60*1000) % 7;
+        int hours = (int) differenceBetweenCurrentAndAlarmTimes / (60*60*1000) % 24;
+        int minutes =  (int) differenceBetweenCurrentAndAlarmTimes / (60*1000) % 60;
+
+        if(days >= 1)
+            Toast.makeText(Global.getInstance(), "Next Alarm in " + days + " days " + hours + " hours ", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(Global.getInstance(), "Next Alarm in "+ hours + " hours " + minutes + " minutes ", Toast.LENGTH_SHORT).show();
 
         Log.i("AlarmsManager", "s" + alarm.getId() + ":" + pendingIntent.toString());
 
@@ -164,7 +174,6 @@ public class AlarmsManager extends Observable {
 
         return new StandardAlarm();
     }
-
 
     /**
      * used primarily to restart all alarms after the phone has been restarted
@@ -195,7 +204,13 @@ public class AlarmsManager extends Observable {
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
-    public void calculatAlarmDay(Calendar calendar, Alarm alarm){
+    /**
+     *
+     * @param calendar
+     * @param alarm
+     * @return the difference between current time and the time set in the alarm
+     */
+    public long calculateAlarmDay(Calendar calendar, Alarm alarm){
         Calendar now = Calendar.getInstance();
         now.setTimeInMillis(System.currentTimeMillis());
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -211,7 +226,7 @@ public class AlarmsManager extends Observable {
             days_to_add++;
         }
 
-        if(!alarm.getRepeatingDay(now.get(Calendar.DAY_OF_WEEK)) && alarm.isRepeating()) {
+        if(!alarm.getRepeatingDay(now.get(Calendar.DAY_OF_WEEK)-1) && alarm.isRepeating()) {
             boolean[] alarmDays = alarm.getRepeatingDays();
 
             //loop 7 days circular list until one result returns true
@@ -231,16 +246,26 @@ public class AlarmsManager extends Observable {
 
         calendar.add(Calendar.DATE, days_to_add);
 
-        long time = calendar.getTimeInMillis() - now.getTimeInMillis();
+        return  calendar.getTimeInMillis() - now.getTimeInMillis(); //differenceBetweenTimes
+    }
 
+    /**
+     * Ensure that
+     */
+    public void start_alarm_verification_service(){
+        //always generate the same intent using this function, enables easy cancel
+        Calendar calendar = Calendar.getInstance();
 
-        int days = (int) time / (24*60*60*1000) % 7;
-        int hours = (int) time / (60*60*1000) % 24;
-        int minutes =  (int) time / (60*1000) % 60;
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
-        if(days >= 1)
-            Toast.makeText(Global.getInstance(), "Next Alarm in "+ days + " days " + hours + " hours ", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(Global.getInstance(), "Next Alarm in "+ hours + " hours " + minutes + " minutes ", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Global.getInstance().getBaseContext(), ScheduledCheckReceiver.class);
+            intent.setAction("xml_mike.radioalarm.intent.SCHEDULED_ALARM_CHECK");
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(Global.getInstance().getBaseContext(), (Integer.MAX_VALUE - 123456789) ,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent); //TODO setup this method to be called every time device is restarted
     }
 }

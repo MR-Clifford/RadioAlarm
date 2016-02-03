@@ -15,6 +15,7 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/button_selected"
         android:onClick="stopAlarmService"
+        android:padding="15dp"
         android:text="@string/stop_message"
         android:textColor="@color/background_color" />
 
@@ -26,6 +27,7 @@
         android:layout_alignTop="@+id/button2"
         android:background="@drawable/button_selected"
         android:onClick="pauseAlarmService"
+        android:padding="15dp"
         android:text="Snooze"
         android:textColor="@color/background_color" />
 

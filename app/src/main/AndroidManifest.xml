@@ -47,12 +47,14 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".receivers.ScheduledCheckReceiver" />
         <receiver android:name=".receivers.AlarmReceiver" />
         <receiver android:name=".receivers.MusicIntentReceiver" >
             <intent-filter>
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
         </receiver>
+
 
         <service android:name=".managers.AlarmService" />
         <service android:name=".managers.TestAudioService" />

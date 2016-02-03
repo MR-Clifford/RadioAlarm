@@ -125,10 +125,7 @@ public abstract class AlarmAbstract implements Alarm {
     @Override
     public boolean getRepeatingDay(int dayOfWeek) {
 
-        if(dayOfWeek < 1)
-            dayOfWeek = dayOfWeek - 1;
-
-        if(dayOfWeek >= 7)
+        if(dayOfWeek > 6)
             return repeatingDays[0];
 
         return repeatingDays[dayOfWeek];
