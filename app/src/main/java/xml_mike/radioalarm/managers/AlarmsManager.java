@@ -27,8 +27,8 @@ import xml_mike.radioalarm.receivers.ScheduledCheckReceiver;
  * The main concept is to have this class mimic alarms that are stored on the android device.
  *
  * its main job is to store alarm objects,
- * schedule and unschedule alarms,
- * update the database everytime an alarm is changed
+ * schedule and un-schedule alarms,
+ * update the database every time an alarm is changed
  * notify all entities watching it.
  */
 public class AlarmsManager extends Observable {
