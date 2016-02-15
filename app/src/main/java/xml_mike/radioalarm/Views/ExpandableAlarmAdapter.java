@@ -25,10 +25,12 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.managers.AlarmsManager;
 import xml_mike.radioalarm.managers.DatabaseManager;
@@ -156,8 +158,23 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                             alarms.get(currentAlarm).setTimeMinute(minute);
                             alarms.get(currentAlarm).setTimeHour(hourOfDay);
 
+                            //get current time
+                            Calendar now = Calendar.getInstance();
+                            now.setTimeInMillis(System.currentTimeMillis());
+
                             //Global.getInstance().setAlarms(alarms);
                             AlarmsManager.getInstance().update(currentAlarm, alarms.get(currentAlarm), true);
+                            long differenceBetweenCurrentAndAlarmTimes = AlarmsManager.calculateAlarmDay(now, alarms.get(currentAlarm));
+
+                            int days = (int) differenceBetweenCurrentAndAlarmTimes / (24*60*60*1000) % 7;
+                            int hours = (int) differenceBetweenCurrentAndAlarmTimes / (60*60*1000) % 24;
+                            int minutes =  (int) differenceBetweenCurrentAndAlarmTimes / (60*1000) % 60;
+
+                            if(days >= 1)
+                                Toast.makeText(Global.getInstance(), "Next Alarm in " + days + " days " + hours + " hours ", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(Global.getInstance(), "Next Alarm in "+ hours + " hours " + minutes + " minutes ", Toast.LENGTH_SHORT).show();
+
                             callBack.notifyDataSetChanged();
                         }
                     }
@@ -505,7 +522,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                 String alarmdata = alarms.get(groupPosition).getData();//alarm_data.setText(alarms.get(groupPosition).getData());
                 Uri alarmToneName = Uri.parse(alarmdata);
                 alarm_data.setText(RingtoneManager.getRingtone(context, alarmToneName).getTitle(context));
-
             }
             else if(alarms.get(groupPosition) instanceof MusicAlarm){
                 AlarmMedia alarmMedia = DatabaseManager.getInstance().getAlarmMedia(alarms.get(groupPosition).getData());
