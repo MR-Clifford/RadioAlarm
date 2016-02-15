@@ -105,14 +105,12 @@ public class ManageActivity extends AppCompatActivity
                 RadioStationsManager.getInstance().downloadStations();
                 p.edit().putBoolean(Global.PREFERENCE_FIRST_RUN, false).apply();
             }
-            //AlarmsManager.getInstance().start_alarm_verification_service();
+            AlarmsManager.getInstance().start_alarm_verification_service();
         }
 
         if(expandableAlarmAdapter.isEmpty()){
             emptyView.setVisibility(View.VISIBLE);
         }
-
-        AlarmsManager.getInstance().start_alarm_verification_service();
 
         final AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()

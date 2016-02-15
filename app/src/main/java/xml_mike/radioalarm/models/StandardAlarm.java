@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.Display;
@@ -42,6 +43,15 @@ public class StandardAlarm extends AlarmAbstract {
 
     public StandardAlarm(Parcel in){
         super(in);
+    }
+
+    @Override
+    public String getDataDescription() {
+
+        Uri alarmToneName = Uri.parse(getData());
+        RingtoneManager.getRingtone(Global.getInstance(), alarmToneName).getTitle(Global.getInstance());
+
+        return super.getDataDescription();
     }
 
     /**

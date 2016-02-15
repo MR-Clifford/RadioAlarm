@@ -144,6 +144,9 @@ public abstract class AlarmAbstract implements Alarm {
     public void setData(String data) { this.data = data; }
 
     @Override
+    public String getDataDescription() { return this.data; }
+
+    @Override
     public boolean isVibrate() {return vibrate;}
 
     @Override

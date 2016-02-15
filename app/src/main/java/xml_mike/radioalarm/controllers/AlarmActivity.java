@@ -32,10 +32,12 @@ import xml_mike.radioalarm.models.Alarm;
  *
  * This class will be the main one intiated once the alarm goes off,
  * it will be bound to the alarm Service so that a user can easily cancel it
+ * TODO refacter this class to include new broadcasts
  */
 public class AlarmActivity extends AppCompatActivity {
 
     public static boolean isRunning = false;
+    static AlarmActivity alarmActivity;
     long alarmId;
     AlarmService mService;
     boolean mBound = false;
@@ -58,25 +60,7 @@ public class AlarmActivity extends AppCompatActivity {
             mBound = false;
         }
     };
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            Long alarmId = 0L;
-            alarmId = intent.getLongExtra("alarmId", alarmId);
-
-            AlarmActivity.this.stopAlarmService(null); //pass null as there is no Gui View passed in.
-
-            Intent restartIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
-            restartIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-            restartIntent.setAction("com.example.action.PLAY");
-            restartIntent.putExtra("alarmId", alarmId);
-
-            context.startActivity(restartIntent);
-
-            Global.writeToLogFile("AlarmActivity.BroadcastReceiver.end ", true);
-        }
-    };
+    private BroadcastReceiver broadcastReceiver = new StopAlarmReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,16 +120,20 @@ public class AlarmActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
 
+        alarmActivity = this;
+
         alarmId = this.getIntent().getLongExtra("alarmId", -1L);
 
+        if(alarmId >= 0) bindService(getAlarmService(), mConnection, Context.BIND_AUTO_CREATE);
+        else Log.e("Wrong ID","no id found");
 
-        if(alarmId >= 0) {
-            bindService(getAlarmService(), mConnection, Context.BIND_AUTO_CREATE);
-        } else {
-            Log.e("Wrong ID","no id found");
-        }
+        IntentFilter intentFilter =  new IntentFilter();
 
-        registerReceiver(broadcastReceiver, new IntentFilter(GlobalStrings.STOP_ALARM_BROADCAST.toString()));
+        intentFilter.addAction(GlobalStrings.STOP_ALARM_BROADCAST.toString());
+        intentFilter.addAction(GlobalStrings.STOP_ALARM.toString());
+        intentFilter.addAction(GlobalStrings.STOP_SNOOZE_ALARM.toString());
+
+        registerReceiver(broadcastReceiver, intentFilter);
 
         isRunning = true;
         super.onStart();
@@ -168,8 +156,7 @@ public class AlarmActivity extends AppCompatActivity {
 
         stopAlarmService();
 
-        //unregisterReceiver(broadcastReceiver);
-
+        alarmActivity = null;
         isRunning = false;
         this.finish();
     }
@@ -184,18 +171,12 @@ public class AlarmActivity extends AppCompatActivity {
             AlarmsManager.getInstance().setSnoozeAlarm(alarm);
         }
 
-        //unregisterReceiver(broadcastReceiver);
-
         this.finish();
     }
 
     @Override
     protected void onStop() {
-
-        //stopAlarmService();
-
         unregisterReceiver(broadcastReceiver);
-
         super.onStop();
     }
 
@@ -205,30 +186,51 @@ public class AlarmActivity extends AppCompatActivity {
             unbindService(mConnection);
             mBound = false;
         }
-
         isRunning = false;
     }
 
     @Override
     public void onBackPressed() {
-
         stopAlarmService();
-
         super.onBackPressed();
     }
 
     @Override
     protected void onDestroy() {
-
         stopAlarmService();
-
         super.onDestroy();
     }
 
-    class StopAlarmReceiver extends BroadcastReceiver {
+    public static class StopAlarmReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AlarmActivity.this.stopAlarmService(null);
+
+            if(alarmActivity != null) {
+                if (intent.getAction().equals(GlobalStrings.STOP_ALARM_BROADCAST.toString())) {
+                    Long alarmId = 0L;
+                    alarmId = intent.getLongExtra("alarmId", alarmId);
+
+                    alarmActivity.stopAlarmService(null); //pass null as there is no Gui View passed in.
+
+                    Intent restartIntent = new Intent(Global.getInstance().getBaseContext(), AlarmActivity.class);
+                    restartIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                    restartIntent.setAction("com.example.action.PLAY");
+                    restartIntent.putExtra("alarmId", alarmId);
+
+                    context.startActivity(restartIntent);
+
+                    Global.writeToLogFile("AlarmActivity.BroadcastReceiver.end ", true);
+                    Log.e("StopAlarmReceiver", "1");
+                } else if (intent.getAction().equals(GlobalStrings.STOP_ALARM.toString())) {
+                    alarmActivity.stopAlarmService(null); // replicate button press in activity, pass null View
+                    Log.e("StopAlarmReceiver", "2");
+                } else if (intent.getAction().equals(GlobalStrings.STOP_SNOOZE_ALARM.toString())) {
+                    alarmActivity.pauseAlarmService(null); // replicate button press in activity, pass null View
+                    Log.e("StopAlarmReceiver", "3");
+                }
+            }
+
+            Log.e("StopAlarmReceiver", intent.getAction());
         }
     }
 }

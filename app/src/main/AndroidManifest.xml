@@ -48,6 +48,15 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".receivers.ScheduledCheckReceiver" />
+
+       <receiver android:name=".controllers.AlarmActivity$StopAlarmReceiver" >
+            <intent-filter>
+                <action android:name="com.xml_mike.radioalarm.action.STOP_ALARM_BROADCAST" />
+                <action android:name="com.xml_mike.radioalarm.action.STOP_SNOOZE_ALARM" />
+                <action android:name="com.xml_mike.radioalarm.action.STOP_ALARM" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".receivers.AlarmReceiver" />
         <receiver android:name=".receivers.MusicIntentReceiver" >
             <intent-filter>

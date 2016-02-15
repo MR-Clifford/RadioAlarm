@@ -20,6 +20,7 @@ import android.widget.TextView;
 import java.io.IOException;
 
 import xml_mike.radioalarm.Global;
+import xml_mike.radioalarm.GlobalStrings;
 import xml_mike.radioalarm.R;
 import xml_mike.radioalarm.StaticWakeLock;
 import xml_mike.radioalarm.controllers.AlarmActivity;
@@ -62,6 +63,7 @@ public class AlarmService extends Service implements AudioService {
 
     @Override
     public void onDestroy() {
+
         if (threadedMediaPlayer != null)
             threadedMediaPlayer.release();
         if(notificationManager != null)
@@ -113,6 +115,7 @@ public class AlarmService extends Service implements AudioService {
                 .setContentIntent(pi);
 
         nBuilder.getNotification().flags |= Notification.FLAG_AUTO_CANCEL;
+
         // Gets an instance of the NotificationManager service
 
         return nBuilder;
@@ -164,7 +167,7 @@ public class AlarmService extends Service implements AudioService {
         Log.d("MaxVolume Tracking", "Vol:" + maxVolumeToSet + ":" + (maxVolumeForAlarm * alarm.getMaxVolume()));
         Log.d("MaxVolume Tracking", "Vol:" + myAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
 
-        notificationBuilder = generateNotification();
+        notificationBuilder = startNotification(alarm);
         updateNotification(alarm.getTimeHour() + ":" + alarm.getTimeMinute());
 
         easingQueue = new EasingThread();
@@ -187,6 +190,31 @@ public class AlarmService extends Service implements AudioService {
         return super.onUnbind(intent);
     }
 
+    public Notification.Builder startNotification(Alarm alarm){
+
+        Intent dismissIntent = new Intent(this, AlarmActivity.StopAlarmReceiver.class);
+        dismissIntent.setAction(GlobalStrings.STOP_ALARM.toString());
+        PendingIntent piDismiss = PendingIntent.getBroadcast(this, 111111, dismissIntent, 0);
+
+        Intent snoozeIntent = new Intent(this, AlarmActivity.StopAlarmReceiver.class);
+        snoozeIntent.setAction(GlobalStrings.SET_SNOOZE_ALARM.toString());
+        PendingIntent piSnooze = PendingIntent.getBroadcast(this, 111112, snoozeIntent, 0);
+
+        Notification.Builder mNotifyBuilder = new Notification.Builder(this)
+                .setContentTitle("R.A.dio")
+                .setContentText(alarm.getDataDescription())
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true)
+                .setStyle(new Notification.BigTextStyle().bigText(alarm.getDataDescription()))
+                .addAction(android.R.drawable.ic_delete, "Dismiss", piDismiss)
+                .addAction(android.R.drawable.ic_input_add, "Snooze", piSnooze)
+              ;
+
+        return mNotifyBuilder;
+        //foregroundNote.bigContentView = bigView;
+    }
+
     private class EasingThread extends AsyncTask<String , String, String> {
 
         @Override
@@ -202,13 +230,9 @@ public class AlarmService extends Service implements AudioService {
                                threadedMediaPlayer.setVolume(easing);
                                android.os.SystemClock.sleep(timing);
                                //Log.i("Service",maxVolume +" increase Volume to " + easing);
-                           } else {
-                               break;
-                           }
+                           } else break;
                        }
-
                    }
-
                    threadedMediaPlayer.setVolume(1f);
                }
            }

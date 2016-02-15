@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import xml_mike.radioalarm.GlobalStrings;
 import xml_mike.radioalarm.managers.AlarmsManager;
 
 /**
@@ -17,7 +18,7 @@ public class ScheduledCheckReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction() == null)
             Log.d(this.getClass().getSimpleName(), "the intent action was null");
-        else if (intent.getAction().equals("xml_mike.radioalarm.intent.SCHEDULED_ALARM_CHECK")) {
+        else if (intent.getAction().equals(GlobalStrings.SCHEDULED_ALARM_CHECK.toString())) {
             AlarmsManager.getInstance().scheduleAllAlarms();
         }
     }

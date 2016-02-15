@@ -32,15 +32,20 @@ public class Global extends Application {
         return singleton;
     }
 
+    /**
+     *
+     * @param message Message to add to log file
+     * @param append whether or not to append to current log file or to overwrite
+     * @return optinal return, not null.
+     */
     public static String writeToLogFile(String message,boolean append){
 
         File logPath = Environment.getExternalStorageDirectory();
 
         logPath = new File(logPath.getPath() + "/Android/data/com.xml_mike.radioalarm/files");
 
-        if(!logPath.exists()) {
+        if(!logPath.exists())
             logPath.mkdirs();
-        }
 
         try {
             File  LogFile = new File(logPath, "debug.log");
@@ -48,11 +53,8 @@ public class Global extends Application {
             BufferedWriter out = new BufferedWriter(LogWriter);
             Date date = new Date();
             out.write("L:" + String.valueOf(date.getHours() + ":" + date.getMinutes() + ":->" + message));
-
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
 
         return "";

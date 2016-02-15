@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import xml_mike.radioalarm.GlobalStrings;
 import xml_mike.radioalarm.managers.AlarmsManager;
 
 /**
@@ -23,7 +24,7 @@ public class AlarmBootReceiver extends BroadcastReceiver {
         //if the device has just booted restart all alarms so that they will run on time.
         //this is becuase android resets all alarms on restart/shutdown.
         if(intent.getAction() != null) {
-            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
+            if (intent.getAction().equals(GlobalStrings.BOOT_COMPLETED.toString()))
                 AlarmsManager.getInstance().scheduleAllAlarms(); //schedule all active alarms
                 AlarmsManager.getInstance().start_alarm_verification_service();
             Log.d("AlarmBookReceiver", intent.getAction());

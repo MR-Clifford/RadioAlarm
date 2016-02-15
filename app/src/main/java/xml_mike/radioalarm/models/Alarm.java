@@ -27,6 +27,8 @@ public interface Alarm extends Parcelable{
 
     void setData(String data);
 
+    String getDataDescription();
+
     boolean isEnabled();
 
     void setEnabled(boolean enable);

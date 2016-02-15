@@ -38,6 +38,12 @@ public class MusicAlarm extends AlarmAbstract {
     }
 
     @Override
+    public String getDataDescription() {
+        AlarmMedia alarmMedia = DatabaseManager.getInstance().getAlarmMedia(getData());
+        return alarmMedia.title;
+    }
+
+    @Override
     public View.OnClickListener getDataOnClickListener(final Context context, final int groupPosition) {
         return new View.OnClickListener() {
             @Override

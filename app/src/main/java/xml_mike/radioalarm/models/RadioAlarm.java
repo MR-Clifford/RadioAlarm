@@ -38,6 +38,11 @@ public class RadioAlarm extends AlarmAbstract {
     }
 
     @Override
+    public String getDataDescription() {
+        return RadioStationsManager.retrieveRadioStation(Long.parseLong(getData())).getName();
+    }
+
+    @Override
     public View.OnClickListener getDataOnClickListener(final Context context, final int groupPosition) {
         return new View.OnClickListener() {
             @Override

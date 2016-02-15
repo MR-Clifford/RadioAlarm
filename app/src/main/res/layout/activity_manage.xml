@@ -14,7 +14,7 @@
         android:padding="3dp">
         <TextView
             android:id="@+id/empty"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Please Click on the Add icon below"
@@ -43,25 +43,34 @@
             android:id="@+id/button"
             android:layout_width="48dp"
             android:layout_height="46dp"
-            android:layout_above="@+id/adView"
+            android:layout_above="@+id/ad_wrapper"
             android:layout_centerHorizontal="true"
-            android:layout_margin="10dp"
             android:background="@drawable/button_round"
             android:drawableTop="@drawable/ic_alarm_add_black_48dp"
             android:gravity="center_vertical|center_horizontal"
             android:onClick="createNewAlarm"
             android:padding="10dp" />
 
+        <RelativeLayout
+            android:id="@+id/ad_wrapper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignWithParentIfMissing="false">
+
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:visibility="invisible"
                 ads:adSize="BANNER"
                 ads:adUnitId="@string/banner_ad_unit_id">
             </com.google.android.gms.ads.AdView>
+        </RelativeLayout>
 
     </RelativeLayout>
 
