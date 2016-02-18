@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. All API's below 21-->
-    <style name="RadioAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="RadioAppTheme" parent="Theme.AppCompat">
         <item name="android:colorActivatedHighlight">@color/background_color</item>
         <item name="android:color">@color/accent</item>
         <item name="android:windowBackground">@color/background_color</item>
@@ -16,6 +16,8 @@
 
         <!--<item name="android:spinnerDropDownItemStyle">@style/Spinner.Theme</item>-->
         <item name="android:alertDialogStyle">@style/default_alarmDialog</item>
+        <item name="android:textColorSecondaryInverse">@color/background_floating_material_dark
+        </item>
     </style>
 
     <!-- define styles for all alert dialogs -->

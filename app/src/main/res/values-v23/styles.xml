@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="RadioAppTheme" parent="Theme.AppCompat.Light.NoActionBar" >
+    <style name="RadioAppTheme" parent="Theme.AppCompat" >
 
         <item name="android:colorPrimary">@color/primary</item>
         <!--   darker variant for the status bar and contextual app bars -->
@@ -27,7 +27,7 @@
         <!--<item name="android:popupBackground">@color/background_color</item>-->
         <!--<item name="android:colorForeground">@color/background_floating_material_dark</item>-->
         <item name="android:textColorPrimaryInverse">@color/primary_text_material_dark</item>
-        <item name="android:textColorSecondaryInverse">@color/secondary_background_color</item>
+        <item name="android:textColorSecondaryInverse">@color/background_floating_material_dark</item>
 
         <item name="android:dialogTheme">@style/Dialog_Theme_23</item>
         <item name="android:alertDialogTheme">@style/Alert_Dialog_Theme_23</item>
@@ -35,6 +35,7 @@
 
         <item name="android:spinnerItemStyle">@style/Spinner.Theme.spinnerItemStyle</item>
         <item name="android:spinnerDropDownItemStyle">@style/Spinner.Theme.spinnerDropDownItemStyle</item>
+        <item name="android:colorAccent">@color/accent_material_dark</item>
     </style>
 
     <style name="timePickerDialogTheme" parent="@android:style/Widget.DatePicker">

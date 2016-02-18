@@ -23,6 +23,7 @@
             android:id="@+id/managedAlarms"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_above="@+id/ad_wrapper"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -35,16 +36,16 @@
             android:fastScrollEnabled="true"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            tools:listitem="@layout/alarm_item"
-            android:layout_above="@+id/ad_wrapper" />
+            tools:listitem="@layout/alarm_item" />
 
 
         <Button
             android:id="@+id/button"
             android:layout_width="48dp"
             android:layout_height="46dp"
-            android:layout_above="@+id/ad_wrapper"
-            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/managedAlarms"
+            android:layout_alignEnd="@+id/managedAlarms"
+            android:layout_alignRight="@+id/managedAlarms"
             android:background="@drawable/button_round"
             android:drawableTop="@drawable/ic_alarm_add_black_48dp"
             android:gravity="center_vertical|center_horizontal"

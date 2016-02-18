@@ -48,8 +48,8 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/alarm_type"
@@ -61,9 +61,9 @@
             android:background="@drawable/button_selected"
             android:entries="@array/alarm_types_array"
             android:gravity="center"
+            android:minHeight="36dp"
             android:padding="5dp"
             android:spinnerMode="dialog"
-            android:minHeight="36dp"
             android:textAlignment="center" />
 
         <TextView
@@ -74,15 +74,15 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_selected"
-            android:gravity="center"
-            android:padding="5dp"
             android:ellipsize="end"
+            android:gravity="center"
+            android:minHeight="36dp"
+            android:padding="5dp"
             android:singleLine="true"
             android:text="Select Audio"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/background_color"
-            android:textSize="12sp"
-            android:minHeight="36dp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -234,73 +234,36 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/duration"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="top"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_selected"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="Duration:10"
-            android:visibility="gone"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/background_color" />
-
-        <Button
-            android:id="@+id/easing"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="top"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_selected"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="Easing:0"
-            android:visibility="gone"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/background_color" />
-        <Button
-            android:id="@+id/volume"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="top"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_selected"
-            android:gravity="center_horizontal"
-            android:padding="12dp"
-            android:text="Volume Options"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/background_color"
-            android:textAlignment="gravity"
-            android:minHeight="32dp" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:paddingTop="5dp">
+        android:padding="5dp"
+        android:weightSum="5">
 
         <Button
             android:id="@+id/alarm_delete"
             android:layout_width="80dp"
             android:layout_height="46dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center|bottom"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
             android:background="@drawable/button_selected"
             android:drawableTop="@drawable/ic_delete_black_48dp"
             android:onClick="createNewAlarm"
-            android:padding="10dp" />
-    </RelativeLayout>
+            android:paddingTop="10dp" />
+
+        <Button
+            android:id="@+id/volume"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="4"
+            android:background="@drawable/button_selected"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:text="Volume Options"
+            android:textAlignment="gravity"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/background_color" />
+
+    </LinearLayout>
+
 </LinearLayout>
