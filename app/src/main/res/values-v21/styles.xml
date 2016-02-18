@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-        <style name="RadioAppTheme" parent="@style/Theme.AppCompat">
+        <style name="RadioAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
                 <!-- Main theme colors -->
                 <!--   your app branding color for the app bar -->
                 <item name="android:colorPrimary">@color/primary</item>

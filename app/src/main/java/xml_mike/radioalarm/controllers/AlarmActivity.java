@@ -129,7 +129,7 @@ public class AlarmActivity extends AppCompatActivity {
 
         IntentFilter intentFilter =  new IntentFilter();
 
-        intentFilter.addAction(GlobalStrings.STOP_ALARM_BROADCAST.toString());
+        intentFilter.addAction(GlobalStrings.STOP_ALARM_FOR_NEXT.toString());
         intentFilter.addAction(GlobalStrings.STOP_ALARM.toString());
         intentFilter.addAction(GlobalStrings.STOP_SNOOZE_ALARM.toString());
 
@@ -161,7 +161,11 @@ public class AlarmActivity extends AppCompatActivity {
         this.finish();
     }
 
-    public void pauseAlarmService(View view){
+    /**
+     * Snooze event, when called will pause current alarm and continue
+     * @param view
+     */
+    public void snoozeAlarmService(View view){
 
         stopAlarmService();
 
@@ -170,7 +174,6 @@ public class AlarmActivity extends AppCompatActivity {
             Alarm alarm = AlarmsManager.getInstance().getAlarm(alarmId);
             AlarmsManager.getInstance().setSnoozeAlarm(alarm);
         }
-
         this.finish();
     }
 
@@ -201,12 +204,16 @@ public class AlarmActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * static broadcast receiver for any messages from
+     */
     public static class StopAlarmReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
 
+            //if current activity is not null
             if(alarmActivity != null) {
-                if (intent.getAction().equals(GlobalStrings.STOP_ALARM_BROADCAST.toString())) {
+                if (intent.getAction().equals(GlobalStrings.STOP_ALARM_FOR_NEXT.toString())) {
                     Long alarmId = 0L;
                     alarmId = intent.getLongExtra("alarmId", alarmId);
 
@@ -224,8 +231,8 @@ public class AlarmActivity extends AppCompatActivity {
                 } else if (intent.getAction().equals(GlobalStrings.STOP_ALARM.toString())) {
                     alarmActivity.stopAlarmService(null); // replicate button press in activity, pass null View
                     Log.e("StopAlarmReceiver", "2");
-                } else if (intent.getAction().equals(GlobalStrings.STOP_SNOOZE_ALARM.toString())) {
-                    alarmActivity.pauseAlarmService(null); // replicate button press in activity, pass null View
+                } else if (intent.getAction().equals(GlobalStrings.SET_SNOOZE_ALARM.toString())) {
+                    alarmActivity.snoozeAlarmService(null); // replicate button press in activity, pass null View
                     Log.e("StopAlarmReceiver", "3");
                 }
             }

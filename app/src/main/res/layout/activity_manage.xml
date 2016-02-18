@@ -23,7 +23,6 @@
             android:id="@+id/managedAlarms"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -36,7 +35,8 @@
             android:fastScrollEnabled="true"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            tools:listitem="@layout/alarm_item" />
+            tools:listitem="@layout/alarm_item"
+            android:layout_above="@+id/ad_wrapper" />
 
 
         <Button

@@ -4,7 +4,7 @@ package xml_mike.radioalarm;
  * Created by MClifford on 25/06/15.
  */
 public enum GlobalStrings {
-    STOP_ALARM_BROADCAST("com.xml_mike.radioalarm.action.STOP_ALARM_BROADCAST"), //Used to set runtime broadcast receiver
+    STOP_ALARM_FOR_NEXT("com.xml_mike.radioalarm.action.STOP_ALARM_FOR_NEXT"), //Used to set runtime broadcast receiver
     STOP_ALARM          ("com.xml_mike.radioalarm.action.STOP_ALARM"),
     START_ALARM         ("xml_mike.radioalarm.intent.START_ALARM"),
     STOP_SNOOZE_ALARM   ("com.xml_mike.radioalarm.action.STOP_SNOOZE_ALARM"),

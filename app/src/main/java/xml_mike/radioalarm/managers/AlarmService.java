@@ -194,11 +194,11 @@ public class AlarmService extends Service implements AudioService {
 
         Intent dismissIntent = new Intent(this, AlarmActivity.StopAlarmReceiver.class);
         dismissIntent.setAction(GlobalStrings.STOP_ALARM.toString());
-        PendingIntent piDismiss = PendingIntent.getBroadcast(this, 111111, dismissIntent, 0);
+        PendingIntent piDismiss = PendingIntent.getBroadcast(this, 111111, dismissIntent, PendingIntent.FLAG_ONE_SHOT);
 
         Intent snoozeIntent = new Intent(this, AlarmActivity.StopAlarmReceiver.class);
         snoozeIntent.setAction(GlobalStrings.SET_SNOOZE_ALARM.toString());
-        PendingIntent piSnooze = PendingIntent.getBroadcast(this, 111112, snoozeIntent, 0);
+        PendingIntent piSnooze = PendingIntent.getBroadcast(this, 111112, snoozeIntent, PendingIntent.FLAG_ONE_SHOT);
 
         Notification.Builder mNotifyBuilder = new Notification.Builder(this)
                 .setContentTitle("R.A.dio")
@@ -212,7 +212,6 @@ public class AlarmService extends Service implements AudioService {
               ;
 
         return mNotifyBuilder;
-        //foregroundNote.bigContentView = bigView;
     }
 
     private class EasingThread extends AsyncTask<String , String, String> {
@@ -261,6 +260,7 @@ public class AlarmService extends Service implements AudioService {
 
                     if(notificationManager != null)
                        notificationManager.cancelAll();
+
                 }
             }
             return "";

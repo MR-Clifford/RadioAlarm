@@ -67,7 +67,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             Toast.makeText(Global.getInstance(), "test", Toast.LENGTH_SHORT).show();
         } /* else if(intent.getAction().equals(GlobalStrings.STOP_ALARM.toString())){ //catch stop alarm intent then handle it.
             Long alarmId = intent.getLongExtra("alarmId", -1L);
-            Intent broadCastIntent = new Intent(GlobalStrings.STOP_ALARM_BROADCAST.toString());
+            Intent broadCastIntent = new Intent(GlobalStrings.STOP_ALARM_FOR_NEXT.toString());
             broadCastIntent.putExtra("alarmId", alarmId);
             context.sendBroadcast(broadCastIntent);
             Toast.makeText(Global.getInstance(), "test", Toast.LENGTH_SHORT).show();
@@ -81,7 +81,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         alarmId = intent.getLongExtra("alarmId", alarmId);
 
         if(isRunning(AlarmActivity.class, context) || AlarmActivity.isRunning) {
-            Intent broadCastIntent = new Intent(GlobalStrings.STOP_ALARM_BROADCAST.toString());
+            Intent broadCastIntent = new Intent(GlobalStrings.STOP_ALARM_FOR_NEXT.toString());
             broadCastIntent.putExtra("alarmId", alarmId);
             context.sendBroadcast(broadCastIntent);
         } else {
