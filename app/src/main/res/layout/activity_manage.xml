@@ -46,6 +46,8 @@
             android:layout_alignBottom="@+id/managedAlarms"
             android:layout_alignEnd="@+id/managedAlarms"
             android:layout_alignRight="@+id/managedAlarms"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/button_round"
             android:drawableTop="@drawable/ic_alarm_add_black_48dp"
             android:gravity="center_vertical|center_horizontal"
