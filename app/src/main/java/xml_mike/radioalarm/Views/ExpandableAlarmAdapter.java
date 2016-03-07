@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 import xml_mike.radioalarm.Global;
 import xml_mike.radioalarm.R;
@@ -51,7 +52,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private LayoutInflater inflater;
-    private ArrayList<Alarm> alarms;
+    private ArrayList<Alarm> alarms = new ArrayList<Alarm>();
     private int currentAlarm = -1;
 
     public ExpandableAlarmAdapter(Context context, LayoutInflater layout, ArrayList<Alarm> alarms) {
@@ -238,9 +239,8 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        if (convertView == null) {
+        if (convertView == null)
             convertView = this.inflater.inflate(R.layout.alarm_item_config, parent, false);
-        }
 
         final Resources thisResource = context.getResources();
 
@@ -254,8 +254,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         final Spinner alarm_type = (Spinner) convertView.findViewById(R.id.alarm_type);
         Button deleteButton = (Button) convertView.findViewById(R.id.alarm_delete);
         Button alarm_volume = (Button) convertView.findViewById(R.id.volume);
-        //Button alarm_duration = (Button) convertView.findViewById(R.id.duration);
-        //Button alarm_easing = (Button) convertView.findViewById(R.id.easing);
 
         final ExpandableAlarmAdapter callBack = this;
 
@@ -277,7 +275,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                     public void onClick(DialogInterface dialog, int id) {
                         alarms.get(groupPosition).setName(input.getText().toString());
                         AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), false);
-                        //Global.getInstance().setAlarms(alarms);
                         callBack.notifyDataSetChanged();
                     }
                 })
@@ -303,7 +300,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                             alarms.get(currentAlarm).setTimeMinute(minute);
                             alarms.get(currentAlarm).setTimeHour(hourOfDay);
 
-                            //Global.getInstance().setAlarms(alarms);
                             AlarmsManager.getInstance().update(currentAlarm, alarms.get(currentAlarm), true);
                             callBack.notifyDataSetChanged();
                         }
@@ -319,7 +315,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
                 alarms.get(groupPosition).setEnabled(!alarms.get(groupPosition).isEnabled());
-                // Global.getInstance().setAlarms(alarms);
                 AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), true);
                 callBack.notifyDataSetChanged();
             }
@@ -330,7 +325,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 alarms.get(groupPosition).setRepeating(isChecked);
                 AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), true);
-                //Global.getInstance().updateAlarm(alarms.get(groupPosition));
                 callBack.notifyDataSetChanged();
             }
         });
@@ -340,7 +334,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 alarms.get(groupPosition).setVibrate(isChecked);
                 AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), false);
-                //Global.getInstance().updateAlarm(alarms.get(groupPosition));
                 callBack.notifyDataSetChanged();
             }
         });
@@ -348,9 +341,6 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // callBack.alarms.remove(groupPosition);
-
-
                 DatabaseManager.getInstance().removeDatabaseItem(alarms.get(groupPosition));
                 AlarmsManager.getInstance().remove(groupPosition);
                 callBack.notifyDataSetChanged();
@@ -552,9 +542,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onClick(View v) {
                     alarms.get(groupPosition).setRepeatingDay(currentday, (!alarms.get(groupPosition).getRepeatingDay(currentday)));
-                    //Global.getInstance().setAlarms(alarms);
                     AlarmsManager.getInstance().update(groupPosition, alarms.get(groupPosition), true);
-                    //callBack.notifyDataSetChanged();
                 }
             });
 
@@ -567,16 +555,16 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
             }
             daysLayout.getChildAt(i).setEnabled(alarms.get(groupPosition).isRepeating());
         }
-
-        //alarm_duration.setText("Duration:" + alarms.get(groupPosition).getDuration());
-        //alarm_easing.setText("Easing:" + alarms.get(groupPosition).getEasing());
-
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public void sort(){
+        Collections.sort(alarms);
     }
 
     @Override
@@ -633,6 +621,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         return returnAlarmDetailsString;
     }
 
+    //TODO check these
     private DialogInterface.OnClickListener OnDeleteClickListener(){
         return null;
     }
@@ -645,7 +634,7 @@ public class ExpandableAlarmAdapter extends BaseExpandableListAdapter {
         return null;
     }
 
-    private DialogInterface.OnClickListener OnDayClickListner(){
+    private DialogInterface.OnClickListener OnDayClickListener(){
         return null;
     }
 }

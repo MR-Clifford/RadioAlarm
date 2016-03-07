@@ -47,8 +47,7 @@ import xml_mike.radioalarm.views.ExpandableAlarmAdapter;
 /**
  * Main view of the mobile alarm app
  */
-public class ManageActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ExpandableListView.OnGroupCollapseListener, Observer {
+public class ManageActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, ExpandableListView.OnGroupCollapseListener, Observer {
 
     ExpandableListView mExpandableList;
     View emptyView;
@@ -87,6 +86,7 @@ public class ManageActivity extends AppCompatActivity
         mExpandableList = (ExpandableListView) findViewById(R.id.managedAlarms);
         ExpandableAlarmAdapter expandableAlarmAdapter = new ExpandableAlarmAdapter(this, LayoutInflater.from(this), AlarmsManager.getInstance().getAlarms() );
         //mExpandableList.setEmptyView(emptyView);
+        expandableAlarmAdapter.sort();
         mExpandableList.setAdapter(expandableAlarmAdapter);
         mExpandableList.setGroupIndicator(null);
 
@@ -137,6 +137,7 @@ public class ManageActivity extends AppCompatActivity
 
     @Override
     public void update(Observable observable, Object data) {
+        ((ExpandableAlarmAdapter) mExpandableList.getExpandableListAdapter()).sort();
         ((ExpandableAlarmAdapter) mExpandableList.getExpandableListAdapter()).notifyDataSetChanged();
     }
 

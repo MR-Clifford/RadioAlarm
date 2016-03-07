@@ -104,17 +104,24 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
         if(view != null)
             view.setText("Stop");
         mp.start();
-        Log.d("Prepared","playing");
+        mp.seekTo(0);
+        if(isPlaying())
+            Log.d("Prepared","playing");
+        else
+            Log.d("Prepared","not playing : " + mp.getAudioSessionId());
     }
 
     @Override
     public void onAudioFocusChange(int focusChange) {
+        /*
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 // resume playback
                 if (mediaplayer == null) initialiseMediaPlayer();
-                else if (!mediaplayer.isPlaying()) mediaplayer.start();
-                mediaplayer.setVolume(1.0f, 1.0f);
+                else if (!mediaplayer.isPlaying()) {
+                    mediaplayer.start();
+                    mediaplayer.setVolume(1.0f, 1.0f);
+                }
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS:
@@ -137,6 +144,7 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
                 if (mediaplayer.isPlaying()) mediaplayer.setVolume(0.1f, 0.1f);
                 break;
         }
+        */
     }
 
     private void initialiseMediaPlayer(){
@@ -169,7 +177,8 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
         // Thread thread = new Thread(new Runnable() {
         // @Override
         //  public void run() {
-        mediaplayer.stop();
+        if(mediaplayer.isPlaying())
+            mediaplayer.stop();
         //mediaplayer.release();
         //mediaplayer.setWakeMode(Global.getInstance(), PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY);
         //    }
@@ -190,6 +199,7 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
                 try {
                     mediaplayer.reset();
                     mediaplayer.setLooping(true);
+                    Log.e("URL","location:"+location);
                     mediaplayer.setDataSource(location);
                     mediaplayer.prepareAsync();
                 } catch (IllegalArgumentException | IllegalStateException | IOException e) {
@@ -261,6 +271,8 @@ public class ThreadedMediaPlayer implements MediaController.MediaPlayerControl, 
 
         if(what != -38)
             Toast.makeText(Global.getInstance().getApplicationContext(), "Connection Failed", Toast.LENGTH_SHORT ).show();
+
+        Log.e("player error", ""+what);
 
         return true;
     }

@@ -64,5 +64,6 @@ public class Global extends Application {
         super.onCreate();
         singleton = this;
         ResourceManager.getInstance();
+        //LeakCanary.install(this);
     }
 }

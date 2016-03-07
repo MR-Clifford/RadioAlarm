@@ -214,5 +214,19 @@ public abstract class AlarmAbstract implements Alarm {
             }
         };
     }
+
+    /**
+     *
+     * @param anotherAlarm
+     * @return position.
+     */
+    @Override
+    public int compareTo(Alarm anotherAlarm) {
+
+        int anotherAlarmTime = anotherAlarm.getTimeHour() * 60 + anotherAlarm.getTimeMinute();
+        int currentAlarmTime = this.getTimeHour() * 60 + this.getTimeMinute();
+        /* For Ascending order*/
+        return currentAlarmTime - anotherAlarmTime;
+    }
 }
 

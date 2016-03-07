@@ -6,6 +6,7 @@ import android.widget.TextView;
  * Created by MClifford on 02/07/15.
  *
  * To replace a redundant class
+ * TODO remove this awful interface into something more elegant.
  */
 public interface AudioService {
 

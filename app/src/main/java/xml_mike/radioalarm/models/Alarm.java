@@ -11,7 +11,7 @@ import xml_mike.radioalarm.managers.ThreadedMediaPlayer;
  *
  * this interface will apply the strategy & visitor patterns. changing how the program/alarm behaves depending on type.
  */
-public interface Alarm extends Parcelable{
+public interface Alarm extends Parcelable, Comparable<Alarm> {
 
     long getId();
 
